@@ -66,6 +66,7 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        public static final boolean DRIVE_PEAK_LIMIT_ENABLED = true;
         public static final int RUMBLE_THRESHOLD = 35;
         
         public static final double SLEW_RATE = 3; 
@@ -74,6 +75,7 @@ public final class Constants {
         public static final int ANGLE_PEAK_LIMIT = 40;
         public static final double ANGLE_PEAK_DURATION = 0.1;
         public static final boolean ANGLE_LIMIT_ENABLED = true;
+        public static final boolean ANGLE_PEAK_LIMIT_ENABLED = true;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
