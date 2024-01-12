@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.frc5587.lib.pid.FPID;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -106,8 +108,8 @@ public final class Constants {
         public static final double MAX_ANGULAR_VELOCITY = 6.;
 
         /* Neutral Modes */
-        // public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
-        // public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
+        public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */

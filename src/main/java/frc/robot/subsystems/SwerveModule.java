@@ -4,6 +4,8 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.control.TitanDrive.ControlMode;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -95,8 +97,7 @@ public class SwerveModule {
                     SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO);
             final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
             mDriveMotor.setControl(m_request.withVelocity(velocity).withFeedForward(0.5));
-            // mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
-            //         feedforward.calculate(desiredState.speedMetersPerSecond));
+            // TODO fix if broken
         }
     }
 
@@ -125,12 +126,12 @@ public class SwerveModule {
     }
 
     private void configAngleEncoder() {
-        angleEncoder.configFactoryDefault();
+        angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
         angleEncoder.configAllSettings(ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
-        mAngleMotor.configFactoryDefault();
+        mAngleMotor.getConfigurator().apply(new TalonFXConfiguration());
         mAngleMotor.configAllSettings(ctreConfigs.swerveAngleFXConfig);
         mAngleMotor.setInverted(SwerveConstants.ANGLE_MOTOR_INVERTED);
         mAngleMotor.setNeutralMode(SwerveConstants.ANGLE_NEUTRAL_MODE);
@@ -138,7 +139,7 @@ public class SwerveModule {
     }
 
     private void configDriveMotor() {
-        mDriveMotor.configFactoryDefault();
+        mDriveMotor.getConfigurator().apply(new TalonFXConfiguration());
         mDriveMotor.configAllSettings(ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.setInverted(SwerveConstants.DRIVE_MOTOR_INVERTED);
         mDriveMotor.setNeutralMode(SwerveConstants.DRIVE_NEUTRAL_MODE);
