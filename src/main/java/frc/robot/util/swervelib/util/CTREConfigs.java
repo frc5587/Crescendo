@@ -2,10 +2,10 @@ package frc.robot.util.swervelib.util;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
 
@@ -14,6 +14,7 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANcoderConfiguration swerveCanCoderConfig;
     public Slot0Configs slot0Configs;
+    
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();
@@ -50,14 +51,19 @@ public final class CTREConfigs {
         slot0Configs.kD = Constants.SwerveConstants.DRIVE_FPID.kD;
         // TODO add kF limits????
         swerveDriveFXConfig.CurrentLimits = driveCurrLimit;
-        swerveDriveFXConfig.OpenLoopRamps = Constants.SwerveConstants.OPEN_LOOP_RAMP;
-        swerveDriveFXConfig.ClosedLoopRamps = Constants.SwerveConstants.CLOSED_LOOP_RAMP;
+        swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.SwerveConstants.OPEN_LOOP_RAMP;
+        swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.SwerveConstants.CLOSED_LOOP_RAMP;
         
         /* Swerve CANCoder Configuration */ 
         swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         // TODO fix above if broken????
-        swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.SwerveConstants.CANCODER_INVERTED;
-        swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        if (!Constants.SwerveConstants.CANCODER_INVERTED) {
+            swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        } else {swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;}
+        // swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.SwerveConstants.CANCODER_INVERTED;
+        // TODO maybe fix above????
+        // swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        // swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        // TODO fix above
     }
 }
