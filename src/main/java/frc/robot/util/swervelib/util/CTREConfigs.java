@@ -57,9 +57,9 @@ public final class CTREConfigs {
         /* Swerve CANCoder Configuration */ 
         swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         // TODO fix above if broken????
-        if (!Constants.SwerveConstants.CANCODER_INVERTED) {
-            swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        } else {swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;}
+        // if (!Constants.SwerveConstants.CANCODER_INVERTED) {
+        swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.SwerveConstants.CANCODER_INVERTED ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
+        // } else {swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;}
         // swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.SwerveConstants.CANCODER_INVERTED;
         // TODO maybe fix above????
         // swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;

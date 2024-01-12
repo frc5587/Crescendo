@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.control.TitanDrive.ControlMode;
 
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ControlModeValue;
@@ -87,13 +88,15 @@ public class SwerveModule {
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED;
-            // TODOD set ControlModeValue.VoltageOut
-            mDriveMotor.set(percentOutput * 12);
+            // TODO set ControlModeValue.VoltageOut
+            mDriveMotor.set(percentOutput);
         } else {
             double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond,
                     SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO);
-            mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
-                    feedforward.calculate(desiredState.speedMetersPerSecond));
+            final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+            mDriveMotor.setControl(m_request.withVelocity(velocity).withFeedForward(0.5));
+            // mDriveMotor.set(ControlMode.Velocity, velocity, DemandType.ArbitraryFeedForward,
+            //         feedforward.calculate(desiredState.speedMetersPerSecond));
         }
     }
 
@@ -102,8 +105,7 @@ public class SwerveModule {
                 ? lastAngle
                 : desiredState.angle; // Prevent rotating module if speed is less then 5%. Prevents Jittering.
 
-        mAngleMotor.set(ControlMode.Position,
-                Conversions.degreesToFalcon(angle.getDegrees(), SwerveConstants.ANGLE_GEAR_RATIO));
+        mAngleMotor.setPosition(Conversions.degreesToFalcon(angle.getDegrees(), SwerveConstants.ANGLE_GEAR_RATIO));
         lastAngle = angle;
     }
 
