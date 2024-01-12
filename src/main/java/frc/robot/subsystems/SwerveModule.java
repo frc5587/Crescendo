@@ -2,22 +2,16 @@ package frc.robot.subsystems;
 
 
 
-import org.frc5587.lib.control.TitanDrive.ControlMode;
-
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ControlModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.util.swervelib.math.Conversions;
 import frc.robot.util.swervelib.util.CTREConfigs;
@@ -33,21 +27,6 @@ public class SwerveModule {
 
     public TalonFX mAngleMotor;
     public TalonFX mDriveMotor;
-
-    private final FlywheelSim sAngleMotor = new FlywheelSim(
-            // LinearSystemId.identifyVelocitySystem(kvVoltSecondsPerRadian,
-            // kaVoltSecondsSquaredPerRadian),
-            // LinearSystemId.identifyVelocitySystem(1.47, 0.0348),
-            LinearSystemId.identifyVelocitySystem(0.16, 0.0917),
-            DCMotor.getFalcon500(1),
-            SwerveConstants.ANGLE_GEAR_RATIO);
-
-    private final FlywheelSim sDriveMotor = new FlywheelSim(
-            // LinearSystemId.identifyVelocitySystem(Constants.DriveConstants.kvVoltSecondsPerMeter,
-            // Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
-            LinearSystemId.identifyVelocitySystem(2, 1.24),
-            DCMotor.getFalcon500(1),
-            SwerveConstants.DRIVE_GEAR_RATIO);
 
     public CANcoder angleEncoder;
 
@@ -90,7 +69,6 @@ public class SwerveModule {
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / SwerveConstants.MAX_SPEED;
-            // TODO set ControlModeValue.VoltageOut
             mDriveMotor.set(percentOutput);
         } else {
             double velocity = Conversions.MPSToFalcon(desiredState.speedMetersPerSecond,
@@ -112,7 +90,7 @@ public class SwerveModule {
 
     private Rotation2d getAngle() {
         return Rotation2d.fromDegrees(
-                Conversions.falconToDegrees(mAngleMotor.getRotorPosition().getValue(), SwerveConstants.ANGLE_GEAR_RATIO));
+                Conversions.falconToDegrees(mAngleMotor.getPosition().getValue(), SwerveConstants.ANGLE_GEAR_RATIO));
     }
 
     public Rotation2d getCanCoder() {
@@ -122,17 +100,17 @@ public class SwerveModule {
     public void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset.getDegrees(),
                 SwerveConstants.ANGLE_GEAR_RATIO);
-        mAngleMotor.setSelectedSensorPosition(absolutePosition);
+        mAngleMotor.setPosition(absolutePosition);
     }
 
     private void configAngleEncoder() {
         angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
-        angleEncoder.configAllSettings(ctreConfigs.swerveCanCoderConfig);
+        angleEncoder.getConfigurator().apply(ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
         mAngleMotor.getConfigurator().apply(new TalonFXConfiguration());
-        mAngleMotor.configAllSettings(ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
         mAngleMotor.setInverted(SwerveConstants.ANGLE_MOTOR_INVERTED);
         mAngleMotor.setNeutralMode(SwerveConstants.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
@@ -140,23 +118,23 @@ public class SwerveModule {
 
     private void configDriveMotor() {
         mDriveMotor.getConfigurator().apply(new TalonFXConfiguration());
-        mDriveMotor.configAllSettings(ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.getConfigurator().apply(ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.setInverted(SwerveConstants.DRIVE_MOTOR_INVERTED);
         mDriveMotor.setNeutralMode(SwerveConstants.DRIVE_NEUTRAL_MODE);
-        mDriveMotor.setSelectedSensorPosition(0);
+        mDriveMotor.setPosition(0);
     }
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-                -Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(),
-                        SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), // TODO Remove -
+                -Conversions.falconToMPS(mDriveMotor.getVelocity().getValue(),
+                        SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), 
                 getAngle());
     }
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
-                -Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(),
-                        SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), // TODO Remove -
+                -Conversions.falconToMeters(mDriveMotor.getPosition().getValue(),
+                        SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO),
                 getAngle());
     }
 }
