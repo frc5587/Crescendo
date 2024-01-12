@@ -111,7 +111,7 @@ public class SwerveModule {
 
     private Rotation2d getAngle() {
         return Rotation2d.fromDegrees(
-                Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), SwerveConstants.ANGLE_GEAR_RATIO));
+                Conversions.falconToDegrees(mAngleMotor.getRotorPosition().getValue(), SwerveConstants.ANGLE_GEAR_RATIO));
     }
 
     public Rotation2d getCanCoder() {
