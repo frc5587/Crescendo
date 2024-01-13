@@ -58,7 +58,7 @@ repositories {
 
 dependencies {
     
-    implementation 'org.frc5587:TitanLib:master-SNAPSHOT'
+    implementation 'org.frc5587:TitanLib:2024-SNAPSHOT'
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
