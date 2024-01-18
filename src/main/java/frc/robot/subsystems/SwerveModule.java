@@ -1,17 +1,19 @@
 package frc.robot.subsystems;
 
+import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class SwerveModule extends SwerveModuleBase {
-    private TalonFX talonFX;
+    private TalonFX angleMotor, driveMotor;
     private CANcoder angleEncoder;
     public SwerveModule(SwerveModuleConstants moduleConstants, TalonFX driveMotor, TalonFX angleMotor, CANcoder angleEncoder) {
         super(moduleConstants, angleMotor, driveMotor);
@@ -56,21 +58,11 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void configureAngleMotor() {
-        angleMotor.restoreFactoryDefaults();
-        angleMotor.getPIDController().setP(DrivetrainConstants.ANGLE_FPID.kP);
-        angleMotor.getPIDController().setI(DrivetrainConstants.ANGLE_FPID.kI);
-        angleMotor.getPIDController().setD(DrivetrainConstants.ANGLE_FPID.kD);
-        angleMotor.getPIDController().setFF(DrivetrainConstants.ANGLE_FPID.kF);
-        angleMotor.setSmartCurrentLimit(DrivetrainConstants.ANGLE_CONT_LIMIT);
-        angleMotor.setSecondaryCurrentLimit(DrivetrainConstants.ANGLE_PEAK_LIMIT);
-        // angleMotor.getEncoder().setPositionConversionFactor(360 / DrivetrainConstants.ANGLE_GEAR_RATIO);
-        angleMotor.getEncoder().setPositionConversionFactor(-1.);
+        angleMotor.getConfigurator().apply(new TalonFXConfiguration());
+        angleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
         angleMotor.setInverted(DrivetrainConstants.ANGLE_MOTOR_INVERTED);
-        angleMotor.setIdleMode(IdleMode.kCoast);
-        angleMotor.getPIDController().setPositionPIDWrappingEnabled(true);
-        angleMotor.getPIDController().setOutputRange(-1, 1, 0);
-        angleMotor.getPIDController().setIZone(0, 0);
-        angleMotor.burnFlash();
+        angleMotor.setNeutralMode(DrivetrainConstants.ANGLE_NEUTRAL_MODE);
+        resetToAbsolute();
     }
 
     @Override
@@ -105,5 +97,4 @@ public class SwerveModule extends SwerveModuleBase {
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getEncoder().getVelocity();
     }
-}
 }
