@@ -16,6 +16,7 @@ import frc.robot.util.swervelib.util.CTREConfigs;
 public class SwerveModule extends SwerveModuleBase {
     private TalonFX angleMotor, driveMotor;
     private CANcoder angleEncoder;
+    public static CTREConfigs ctreConfigs;
     public SwerveModule(SwerveModuleConstants moduleConstants, TalonFX driveMotor, TalonFX angleMotor, CANcoder angleEncoder) {
         super(moduleConstants, angleMotor, driveMotor);
         this.angleMotor = angleMotor;
@@ -24,6 +25,8 @@ public class SwerveModule extends SwerveModuleBase {
         configureAngleEncoder();
         configureAngleMotor();
         configureDriveMotor();
+
+        ctreConfigs = new CTREConfigs();
     }
 
     @Override
@@ -60,7 +63,7 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected void configureAngleMotor() {
         angleMotor.getConfigurator().apply(new TalonFXConfiguration());
-        angleMotor.getConfigurator().apply(CTREConfigs.swerveAngleFXConfig);
+        angleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
         angleMotor.setInverted(DrivetrainConstants.ANGLE_MOTOR_INVERTED);
         angleMotor.setNeutralMode(DrivetrainConstants.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
@@ -68,20 +71,11 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void configureDriveMotor() {
-        driveMotor.restoreFactoryDefaults();
+        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+        driveMotor.getConfigurator().apply(ctreConfigs.swerveDriveFXConfig);
         driveMotor.setInverted(DrivetrainConstants.DRIVE_MOTOR_INVERTED);
-        driveMotor.setIdleMode(IdleMode.kBrake);
-        driveMotor.getPIDController().setP(DrivetrainConstants.DRIVE_FPID.kP);
-        driveMotor.getPIDController().setI(DrivetrainConstants.DRIVE_FPID.kI);
-        driveMotor.getPIDController().setD(DrivetrainConstants.DRIVE_FPID.kD);
-        driveMotor.getPIDController().setFF(DrivetrainConstants.DRIVE_FPID.kF);
-        driveMotor.setOpenLoopRampRate(DrivetrainConstants.OPEN_LOOP_RAMP);
-        driveMotor.setClosedLoopRampRate(DrivetrainConstants.CLOSED_LOOP_RAMP);
-        driveMotor.setSmartCurrentLimit(DrivetrainConstants.DRIVE_PEAK_LIMIT, DrivetrainConstants.DRIVE_CONT_LIMIT);
-        driveMotor.getEncoder().setPositionConversionFactor(DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS / DrivetrainConstants.DRIVE_GEAR_RATIO);
-        driveMotor.getEncoder().setVelocityConversionFactor((DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS / DrivetrainConstants.DRIVE_GEAR_RATIO) / 60.);
-        driveMotor.getEncoder().setPosition(0);
-        driveMotor.burnFlash();
+        driveMotor.setNeutralMode(DrivetrainConstants.DRIVE_NEUTRAL_MODE);
+        driveMotor.setPosition(0);
     }
 
     @Override
