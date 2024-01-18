@@ -10,6 +10,7 @@ import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -118,6 +119,10 @@ public final class Constants {
         public static final double MAX_SPEED = 2.5;// 5.;
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = Math.PI;// 6.;
+
+        /* Neutral Modes */
+        public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
+        public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
