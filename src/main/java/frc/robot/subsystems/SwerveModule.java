@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.util.swervelib.util.CTREConfigs;
 
 public class SwerveModule extends SwerveModuleBase {
     private TalonFX angleMotor, driveMotor;
@@ -59,7 +60,7 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected void configureAngleMotor() {
         angleMotor.getConfigurator().apply(new TalonFXConfiguration());
-        angleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
+        angleMotor.getConfigurator().apply(CTREConfigs.swerveAngleFXConfig);
         angleMotor.setInverted(DrivetrainConstants.ANGLE_MOTOR_INVERTED);
         angleMotor.setNeutralMode(DrivetrainConstants.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();

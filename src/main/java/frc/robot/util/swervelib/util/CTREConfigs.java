@@ -1,6 +1,8 @@
 package frc.robot.util.swervelib.util;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -11,44 +13,52 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANcoderConfiguration swerveCanCoderConfig;
+    public Slot0Configs slot0Configs;
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();
         swerveDriveFXConfig = new TalonFXConfiguration();
         swerveCanCoderConfig = new CANcoderConfiguration();
-
+       
         /* Swerve Angle Motor Configurations */
-        // SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
-        //     Constants.SwerveConstants.ANGLE_LIMIT_ENABLED, 
-        //     Constants.SwerveConstants.ANGLE_CONT_LIMIT, 
-        //     Constants.SwerveConstants.ANGLE_PEAK_LIMIT, 
-        //     Constants.SwerveConstants.ANGLE_PEAK_DURATION);
+        CurrentLimitsConfigs angleCurrLimit = new CurrentLimitsConfigs();
+        
 
-        // swerveAngleFXConfig.slot0.kP = Constants.SwerveConstants.ANGLE_FPID.kP;
-        // swerveAngleFXConfig.slot0.kI = Constants.SwerveConstants.ANGLE_FPID.kI;
-        // swerveAngleFXConfig.slot0.kD = Constants.SwerveConstants.ANGLE_FPID.kD;
-        // swerveAngleFXConfig.slot0.kF = Constants.SwerveConstants.ANGLE_FPID.kF;
-        // swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
+        angleCurrLimit.SupplyCurrentLimit = Constants.DrivetrainConstants.ANGLE_CONT_LIMIT;
+        angleCurrLimit.StatorCurrentLimit = Constants.DrivetrainConstants.ANGLE_PEAK_LIMIT;
+        angleCurrLimit.SupplyCurrentLimitEnable = Constants.DrivetrainConstants.ANGLE_LIMIT_ENABLED;
+        angleCurrLimit.StatorCurrentLimitEnable = Constants.DrivetrainConstants.ANGLE_PEAK_LIMIT_ENABLED;
+        angleCurrLimit.SupplyTimeThreshold = Constants.DrivetrainConstants.ANGLE_PEAK_DURATION;
+
+        slot0Configs.kP = Constants.DrivetrainConstants.ANGLE_FPID.kP;
+        slot0Configs.kI = Constants.DrivetrainConstants.ANGLE_FPID.kI;
+        slot0Configs.kD = Constants.DrivetrainConstants.ANGLE_FPID.kD;
+        // TODO add kF limits????
+        swerveAngleFXConfig.CurrentLimits = angleCurrLimit;
 
         /* Swerve Drive Motor Configuration */
-        // SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
-        //     Constants.SwerveConstants.DRIVE_LIMIT_ENABLED, 
-        //     Constants.SwerveConstants.DRIVE_CONT_LIMIT, 
-        //     Constants.SwerveConstants.DRIVE_PEAK_LIMIT, 
-        //     Constants.SwerveConstants.DRIVE_PEAK_DURATION);
+        CurrentLimitsConfigs driveCurrLimit = new CurrentLimitsConfigs();
 
-        // swerveDriveFXConfig.slot0.kP = Constants.SwerveConstants.DRIVE_FPID.kP;
-        // swerveDriveFXConfig.slot0.kI = Constants.SwerveConstants.DRIVE_FPID.kI;
-        // swerveDriveFXConfig.slot0.kD = Constants.SwerveConstants.DRIVE_FPID.kD;
-        // swerveDriveFXConfig.slot0.kF = Constants.SwerveConstants.DRIVE_FPID.kF;
-        // swerveDriveFXConfig.supplyCurrLimit = driveSupplyLimit;
-        // swerveDriveFXConfig.openloopRamp = Constants.SwerveConstants.OPEN_LOOP_RAMP;
-        // swerveDriveFXConfig.closedloopRamp = Constants.SwerveConstants.CLOSED_LOOP_RAMP;
+        driveCurrLimit.SupplyCurrentLimit = Constants.DrivetrainConstants.DRIVE_CONT_LIMIT;
+        driveCurrLimit.StatorCurrentLimit = Constants.DrivetrainConstants.DRIVE_PEAK_LIMIT;
+        driveCurrLimit.SupplyCurrentLimitEnable = Constants.DrivetrainConstants.DRIVE_LIMIT_ENABLED;
+        driveCurrLimit.StatorCurrentLimitEnable = Constants.DrivetrainConstants.DRIVE_PEAK_LIMIT_ENABLED;
+        driveCurrLimit.SupplyTimeThreshold = Constants.DrivetrainConstants.DRIVE_PEAK_DURATION;
+
+        slot0Configs.kP = Constants.DrivetrainConstants.DRIVE_FPID.kP;
+        slot0Configs.kI = Constants.DrivetrainConstants.DRIVE_FPID.kI;
+        slot0Configs.kD = Constants.DrivetrainConstants.DRIVE_FPID.kD;
+        // TODO add kF limits????
+        swerveDriveFXConfig.CurrentLimits = driveCurrLimit;
+        swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.DrivetrainConstants.OPEN_LOOP_RAMP;
+        swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.DrivetrainConstants.CLOSED_LOOP_RAMP;
         
-        /* Swerve CANCoder Configuration */
+        /* Swerve CANCoder Configuration */ 
         swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        // TODO fix above if broken????
         swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.DrivetrainConstants.CANCODER_INVERTED ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
-        // swerveCanCoderConfig.MagnetSensor. = SensorInitializationStrategy.BootToAbsolutePosition;
-        // swerveCanCoderConfig.MagnetSensor. = SensorTimeBase.PerSecond;
+        // swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        // swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        // TODO fix above
     }
 }
