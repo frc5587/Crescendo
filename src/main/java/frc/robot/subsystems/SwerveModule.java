@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
-import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DrivetrainConstants;
@@ -36,7 +36,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setAngleMotorPosition(Rotation2d position) {
-        angleMotor.getPIDController().setReference(position.getRotations(), ControlType.kPosition);
+        angleMotor.setControl(new PositionDutyCycle(position.getRotations()));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.set(velocityMPS);
+        driveMotor.setControl(new VelocityDutyCycle(velocityMPS));
     }
 
     @Override
