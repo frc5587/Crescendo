@@ -80,16 +80,16 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected Rotation2d getAngleMotorEncoderPosition() {
-        return Rotation2d.fromRotations(angleMotor.getPosition());
+        return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
     }
 
     @Override
     protected Rotation2d getDriveMotorEncoderPosition() {
-        return Rotation2d.fromRotations(driveMotor.getEncoder().getPosition());
+        return Rotation2d.fromRotations(driveMotor.getPosition().getValueAsDouble());
     }
 
     @Override
     protected double getDriveMotorEncoderVelocity() {
-        return driveMotor.getEncoder().getVelocity();
+        return driveMotor.getVelocity().getValueAsDouble();
     }
 }
