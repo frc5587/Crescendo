@@ -41,12 +41,12 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setAngleMotorEncoderPosition(Rotation2d position) {
-        angleMotor.getEncoder().setPosition(position.getRotations());
+        angleMotor.setPosition(position.getRotations());
     }
 
     @Override
     protected void setDriveMotorEncoderPosition(Rotation2d position) {
-        driveMotor.getEncoder().setPosition(position.getDegrees());
+        driveMotor.setPosition(position.getDegrees());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected Rotation2d getAngleMotorEncoderPosition() {
-        return Rotation2d.fromRotations(angleMotor.getEncoder().getPosition());
+        return Rotation2d.fromRotations(angleMotor.getPosition());
     }
 
     @Override
