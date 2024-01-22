@@ -51,7 +51,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.getPIDController().setReference(velocityMPS, ControlType.kVelocity);
+        driveMotor.set(velocityMPS);
     }
 
     @Override
