@@ -36,5 +36,6 @@ public class Swerve extends SwerveBase {
                 gyro.zeroYaw();
         }
         SmartDashboard.putBoolean("Zero Yaw", false);
+        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     }
 }
