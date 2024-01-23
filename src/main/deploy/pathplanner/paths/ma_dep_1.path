@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6105853807149207,
-        "y": 7.145128364330803
+        "x": 2.119131303789673,
+        "y": 5.57
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6361634489603305,
-        "y": 7.156822518773242
+        "x": 2.1691313037896727,
+        "y": 5.57
       },
       "isLocked": false,
-      "linkedName": "aa_startpoint"
-    },
-    {
-      "anchor": {
-        "x": 1.8852482149408742,
-        "y": 5.70674736791069
-      },
-      "prevControl": {
-        "x": 2.834664484139039,
-        "y": 6.607197259978565
-      },
-      "nextControl": {
-        "x": 1.5967543595833824,
-        "y": 5.4331326539577764
-      },
-      "isLocked": false,
-      "linkedName": null
+      "linkedName": "ring2_pickup"
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 5.566417514595813
       },
       "prevControl": {
-        "x": 1.372895178829303,
-        "y": 5.589805823473763
+        "x": 1.2973171105838932,
+        "y": 5.566417514595813
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,15 +38,12 @@
     "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0.0,
+    "velocity": 0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3734660348583096,
-        "y": 5.566417514595813
+        "x": 1.3473171105886368,
+        "y": 3.7772118849081
       },
       "isLocked": false,
       "linkedName": "dep_preloaded_end"
     },
     {
       "anchor": {
-        "x": 2.0606605315774735,
-        "y": 6.981410202136645
+        "x": 2.084048840462353,
+        "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.0606605315774735,
-        "y": 6.933193968173611
+        "x": 2.0758308900398013,
+        "y": 4.153968238603511
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "pickup_1_end"
+      "linkedName": "ring3_pickup"
     }
   ],
   "rotationTargets": [],
@@ -45,5 +45,5 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
