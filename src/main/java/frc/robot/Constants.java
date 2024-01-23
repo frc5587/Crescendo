@@ -179,9 +179,7 @@ public final class Constants {
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
 
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
-    }
+
 
     public static final class LimelightConstants {
         public static final double MOUNT_ANGLE = 0;
