@@ -179,12 +179,15 @@ public final class Constants {
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
 
-
-
     public static final class LimelightConstants {
         public static final double MOUNT_ANGLE = 0;
         public static final double LENS_HEIGHT = Units.inchesToMeters(38.275); // TODO set lens height
         public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25); // TODO set goal height
         public static final double DISTANCE_OFFSET = 0;
+    }
+
+    public static final class AutoConstants {
+        public static final double MAX_SPEED_MPS = 4; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 2; // 3. // in m/s^2 
     }
 }
