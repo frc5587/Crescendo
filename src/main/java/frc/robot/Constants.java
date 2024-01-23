@@ -179,7 +179,12 @@ public final class Constants {
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
 
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
+
+
+    public static final class LimelightConstants {
+        public static final double MOUNT_ANGLE = 0;
+        public static final double LENS_HEIGHT = Units.inchesToMeters(38.275); // TODO set lens height
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25); // TODO set goal height
+        public static final double DISTANCE_OFFSET = 0;
     }
 }
