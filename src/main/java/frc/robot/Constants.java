@@ -178,13 +178,4 @@ public final class Constants {
         public static final SwerveModuleConstants[] ALL_MODULE_CONSTANTS = {Mod0.MODULE_CONSTANTS, Mod1.MODULE_CONSTANTS, Mod2.MODULE_CONSTANTS, Mod3.MODULE_CONSTANTS};
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
-
-
-
-    public static final class LimelightConstants {
-        public static final double MOUNT_ANGLE = 0;
-        public static final double LENS_HEIGHT = Units.inchesToMeters(38.275); // TODO set lens height
-        public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25); // TODO set goal height
-        public static final double DISTANCE_OFFSET = 0;
-    }
 }
