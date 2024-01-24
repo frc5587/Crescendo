@@ -18,7 +18,17 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
+    // motor ports
     public static final int LEFT_MOTOR_ID = 30;
     public static final int RIGHT_MOTOR_ID = 31;
+
+    public static final boolean RIGHT_MOTOR_INVERTED = false;
+    public static final boolean LEFT_MOTOR_INVERTED = true;
+    // motor limits
+    public static final int STALL_LIMIT = 20;
+    public static final int FREE_LIMIT = 25;
+    // motor speeds
+    public static final double FORWARD_THROTTLE = 0.75;
+    public static final double REVERSE_THROTTLE = 0.75;
   }
 }
