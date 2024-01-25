@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,9 +24,18 @@ public class RobotContainer {
   private final CommandXboxController xbox =
       new CommandXboxController(0);
 
-      private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-           () -> {return -xbox.getRightX();}, () -> true);
+  private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
+      () -> {return -xbox.getRightX();}, () -> true);
+
+  /*
+   * Auto Commands
+   */
   
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  /*
+   * Constructor
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     swerve.setDefaultCommand(driveCommand);
