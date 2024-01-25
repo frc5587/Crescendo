@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.frc5587.lib.control.DeadbandCommandXboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,11 +22,11 @@ public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
 
-  private final CommandXboxController xbox =
-      new CommandXboxController(0);
+  private final DeadbandCommandXboxController xbox =
+      new DeadbandCommandXboxController(0, 0.3);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-           () -> {return -xbox.getRightX();}, () -> true);
+           () -> {return -xbox.getRightX();}, () -> false);
   
   public RobotContainer() {
     // Configure the trigger bindings

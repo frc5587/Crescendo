@@ -33,8 +33,16 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putNumber("Gyro yaw", gyro.getYaw().getDegrees());
         SmartDashboard.putNumber("Yaw offset", gyro.getYawZeroOffset().getDegrees());
         if(SmartDashboard.getBoolean("Zero Yaw", true)) {
-                gyro.zeroYaw();
+            gyro.zeroYaw();
         }
         SmartDashboard.putBoolean("Zero Yaw", false);
+
+        for (int i = 0; i < swerveModules.length; i++) {
+            SmartDashboard.putNumber("mod "+i+"degrees", swerveModules[i].getRawAbsoluteEncoderValue().getDegrees());
+            SmartDashboard.putNumber("Adjusted absolute "+i, swerveModules[i].getAbsoluteEncoderValue().getDegrees());
+            SmartDashboard.putNumber("Motor " +i, swerveModules[i].getAngle().getDegrees());
+        }
+        
+
     }
 }

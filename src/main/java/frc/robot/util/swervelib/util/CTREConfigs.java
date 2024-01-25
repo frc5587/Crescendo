@@ -35,6 +35,7 @@ public final class CTREConfigs {
         slot0Configs.kD = Constants.DrivetrainConstants.ANGLE_FPID.kD;
         // TODO add kF limits????
         swerveAngleFXConfig.CurrentLimits = angleCurrLimit;
+        swerveAngleFXConfig.Slot0 = slot0Configs;
 
         /* Swerve Drive Motor Configuration */
         CurrentLimitsConfigs driveCurrLimit = new CurrentLimitsConfigs();
