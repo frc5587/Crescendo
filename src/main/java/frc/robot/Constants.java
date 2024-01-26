@@ -99,7 +99,7 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.02, 0.1, 0, 0);// 0.05, 0.03, 0., 0.); // //2.8884 for P
+                0.05, 0.1, 0, 0);// 0.05, 0.03, 0., 0.); // //2.8884 for P
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
