@@ -4,10 +4,17 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.frc5587.lib.control.DeadbandCommandXboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DualStickSwerve;
+import frc.robot.subsystems.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,16 +23,28 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  protected final Swerve swerve = new Swerve();
+  private final SendableChooser<Command> autoChooser;
+  private final DeadbandCommandXboxController xbox =
+      new DeadbandCommandXboxController(0, 0.3);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+      private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
+           () -> {return -xbox.getRightX();}, () -> false);
+  
+  
+
+  /*
+   * Constructor
+   */
   public RobotContainer() {
     // Configure the trigger bindings
+    swerve.setDefaultCommand(driveCommand);
     configureBindings();
+
+    // Initializing autoChooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -47,6 +66,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-return null;
+    return autoChooser.getSelected();
   }
 }
