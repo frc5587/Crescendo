@@ -16,12 +16,14 @@ import frc.robot.util.swervelib.util.CTREConfigs;
 public class SwerveModule extends SwerveModuleBase {
     private TalonFX angleMotor, driveMotor;
     private CANcoder angleEncoder;
+    private Rotation2d canCoderOffset;
     public static CTREConfigs ctreConfigs = new CTREConfigs();
-    public SwerveModule(SwerveModuleConstants moduleConstants, TalonFX driveMotor, TalonFX angleMotor, CANcoder angleEncoder) {
+    public SwerveModule(SwerveModuleConstants moduleConstants, TalonFX driveMotor, TalonFX angleMotor, CANcoder angleEncoder, Rotation2d canCoderOffset) {
         super(moduleConstants, angleMotor, driveMotor);
         this.angleMotor = angleMotor;
         this.driveMotor = driveMotor;
         this.angleEncoder = angleEncoder;
+        this.canCoderOffset = canCoderOffset;
         configureAngleEncoder();
         configureAngleMotor();
         configureDriveMotor();
@@ -55,7 +57,7 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected void configureAngleEncoder() {
         angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
-        angleEncoder.getConfigurator().apply(DrivetrainConstants.CANCODER_CONFIG);
+        angleEncoder.getConfigurator().apply(DrivetrainConstants.CANCODER_CONFIG.withMagnetOffset(canCoderOffset.getRotations()));
     }
 
     @Override

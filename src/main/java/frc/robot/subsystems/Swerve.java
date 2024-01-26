@@ -11,13 +11,13 @@ import frc.robot.Constants.DrivetrainConstants;
 public class Swerve extends SwerveBase {
      private static SwerveModule[] swerveModules = {
             new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, ""),
-                    new TalonFX(15, ""), new CANcoder(50)),
+                    new TalonFX(15, ""), new CANcoder(50), DrivetrainConstants.Mod0.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, ""),
-                    new TalonFX(16, ""), new CANcoder(51)),
+                    new TalonFX(16, ""), new CANcoder(51), DrivetrainConstants.Mod1.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, ""),
-                    new TalonFX(17, ""), new CANcoder(52)),
+                    new TalonFX(17, ""), new CANcoder(52), DrivetrainConstants.Mod2.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, ""),
-                    new TalonFX(18, ""), new CANcoder(53))
+                    new TalonFX(18, ""), new CANcoder(53), DrivetrainConstants.Mod3.ANGLE_OFFSET)
     };
 
     public Swerve() {
