@@ -9,7 +9,6 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
@@ -18,13 +17,13 @@ import frc.robot.Constants.DrivetrainConstants;
 public class Swerve extends SwerveBase {
      private static SwerveModule[] swerveModules = {
             new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, "canivore"),
-                    new TalonFX(15, "canivore"), new CANcoder(50)),
+                    new TalonFX(15, "canivore"), new CANcoder(50, "canivore"), DrivetrainConstants.Mod0.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, "canivore"),
-                    new TalonFX(16, "canivore"), new CANcoder(51)),
+                    new TalonFX(16, "canivore"), new CANcoder(51, "canivore"), DrivetrainConstants.Mod1.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, "canivore"),
-                    new TalonFX(17, "canivore"), new CANcoder(52)),
+                    new TalonFX(17, "canivore"), new CANcoder(52, "canivore"), DrivetrainConstants.Mod2.ANGLE_OFFSET),
             new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, "canivore"),
-                    new TalonFX(18, "canivore"), new CANcoder(53))
+                    new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
     };
 
    
@@ -60,9 +59,7 @@ public class Swerve extends SwerveBase {
         );
     }
 
-    public ChassisSpeeds getChassisSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
-    }
+ 
     
     @Override
     public void periodic() {
@@ -73,9 +70,17 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putNumber("Gyro yaw", gyro.getYaw().getDegrees());
         SmartDashboard.putNumber("Yaw offset", gyro.getYawZeroOffset().getDegrees());
         if(SmartDashboard.getBoolean("Zero Yaw", true)) {
-                gyro.zeroYaw();
+            gyro.zeroYaw();
         }
         SmartDashboard.putBoolean("Zero Yaw", false);
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+
+        for (int i = 0; i < swerveModules.length; i++) {
+            SmartDashboard.putNumber("mod "+i+"degrees", swerveModules[i].getRawAbsoluteEncoderValue().getDegrees());
+            SmartDashboard.putNumber("Adjusted absolute "+i, swerveModules[i].getAbsoluteEncoderValue().getDegrees());
+            SmartDashboard.putNumber("Motor " +i, swerveModules[i].getAngle().getDegrees());
+        }
+        
+
     }
 }
