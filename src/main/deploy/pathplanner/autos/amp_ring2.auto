@@ -16,6 +16,24 @@
           "data": {
             "pathName": "amp_dep_preloaded"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_dep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_crossline"
+          }
         }
       ]
     }

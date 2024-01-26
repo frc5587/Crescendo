@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,18 +23,14 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
-
+  private final SendableChooser<Command> autoChooser;
   private final CommandXboxController xbox =
       new CommandXboxController(0);
 
   private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
       () -> {return -xbox.getRightX();}, () -> true);
-
-  /*
-   * Auto Commands
-   */
   
-  SendableChooser<Command> autoChooser = new SendableChooser<>();
+  
 
   /*
    * Constructor
@@ -40,6 +39,10 @@ public class RobotContainer {
     // Configure the trigger bindings
     swerve.setDefaultCommand(driveCommand);
     configureBindings();
+
+    // auto stuff
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -61,6 +64,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }
