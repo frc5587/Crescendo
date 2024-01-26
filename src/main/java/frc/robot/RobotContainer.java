@@ -40,7 +40,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(driveCommand);
     configureBindings();
 
-    // auto stuff
+    // Initializing autoChooser
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
