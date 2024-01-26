@@ -193,11 +193,11 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = 0;
+        public static final double ROTATION_KP = 5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 0;
+        public static final double TRANSLATION_KP = 5;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 

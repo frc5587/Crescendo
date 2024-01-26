@@ -13,7 +13,7 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANcoderConfiguration swerveCanCoderConfig;
-    public Slot0Configs slot0Configs;
+    public Slot0Configs slot0Configs = new Slot0Configs();
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();

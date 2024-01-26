@@ -16,7 +16,7 @@ import frc.robot.util.swervelib.util.CTREConfigs;
 public class SwerveModule extends SwerveModuleBase {
     private TalonFX angleMotor, driveMotor;
     private CANcoder angleEncoder;
-    public static CTREConfigs ctreConfigs;
+    public static CTREConfigs ctreConfigs = new CTREConfigs();
     public SwerveModule(SwerveModuleConstants moduleConstants, TalonFX driveMotor, TalonFX angleMotor, CANcoder angleEncoder) {
         super(moduleConstants, angleMotor, driveMotor);
         this.angleMotor = angleMotor;
@@ -26,7 +26,6 @@ public class SwerveModule extends SwerveModuleBase {
         configureAngleMotor();
         configureDriveMotor();
 
-        ctreConfigs = new CTREConfigs();
     }
 
     @Override
