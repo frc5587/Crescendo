@@ -99,7 +99,7 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.05, 0.1, 0, 0);// 0.05, 0.03, 0., 0.); // //2.8884 for P
+                0.05, 0, 0, 0);// 0.05, 0.03, 0., 0.); // //2.8884 for P
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -118,7 +118,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 2.5;// 5.;
+        public static final double MAX_SPEED = 0.5;// 5.;
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = Math.PI;// 6.;
 
@@ -188,20 +188,20 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
-        public static final double MAX_ACCEL_MPS_2 = 2; // 3. // in m/s^2 
-        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
-        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
+        public static final double MAX_ACCEL_MPS_2 = 0.25; // 3. // in m/s^2 
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4.; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = 0.5;
+        public static final double ROTATION_KP = 0.05;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 0.5;
+        public static final double TRANSLATION_KP = 0.05;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 
-        public static final double DRIVE_BASE_RADIUS = 0.34;
+        public static final double DRIVE_BASE_RADIUS = 0.47;
         
     }
 }

@@ -33,7 +33,7 @@ public class Swerve extends SwerveBase {
 
         // Auto Config
             AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
+                this::getOdometryPose, // Robot pose supplier
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -80,7 +80,7 @@ public class Swerve extends SwerveBase {
             SmartDashboard.putNumber("Adjusted absolute "+i, swerveModules[i].getAbsoluteEncoderValue().getDegrees());
             SmartDashboard.putNumber("Motor " +i, swerveModules[i].getAngle().getDegrees());
         }
-        
+        SmartDashboard.putData("Field", field);
 
     }
 }
