@@ -180,10 +180,10 @@ public final class Constants {
     }
 
     public static final class LimelightConstants {
-        public static final double MOUNT_ANGLE = 0;
-        public static final double LENS_HEIGHT = Units.inchesToMeters(38.275); // TODO set lens height
-        public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25); // TODO set goal height
-        public static final double DISTANCE_OFFSET = 0;
+        public static final double MOUNT_ANGLE = 30;
+        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
+        public static final double DISTANCE_OFFSET = 0; // not needed
     }
 
     public static final class AutoConstants {
