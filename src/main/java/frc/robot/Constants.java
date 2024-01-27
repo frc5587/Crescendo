@@ -16,4 +16,15 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static final class IntakeConstants {
+    public static final int MOTOR_ID = 40;
+    public static final boolean MOTOR_INVERTED = false;
+
+    public static final int STALL_LIMIT = 20;
+    public static final int FREE_LIMIT = 25;
+
+    public static final double FORWARD_THROTTLE = 0.75;
+    public static final double REVERSE_THROTTLE = 0.75;
+  }
 }
