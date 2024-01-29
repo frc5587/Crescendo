@@ -8,18 +8,17 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SimpleMotorBase {
-    private static CANSparkMax Motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
+    private static CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
  
     
     public Intake() {
-        super(Motor, IntakeConstants.FORWARD_THROTTLE, IntakeConstants.REVERSE_THROTTLE);
+        super(motor, IntakeConstants.FORWARD_THROTTLE, IntakeConstants.REVERSE_THROTTLE);
     }
 
     @Override
     public void configureMotors() {
-        Motor.restoreFactoryDefaults();
-        Motor.setInverted(IntakeConstants.MOTOR_INVERTED);
-        Motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
-       
+        motor.restoreFactoryDefaults();
+        motor.setInverted(IntakeConstants.MOTOR_INVERTED);
+        motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
     }
 }
