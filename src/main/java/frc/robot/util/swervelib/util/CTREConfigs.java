@@ -34,7 +34,6 @@ public final class CTREConfigs {
         angleSlot0Configs.kP = Constants.DrivetrainConstants.ANGLE_FPID.kP;
         angleSlot0Configs.kI = Constants.DrivetrainConstants.ANGLE_FPID.kI;
         angleSlot0Configs.kD = Constants.DrivetrainConstants.ANGLE_FPID.kD;
-        // TODO add kF limits????
         swerveAngleFXConfig.CurrentLimits = angleCurrLimit;
         swerveAngleFXConfig.Slot0 = angleSlot0Configs;
 
@@ -50,7 +49,6 @@ public final class CTREConfigs {
         driveSlot0Configs.kP = Constants.DrivetrainConstants.DRIVE_FPID.kP;
         driveSlot0Configs.kI = Constants.DrivetrainConstants.DRIVE_FPID.kI;
         driveSlot0Configs.kD = Constants.DrivetrainConstants.DRIVE_FPID.kD;
-        // TODO add kF limits????
         swerveDriveFXConfig.CurrentLimits = driveCurrLimit;
         swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.DrivetrainConstants.OPEN_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.DrivetrainConstants.CLOSED_LOOP_RAMP;
@@ -58,10 +56,6 @@ public final class CTREConfigs {
         
         /* Swerve CANCoder Configuration */ 
         swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-        // TODO fix above if broken????
         swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.DrivetrainConstants.CANCODER_INVERTED ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
-        // swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        // swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        // TODO fix above
     }
 }
