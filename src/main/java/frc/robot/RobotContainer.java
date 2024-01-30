@@ -26,7 +26,7 @@ public class RobotContainer {
       new DeadbandCommandXboxController(0, 0.3);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-           () -> {return -xbox.getRightX();}, () -> false);
+           () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
   
   public RobotContainer() {
     // Configure the trigger bindings

@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -56,13 +54,11 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void configureAngleEncoder() {
-        angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
         angleEncoder.getConfigurator().apply(DrivetrainConstants.CANCODER_CONFIG.withMagnetOffset(canCoderOffset.getRotations()));
     }
 
     @Override
     protected void configureAngleMotor() {
-        angleMotor.getConfigurator().apply(new TalonFXConfiguration());
         angleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
         angleMotor.setInverted(DrivetrainConstants.ANGLE_MOTOR_INVERTED);
         angleMotor.setNeutralMode(DrivetrainConstants.ANGLE_NEUTRAL_MODE);
@@ -71,7 +67,6 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void configureDriveMotor() {
-        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
         driveMotor.getConfigurator().apply(ctreConfigs.swerveDriveFXConfig);
         driveMotor.setInverted(DrivetrainConstants.DRIVE_MOTOR_INVERTED);
         driveMotor.setNeutralMode(DrivetrainConstants.DRIVE_NEUTRAL_MODE);

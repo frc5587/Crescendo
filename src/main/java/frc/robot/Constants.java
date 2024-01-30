@@ -41,8 +41,8 @@ public final class Constants {
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22.5); // distance from left wheel to right wheel
-        public static final double WHEEL_BASE = Units.inchesToMeters(22.5); // distance from front wheel to back wheel
+        public static final double TRACK_WIDTH = Units.inchesToMeters(27); // distance from left wheel to right wheel
+        public static final double WHEEL_BASE = Units.inchesToMeters(27); // distance from front wheel to back wheel
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /*
@@ -79,12 +79,11 @@ public final class Constants {
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
         public static final boolean DRIVE_PEAK_LIMIT_ENABLED = true;
-        public static final int RUMBLE_THRESHOLD = 35;
 
-        public static final double SLEW_RATE = 3; // m/s^2 //
+        public static final double SLEW_RATE = 3; // m/s^2
 
-        public static final int ANGLE_CONT_LIMIT = 25;
-        public static final int ANGLE_PEAK_LIMIT = 40;
+        public static final int ANGLE_CONT_LIMIT = 30;
+        public static final int ANGLE_PEAK_LIMIT = 35;
         public static final double ANGLE_PEAK_DURATION = 0.1;
         public static final boolean ANGLE_LIMIT_ENABLED = true;
         public static final boolean ANGLE_PEAK_LIMIT_ENABLED = true;
@@ -95,32 +94,30 @@ public final class Constants {
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
          */
         public static final double OPEN_LOOP_RAMP = 0.25;
-        public static final double CLOSED_LOOP_RAMP = 0.0;
+        public static final double CLOSED_LOOP_RAMP = 0.25;
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.02, 0.1, 0, 0);// 0.05, 0.03, 0., 0.); // //2.8884 for P
+                0.02, 0.1, 0, 0);
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
-                CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD); // 0.05
+                CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD);
 
         /*
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        // COMMENTED VALS IN () ARE FROM BASEFALCONSWERVE, OTHER COMMENTED VALS ARE
-        // SYSID, USED VALS ARE FROM FRESTA
-        public static final double DRIVE_KS = (0.32 / 12);// .18576/12; // 0.23034/12; ;
-        public static final double DRIVE_KV = (1.51 / 12);// 2.3317/12; // 2.6998/12; // ;
-        public static final double DRIVE_KA = (0.27 / 12);// 0.25916/12; // 0.29868/12; //
+        public static final double DRIVE_KS = (0.32 / 12);
+        public static final double DRIVE_KV = (1.51 / 12);
+        public static final double DRIVE_KA = (0.27 / 12);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 2.5;// 5.;
+        public static final double MAX_SPEED = 5;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI;// 6.;
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI;
 
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;

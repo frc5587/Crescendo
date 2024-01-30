@@ -4,7 +4,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Swerve;
@@ -28,10 +27,6 @@ public class DualStickSwerve extends Command {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("TranslationSupplier", translationSup.getAsDouble());
-        SmartDashboard.putNumber("StrafeSupplier", strafeSup.getAsDouble());
-        SmartDashboard.putNumber("RotationSupplier", rotationSup.getAsDouble());
-        
         Translation2d translation = new Translation2d(translationSup.getAsDouble(), -strafeSup.getAsDouble()).times(DrivetrainConstants.MAX_SPEED);
         double rotation = rotationSup.getAsDouble() * DrivetrainConstants.MAX_ANGULAR_VELOCITY;
         
