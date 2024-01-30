@@ -23,7 +23,7 @@ public class RobotContainer {
   protected final Swerve swerve = new Swerve();
 
   private final DeadbandCommandXboxController xbox =
-      new DeadbandCommandXboxController(0, 0.3);
+      new DeadbandCommandXboxController(0);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
            () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
