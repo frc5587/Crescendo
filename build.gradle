@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "edu.wpi.first.GradleRIO" version "2024.2.1"
 }
 
 java {
@@ -58,7 +58,7 @@ repositories {
 
 dependencies {
     
-    implementation 'org.frc5587:TitanLib:2024-SNAPSHOT'
+    implementation 'org.frc5587:TitanLib:swerve-SNAPSHOT'
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
