@@ -8,10 +8,7 @@ import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 
-import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,7 +35,7 @@ public final class Constants {
         public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
-            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
+            COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(27); // distance from left wheel to right wheel
@@ -68,10 +65,6 @@ public final class Constants {
 
         /* Angle Encoder Invert */
         public static final boolean CANCODER_INVERTED = CHOSEN_MODULE.canCoderInvert;
-        public static final MagnetSensorConfigs CANCODER_CONFIG = new MagnetSensorConfigs()
-                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                .withSensorDirection(CANCODER_INVERTED ? SensorDirectionValue.Clockwise_Positive
-                    : SensorDirectionValue.CounterClockwise_Positive);
 
         /* Swerve Current Limiting */
         public static final int DRIVE_CONT_LIMIT = 35;

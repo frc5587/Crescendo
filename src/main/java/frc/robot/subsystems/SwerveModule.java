@@ -55,7 +55,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void configureAngleEncoder() {
-        angleEncoder.getConfigurator().apply(DrivetrainConstants.CANCODER_CONFIG.withMagnetOffset(canCoderOffset.getRotations()));
+        angleEncoder.getConfigurator().apply(ctreConfigs.swerveCanCoderConfig.MagnetSensor.withMagnetOffset(canCoderOffset.getRotations()));
     }
 
     @Override
