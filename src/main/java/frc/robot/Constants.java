@@ -4,19 +4,21 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -219,6 +221,13 @@ public final class Constants {
         public static final double TRANSLATION_KD = 0;
 
         public static final double DRIVE_BASE_RADIUS = 0.47;
+    }
+
+    public static final class FieldConstants {
+        public static final Translation3d BLUE_SPEAKER_OPENING_TRANSLATION = new Translation3d(0, 9.406, 3.267);
+        public static final Pose2d BLUE_SUBWOOFER_FRONT_POSE = new Pose2d(0.92, 9.406, new Rotation2d());
         
+        public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 9.406, 3.267);
+        public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(24.2143, 9.406, new Rotation2d());
     }
 }

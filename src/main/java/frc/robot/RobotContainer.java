@@ -52,7 +52,7 @@ public class RobotContainer {
             () -> xbox.getRawAxis(0),
             () -> -xbox.getRawAxis(2), () -> xbox.rightBumper().negate().getAsBoolean());
 
-    private final PositionArm positionArm = new PositionArm(arm, swerve::getPose);
+    private final PositionArm positionArm = new PositionArm(arm, simSwerve::getPose);
 
     /*
      * Constructor
@@ -61,7 +61,7 @@ public class RobotContainer {
         // Configure the trigger bindings
         swerve.setDefaultCommand(driveCommand);
         simSwerve.setDefaultCommand(simDriveCommand);
-        // arm.setDefaultCommand(positionArm);
+        arm.setDefaultCommand(positionArm);
         configureBindings();
 
         // Initializing autoChooser

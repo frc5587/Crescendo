@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ public class Arm extends PivotingArmBase {
     private final DigitalInput frontLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[0]);
     private final DigitalInput rearLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[1]);
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
+    private State lastGoal = new State();
     private Pose3d armPose = new Pose3d();
 
     public static PivotingArmConstants constants = new PivotingArmConstants(
@@ -41,7 +43,7 @@ public class Arm extends PivotingArmBase {
         resetEncoders();
         setGoal(0);
         // throughBore.setDutyCycleRange(1./1024., 1023./1024.); placeholder values
-
+        this.lastGoal = this.getController().getGoal();
     }
 
     public Arm() {
@@ -112,6 +114,7 @@ public class Arm extends PivotingArmBase {
             this.disable();
             this.stop();
         }
+
     }
 
     @Override
