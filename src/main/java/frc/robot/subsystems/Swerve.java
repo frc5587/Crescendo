@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
 import org.frc5587.lib.subsystems.SwerveBase;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DrivetrainConstants;
 
@@ -25,6 +27,12 @@ public class Swerve extends SwerveBase {
     }
 
     @Override
+    public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
+        super.setModuleStates(desiredStates, isOpenLoop);
+        Logger.recordOutput("Desired States", desiredStates);
+    }
+
+    @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("Gyro yaw", gyro.getYaw().getDegrees());
@@ -40,6 +48,8 @@ public class Swerve extends SwerveBase {
             SmartDashboard.putNumber("Motor " +i, swerveModules[i].getAngle().getDegrees());
         }
         
-
+        SmartDashboard.putData("field", field);
+        Logger.recordOutput("Swerve States", getModuleStates());
+        Logger.recordOutput("Swerve Orientation", getPose().getRotation());
     }
 }

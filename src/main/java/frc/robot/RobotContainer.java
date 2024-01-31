@@ -7,9 +7,13 @@ package frc.robot;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.PositionArm;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -21,16 +25,20 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
+  protected final Arm arm = new Arm();
 
   private final DeadbandCommandXboxController xbox =
       new DeadbandCommandXboxController(0);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
            () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
+
+      private final PositionArm positionArm = new PositionArm(arm, swerve::getPose);
   
   public RobotContainer() {
     // Configure the trigger bindings
     swerve.setDefaultCommand(driveCommand);
+    // arm.setDefaultCommand(positionArm);
     configureBindings();
   }
 
@@ -44,7 +52,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
+    xbox.a().onTrue(new InstantCommand(arm::ArmSpeaker));
+    xbox.y().onTrue(new InstantCommand(arm::ArmRest));
   }
 
   /**
