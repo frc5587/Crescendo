@@ -11,7 +11,10 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -29,6 +32,20 @@ public class Swerve extends SwerveBase {
     };
 
    
+    private final FlywheelSim sAngleMotor = new FlywheelSim(
+            // LinearSystemId.identifyVelocitySystem(kvVoltSecondsPerRadian,
+            // kaVoltSecondsSquaredPerRadian),
+            // LinearSystemId.identifyVelocitySystem(1.47, 0.0348),
+            LinearSystemId.identifyVelocitySystem(0.16, 0.0917),
+            DCMotor.getFalcon500(1),
+            DrivetrainConstants.ANGLE_GEAR_RATIO);
+
+    private final FlywheelSim sDriveMotor = new FlywheelSim(
+            // LinearSystemId.identifyVelocitySystem(Constants.DriveConstants.kvVoltSecondsPerMeter,
+            // Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
+            LinearSystemId.identifyVelocitySystem(2, 1.24),
+            DCMotor.getFalcon500(1),
+            DrivetrainConstants.DRIVE_GEAR_RATIO);
 
     public Swerve() {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
