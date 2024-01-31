@@ -1,166 +1,112 @@
-
 package frc.robot.subsystems;
 
-import org.frc5587.lib.subsystems.PivotingArmBase;
-
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
+import org.frc5587.lib.subsystems.PivotingArmBase;
 
-public abstract class Arm extends PivotingArmBase {
-    
-    private static CANSparkMax LEADER = new CANSparkMax(ArmConstants.LEADER_MOTOR, MotorType.kBrushless);
-    private static CANSparkMax FOLLOWER = new CANSparkMax(ArmConstants.FOLLOWER_MOTOR, MotorType.kBrushless);
-    /**
-     * @param subsystemName
-     * @param constants
-     * @param motor
-     */
-    public Arm(String subsystemName, PivotingArmConstants constants, MotorController motor) {
-        super(constants.pid);
-        this.constants = constants;
-        this.motor = motor;
-        this.pidController = getController();
-        this.subsystemName = subsystemName;
-        this.ffController = constants.ff;
+public class Arm extends PivotingArmBase {
+ public static CANSparkMax leftMotor = new CANSparkMax(ArmConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+ public static CANSparkMax rightMotor = new CANSparkMax(ArmConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);  
+
+ private final DigitalInput frontLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[0]);
+ private final DigitalInput rearLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[1]);
+ private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
+
+
+ public static PivotingArmConstants constants = new PivotingArmConstants (
+        ArmConstants.GEARING,
+        1,
+        0,
+        ArmConstants.SOFT_LIMITS,
+        (int) ArmConstants.ZERO_OFFSET,
+        ArmConstants.ENCODER_CPR,
+        ArmConstants.PID,
+        ArmConstants.FF
         
-        SmartDashboard.putBoolean(subsystemName + " Output On?", true);
-    }
+ );
 
-    /**
-     * Sets the motors to a percent output
-     * 
-     * @param value the percent output to set the motors to (a double -1 to 1)
-     */
-    public void set(double throttle) {
-        motor.set(throttle);
-    }
+ public Arm(CANSparkMax leftMotor, CANSparkMax rightMotor) {
+    super("arm", constants, leftMotor); 
+    enable();
+    resetEncoders();
+    setGoal(0);
+    // throughBore.setDutyCycleRange(1./1024., 1023./1024.); placeholder values
 
-    /**
-     * Moves the motors by voltage instead of percent output
-     * 
-     * @param voltage the voltage to set the motors to (a double -12 to 12)
-     */
-    public void setVoltage(double voltage) {
-        motor.setVoltage(voltage);
-    }
+ }
 
-    /* CALCULATIONS AND UTIL */
-    /* The implementing class needs to handle encoders for us as we don't know what type the arm is using */
-    /** @return the encoder's position */
-    public abstract double getEncoderPosition();
-
-    /** @return the encoder's velocity */
-    public abstract double getEncoderVelocity();
-
-    /** @param position the position to set the encoder to */
-    public abstract void setEncoderPosition(double position);
-
-    /**
-     * Configure the motors. This should handle things like reversal,
-     * idle mode, motor sensor ports, etc.
-     */
-    public abstract void configureMotors();
-
-    /**
-     * @param value value to divide by the gearing set in constants
-     */
-    public double applyGearing(double value) {
-        return value / constants.gearing;
-    }
-
-    /**
-     * @param value value to divide by the encoder counts per revolution set in constants
-     */
-    public double applyCPR(double value) {
-        return value / constants.encoderCPR;
-    }
-
-    /**
-     * @return the position of the subsystem in rotations,
-     *         accounting for gearing and encoder counts per revolution.
-     */
-    public double getRotations() {
-        return applyCPR(applyGearing(getEncoderPosition()));
-        // return applyCPR(getEncoderPosition());
-    }
-
-    /**
-     * @return the velocity of the subsystem (in RPS),
-     *         accounting for encoderCPR and gearing.
-     */
-    public double getRotationsPerSecond() {
-        return applyCPR(applyGearing(getEncoderVelocity()));
-    }
-
-    /**
-     * @return The arm's angle in radians
-     */
-    @Override
-    public double getMeasurement() {
-        return getRotations() * 2 * Math.PI;
-    }
-
-    /**
-    * @return the angle of the arm in degrees
-    */
-    public double getAngleDegrees() {
-        return getRotations() * 360;
-    }
-
-    /**
-    * @return the angle of the arm in radians
-    */
-    public double getAngleRadians() {
-        return Units.degreesToRadians(getAngleDegrees());
-    }
-
-    /**
-     * @param ticks the number of encoder ticks to convert to radians
-     * @return the number of radians corresponding to the encoder ticks
-     */
-    public double encoderTicksToRadians(double ticks) {
-        return applyCPR(applyGearing(ticks)) * 2 * Math.PI;
-    }
-
-    /**
-     * @param radians the number of radians to convert to encoder ticks
-     * @return the number of encoder ticks corresponding to radians
-     */
-    public int radiansToEncoderTicks(double radians) {
-        return Math.round((float) ((radians * constants.gearing * constants.encoderCPR) / 2 / Math.PI));
-    }
-
-    /**
-     * Sets encoders back to the zero offset of the subsystem.
-     */
-    public void resetEncoders() {
-        setEncoderPosition(constants.zeroOffset);
-    }
-
-    /**
-    * Stops the MotorControllerGroup
-    */
-    public void stop() {
-        motor.set(0);
-    }
-    @Override
-    public void useOutput(double output, TrapezoidProfile.State setpoint) {
-        double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
-        
-        /** if the driver has set output on, useOutput. */
-        if(SmartDashboard.getBoolean(subsystemName + " Output On?", true)) {
-            setVoltage(output + ff);
-        }
-        /** otherwise, set output to 0 */
-        else {
-            setVoltage(0);
-        }
-    }
+ public DigitalInput getFrontLimitSwitch() { 
+    return frontLimitSwitch;
+ }
+ 
+ public DigitalInput getRearLimitSwitch() { 
+    return rearLimitSwitch; 
+}
+@Override
+public double getEncoderPosition() {
+    return leftMotor.getEncoder().getPosition(); 
 }
 
+
+@Override
+public double getEncoderVelocity() {
+    return leftMotor.getEncoder().getVelocity(); 
+}
+
+
+@Override
+public void setEncoderPosition(double position) {
+    leftMotor.getEncoder().setPosition(position);
+}
+
+
+@Override
+public void configureMotors() {
+    leftMotor.restoreFactoryDefaults();
+    rightMotor.restoreFactoryDefaults();
+
+    leftMotor.setIdleMode(IdleMode.kBrake);
+    rightMotor.setIdleMode(IdleMode.kBrake);
+
+    leftMotor.setInverted(ArmConstants.LEFT_MOTOR_INVERTED);
+    rightMotor.setInverted(ArmConstants.RIGHT_MOTOR_INVERTED);
+
+    leftMotor.setSmartCurrentLimit(ArmConstants.STALL_LIMIT, ArmConstants.FREE_LIMIT);
+    rightMotor.setSmartCurrentLimit(ArmConstants.STALL_LIMIT, ArmConstants.FREE_LIMIT);
+
+    rightMotor.follow(leftMotor);
+}
+
+    public void ArmSpeaker() {
+        setGoal(ArmConstants.SPEAKER_SETPOINT);
+    }
+
+    public void ArmAmp() {
+        setGoal(ArmConstants.AMP_SETPOINT);
+    }
+
+    public void ArmRest() {
+        setGoal(ArmConstants.RESTING_SETPOINT);
+    }
+
+ @Override
+    public void periodic() {
+        super.periodic();
+        if(SmartDashboard.getBoolean("Reset Encoders", false)) {
+            resetEncoders();
+        }
+        SmartDashboard.putBoolean("Reset Encoders", false);
+
+        if(!throughBore.isConnected()) {
+            this.disable();
+         this.stop();
+     }
+    }
+
+
+}
