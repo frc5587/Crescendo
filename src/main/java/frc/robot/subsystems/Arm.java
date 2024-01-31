@@ -3,15 +3,24 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
-import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
-import frc.robot.util.swervelib.util.SwerveModuleConstants;
-import frc.robot.util.titanlib.PivotingArmBase.PivotingArmConstants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
 
 public abstract class Arm extends PivotingArmBase {
-
+    
+    private static CANSparkMax LEADER = new CANSparkMax(ArmConstants.LEADER_MOTOR, MotorType.kBrushless);
+    private static CANSparkMax FOLLOWER = new CANSparkMax(ArmConstants.FOLLOWER_MOTOR, MotorType.kBrushless);
+    /**
+     * @param subsystemName
+     * @param constants
+     * @param motor
+     */
     public Arm(String subsystemName, PivotingArmConstants constants, MotorController motor) {
         super(constants.pid);
         this.constants = constants;
@@ -140,4 +149,18 @@ public abstract class Arm extends PivotingArmBase {
     public void stop() {
         motor.set(0);
     }
+    @Override
+    public void useOutput(double output, TrapezoidProfile.State setpoint) {
+        double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
+        
+        /** if the driver has set output on, useOutput. */
+        if(SmartDashboard.getBoolean(subsystemName + " Output On?", true)) {
+            setVoltage(output + ff);
+        }
+        /** otherwise, set output to 0 */
+        else {
+            setVoltage(0);
+        }
+    }
 }
+
