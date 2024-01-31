@@ -5,9 +5,15 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Swerve extends SwerveBase {
@@ -22,10 +28,41 @@ public class Swerve extends SwerveBase {
                     new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
     };
 
+   
+
     public Swerve() {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
+
+        // Auto Config
+            AutoBuilder.configureHolonomic(
+                this::getOdometryPose, // Robot pose supplier
+                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants TODO set
+                        new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
+                        AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
+                        AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
     }
 
+ 
+    
     @Override
     public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
         super.setModuleStates(desiredStates, isOpenLoop);
@@ -41,6 +78,7 @@ public class Swerve extends SwerveBase {
             gyro.zeroYaw();
         }
         SmartDashboard.putBoolean("Zero Yaw", false);
+        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 
         for (int i = 0; i < swerveModules.length; i++) {
             SmartDashboard.putNumber("mod "+i+"degrees", swerveModules[i].getRawAbsoluteEncoderValue().getDegrees());

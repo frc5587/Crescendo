@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.61,
+      "y": 7.15
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp_dep_preloaded"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_dep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_crossline"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

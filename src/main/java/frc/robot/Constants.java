@@ -195,4 +195,30 @@ public final class Constants {
         public static final SwerveModuleConstants[] ALL_MODULE_CONSTANTS = {Mod0.MODULE_CONSTANTS, Mod1.MODULE_CONSTANTS, Mod2.MODULE_CONSTANTS, Mod3.MODULE_CONSTANTS};
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
+
+    public static final class LimelightConstants {
+        public static final double MOUNT_ANGLE = 30;
+        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
+        public static final double DISTANCE_OFFSET = 0; // not needed
+    }
+
+    public static final class AutoConstants {
+        public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 0.25; // 3. // in m/s^2 
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4.; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
+
+        // TODO set rotation + translation PID values
+        public static final double ROTATION_KP = 0.05;
+        public static final double ROTATION_KI = 0;
+        public static final double ROTATION_KD = 0;
+
+        public static final double TRANSLATION_KP = 0.05;
+        public static final double TRANSLATION_KI = 0;
+        public static final double TRANSLATION_KD = 0;
+
+        public static final double DRIVE_BASE_RADIUS = 0.47;
+        
+    }
 }

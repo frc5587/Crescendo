@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +31,7 @@ public class RobotContainer {
   protected final Swerve swerve = new Swerve();
   protected final Arm arm = new Arm();
 
+  private final SendableChooser<Command> autoChooser;
   private final DeadbandCommandXboxController xbox =
       new DeadbandCommandXboxController(0);
 
@@ -35,11 +40,20 @@ public class RobotContainer {
 
       private final PositionArm positionArm = new PositionArm(arm, swerve::getPose);
   
+  
+
+  /*
+   * Constructor
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     swerve.setDefaultCommand(driveCommand);
     // arm.setDefaultCommand(positionArm);
     configureBindings();
+
+    // Initializing autoChooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -62,6 +76,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-return null;
+    return autoChooser.getSelected();
   }
 }
