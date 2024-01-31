@@ -36,7 +36,7 @@ public class Arm extends PivotingArmBase {
     enable();
     resetEncoders();
     setGoal(0);
-    // throughBore.setDutyCycleRange(1./1024., 1023./1024.); placeholder values
+    throughBore.setDutyCycleRange(1.0/1024.0, 1023.0/1024.0); //placeholder values
 
  }
 
