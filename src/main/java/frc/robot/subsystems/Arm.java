@@ -109,4 +109,11 @@ public void configureMotors() {
     }
 
 
+    public double setAbsolutePosition(){
+        return throughBore.get();
+    }
+    public void zeroThroughBore(){
+        double absolutePosition = setAbsolutePosition();
+        throughBore.setPositionOffset(absolutePosition);
+    }
 }
