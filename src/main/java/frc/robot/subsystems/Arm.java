@@ -108,12 +108,11 @@ public void configureMotors() {
      }
     }
 
-
-    public double setAbsolutePosition(){
+    public double getAbsolutePosition(){
         return throughBore.get();
     }
     public void zeroThroughBore(){
-        double absolutePosition = setAbsolutePosition();
+        double absolutePosition = getAbsolutePosition();
         throughBore.setPositionOffset(absolutePosition);
     }
 }
