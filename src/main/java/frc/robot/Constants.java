@@ -43,8 +43,8 @@ public final class Constants {
     
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Math.toRadians(40);
-    public static final double AMP_SETPOINT = Math.toRadians(-10);
-    public static final double RESTING_SETPOINT = Math.toRadians(0);
+    public static final double AMP_SETPOINT = Math.toRadians(7);
+    public static final double RESTING_SETPOINT = Math.toRadians(70);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 24./16.;
