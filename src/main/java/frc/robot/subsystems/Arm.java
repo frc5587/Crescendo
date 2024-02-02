@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import org.frc5587.lib.subsystems.PivotingArmBase;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
-import org.frc5587.lib.subsystems.PivotingArmBase;
 
 public class Arm extends PivotingArmBase {
- public static CANSparkMax leftMotor = new CANSparkMax(ArmConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
- public static CANSparkMax rightMotor = new CANSparkMax(ArmConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);  
+    private static TalonFX rightMotor = new TalonFX(ArmConstants.RIGHT_MOTOR_ID);
+    private static TalonFX leftMotor = new TalonFX(ArmConstants.LEFT_MOTOR_ID);
+    
 
  private final DigitalInput frontLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[0]);
  private final DigitalInput rearLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[1]);
@@ -31,7 +34,7 @@ public class Arm extends PivotingArmBase {
         
  );
 
- public Arm(CANSparkMax leftMotor, CANSparkMax rightMotor) {
+ public Arm(TalonFX leftMotor, TalonFX rightMotor) {
     super("arm", constants, leftMotor); 
     enable();
     resetEncoders();
@@ -49,37 +52,37 @@ public class Arm extends PivotingArmBase {
 }
 @Override
 public double getEncoderPosition() {
-    return leftMotor.getEncoder().getPosition(); 
+    return leftMotor.getPosition().getValueAsDouble(); 
 }
 
 
 @Override
 public double getEncoderVelocity() {
-    return leftMotor.getEncoder().getVelocity(); 
+    return leftMotor.getVelocity().getValueAsDouble();
 }
 
 
 @Override
 public void setEncoderPosition(double position) {
-    leftMotor.getEncoder().setPosition(position);
+    leftMotor.setPosition(position);
 }
 
 
 @Override
 public void configureMotors() {
-    leftMotor.restoreFactoryDefaults();
-    rightMotor.restoreFactoryDefaults();
+    // leftMotor.restoreFactoryDefaults();
+    // rightMotor.restoreFactoryDefaults();
 
-    leftMotor.setIdleMode(IdleMode.kBrake);
-    rightMotor.setIdleMode(IdleMode.kBrake);
+    leftMotor.setNeutralMode(NeutralModeValue.Brake);
+    rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    leftMotor.setInverted(ArmConstants.LEFT_MOTOR_INVERTED);
-    rightMotor.setInverted(ArmConstants.RIGHT_MOTOR_INVERTED);
+    leftMotor.setInverted(true);
+    rightMotor.setInverted(false);
 
-    leftMotor.setSmartCurrentLimit(ArmConstants.STALL_LIMIT, ArmConstants.FREE_LIMIT);
-    rightMotor.setSmartCurrentLimit(ArmConstants.STALL_LIMIT, ArmConstants.FREE_LIMIT);
+    leftMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT).withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
+    rightMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT).withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
 
-    rightMotor.follow(leftMotor);
+    rightMotor.setControl(new Follower(leftMotor.getDeviceID(), ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
 }
 
     public void ArmSpeaker() {
