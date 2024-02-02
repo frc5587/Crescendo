@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -21,6 +22,7 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
+  protected final Arm arm = new Arm();
 
   private final DeadbandCommandXboxController xbox =
       new DeadbandCommandXboxController(0);

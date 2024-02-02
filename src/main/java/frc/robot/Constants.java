@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
@@ -31,6 +34,31 @@ import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
  */
 public final class Constants {
 
+  public static final class ArmConstants {
+    //motor info
+   public static final int LEFT_MOTOR_ID = 20;
+   public static final int RIGHT_MOTOR_ID = 21;
+   public static final boolean LEFT_MOTOR_INVERTED = false;
+   public static final boolean RIGHT_MOTOR_INVERTED = true;
+    
+   //Values TBD, placeholders for now
+    public static final double SPEAKER_SETPOINT = Math.toRadians(40);
+    public static final double AMP_SETPOINT = Math.toRadians(7);
+    public static final double RESTING_SETPOINT = Math.toRadians(70);
+    
+    public static final double GEARING_MOTOR_TO_ARM = 180.;
+    public static final double GEARING_ARM_TO_THROUGHBORE = 24./16.;
+    public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
+    public static final double[] SOFT_LIMITS = {Math.toRadians(4), Math.toRadians(90)};
+    public static final double ZERO_OFFSET = 0.0;
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0); // TODO: Replace this placeholder
+    public static final int ENCODER_CPR = 1;
+    public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(1, 0.5));
+    public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
+    public static final int STALL_LIMIT = 35;
+    public static final int FREE_LIMIT = 40;
+
+  }
     public static final class DrivetrainConstants {
         public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
 
