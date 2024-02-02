@@ -46,12 +46,12 @@ public final class Constants {
     public static final double AMP_SETPOINT = Math.toRadians(-10);
     public static final double RESTING_SETPOINT = Math.toRadians(0);
     
-    public static final double GEARING = 25;
+    public static final double GEARING_MOTOR_TO_ARM = 180.;
+    public static final double GEARING_ARM_TO_THROUGHBORE = 24./16.;
+    public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
     public static final double[] SOFT_LIMITS = {Math.toRadians(-10), Math.toRadians(20)};
     public static final double ZERO_OFFSET = 0.0;
     public static final int ENCODER_CPR = 1;
-    public static final int[] SWITCH_PORTS = {2, 3};
-    public static final boolean[] SWITCH_INVERTIONS = {false, false};
     public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(1, 0.5));
     public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
     public static final int STALL_LIMIT = 35;

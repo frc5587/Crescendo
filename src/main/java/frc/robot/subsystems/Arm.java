@@ -15,15 +15,10 @@ import frc.robot.Constants.ArmConstants;
 public class Arm extends PivotingArmBase {
     private static TalonFX rightMotor = new TalonFX(ArmConstants.RIGHT_MOTOR_ID);
     private static TalonFX leftMotor = new TalonFX(ArmConstants.LEFT_MOTOR_ID);
-    
-
- private final DigitalInput frontLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[0]);
- private final DigitalInput rearLimitSwitch = new DigitalInput(ArmConstants.SWITCH_PORTS[1]);
- private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
-
+ private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
 
  public static PivotingArmConstants constants = new PivotingArmConstants (
-        ArmConstants.GEARING,
+        ArmConstants.GEARING_MOTOR_TO_ARM,
         1,
         0,
         ArmConstants.SOFT_LIMITS,
@@ -43,36 +38,23 @@ public class Arm extends PivotingArmBase {
 
  }
 
- public DigitalInput getFrontLimitSwitch() { 
-    return frontLimitSwitch;
- }
- 
- public DigitalInput getRearLimitSwitch() { 
-    return rearLimitSwitch; 
-}
 @Override
 public double getEncoderPosition() {
     return leftMotor.getPosition().getValueAsDouble(); 
 }
-
 
 @Override
 public double getEncoderVelocity() {
     return leftMotor.getVelocity().getValueAsDouble();
 }
 
-
 @Override
 public void setEncoderPosition(double position) {
     leftMotor.setPosition(position);
 }
 
-
 @Override
 public void configureMotors() {
-    // leftMotor.restoreFactoryDefaults();
-    // rightMotor.restoreFactoryDefaults();
-
     leftMotor.setNeutralMode(NeutralModeValue.Brake);
     rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -111,11 +93,24 @@ public void configureMotors() {
      }
     }
 
-    public double getAbsolutePosition(){
+    public double getRawAbsolutePosition(){
         return throughBore.get();
     }
+
     public void zeroThroughBore(){
-        double absolutePosition = getAbsolutePosition();
+        double absolutePosition = getRawAbsolutePosition();
         throughBore.setPositionOffset(absolutePosition);
+    }
+
+    public double getArmAbsolutePosition() {
+        return getRawAbsolutePosition() / ArmConstants.GEARING_ARM_TO_THROUGHBORE;
+    }
+
+    public double throughBoreToMotor(double throughBoreRotations) {
+        return throughBoreRotations * ArmConstants.GEARING_THROUGHBORE_TO_MOTOR;
+    }
+
+    public void resetToAbsolute() {
+        setEncoderPosition(throughBoreToMotor(getRawAbsolutePosition()));
     }
 }
