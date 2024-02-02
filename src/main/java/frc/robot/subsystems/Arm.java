@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends PivotingArmBase {
-    private static TalonFX rightMotor = new TalonFX(ArmConstants.RIGHT_MOTOR_ID);
-    private static TalonFX leftMotor = new TalonFX(ArmConstants.LEFT_MOTOR_ID);
+    private final TalonFX leftMotor;
+    private final TalonFX rightMotor;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
 
     public static PivotingArmConstants constants = new PivotingArmConstants(
@@ -25,16 +25,19 @@ public class Arm extends PivotingArmBase {
             ArmConstants.ENCODER_CPR,
             ArmConstants.PID,
             ArmConstants.FF
-
     );
 
     public Arm(TalonFX leftMotor, TalonFX rightMotor) {
         super("arm", constants, leftMotor);
+        this.leftMotor = leftMotor;
+        this.rightMotor = rightMotor;
+        resetToAbsolute();
         enable();
-        resetEncoders();
-        setGoal(0);
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0); // placeholder values
+    }
 
+    public Arm() {
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID), new TalonFX(ArmConstants.RIGHT_MOTOR_ID));
     }
 
     @Override

@@ -36,8 +36,8 @@ public final class Constants {
 
   public static final class ArmConstants {
     //motor info
-   public static final int LEFT_MOTOR_ID = 30;
-   public static final int RIGHT_MOTOR_ID = 31;
+   public static final int LEFT_MOTOR_ID = 20;
+   public static final int RIGHT_MOTOR_ID = 21;
    public static final boolean LEFT_MOTOR_INVERTED = false;
    public static final boolean RIGHT_MOTOR_INVERTED = true;
     
@@ -49,8 +49,9 @@ public final class Constants {
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 24./16.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
-    public static final double[] SOFT_LIMITS = {Math.toRadians(-10), Math.toRadians(20)};
+    public static final double[] SOFT_LIMITS = {Math.toRadians(4), Math.toRadians(90)};
     public static final double ZERO_OFFSET = 0.0;
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
     public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(1, 0.5));
     public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
