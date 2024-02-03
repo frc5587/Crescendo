@@ -21,19 +21,11 @@ public class Arm extends PivotingArmBase {
     private final TalonFX rightMotor;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
 
-    public static PivotingArmConstants constants = new PivotingArmConstants(
-            ArmConstants.GEARING_MOTOR_TO_ARM,
-            1,
-            0,
-            ArmConstants.SOFT_LIMITS,
-            (int) ArmConstants.ZERO_OFFSET,
-            ArmConstants.ENCODER_CPR,
-            ArmConstants.PID,
-            ArmConstants.FF
-    );
+    public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
+            new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
 
     public Arm(TalonFX leftMotor, TalonFX rightMotor) {
-        super("arm", constants, leftMotor);
+        super(constants, leftMotor);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         resetToAbsolute();
@@ -46,8 +38,8 @@ public class Arm extends PivotingArmBase {
     }
 
     @Override
-    public double getEncoderPosition() {
-        return leftMotor.getPosition().getValueAsDouble();
+    public Rotation2d getEncoderPosition() {
+        return Rotation2d.fromRotations(leftMotor.getPosition().getValueAsDouble());
     }
 
     @Override
@@ -56,8 +48,8 @@ public class Arm extends PivotingArmBase {
     }
 
     @Override
-    public void setEncoderPosition(double position) {
-        leftMotor.setPosition(position);
+    public void setEncoderPosition(Rotation2d position) {
+        leftMotor.setPosition(position.getRotations());
     }
 
     @Override
@@ -121,21 +113,20 @@ public class Arm extends PivotingArmBase {
         }
     }
 
-    public double getRawAbsolutePosition() {
-        return throughBore.get();
+    public Rotation2d getRawAbsolutePosition() {
+        return Rotation2d.fromRotations(throughBore.get());
     }
 
     public void zeroThroughBore() {
-        double absolutePosition = getRawAbsolutePosition();
-        throughBore.setPositionOffset(absolutePosition);
+        throughBore.setPositionOffset(getRawAbsolutePosition().getRotations());
     }
 
-    public double getArmAbsolutePosition() {
-        return getRawAbsolutePosition() / ArmConstants.GEARING_ARM_TO_THROUGHBORE;
+    public Rotation2d getArmAbsolutePosition() {
+        return getRawAbsolutePosition().div(ArmConstants.GEARING_ARM_TO_THROUGHBORE);
     }
 
-    public double throughBoreToMotor(double throughBoreRotations) {
-        return throughBoreRotations * ArmConstants.GEARING_THROUGHBORE_TO_MOTOR;
+    public Rotation2d throughBoreToMotor(Rotation2d throughBoreRotations) {
+        return throughBoreRotations.times(ArmConstants.GEARING_THROUGHBORE_TO_MOTOR);
     }
 
     public void resetToAbsolute() {
