@@ -7,12 +7,13 @@ package frc.robot;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -23,12 +24,14 @@ public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
   protected final Arm arm = new Arm();
+  // The robot's subsystems and commands are defined here...
+private final Intake intake = new Intake();
 
-  private final DeadbandCommandXboxController xbox =
-      new DeadbandCommandXboxController(0);
+private final CommandXboxController xbox = new DeadbandCommandXboxController(0);
+private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-           () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
+           () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
   
   public RobotContainer() {
     // Configure the trigger bindings
@@ -46,7 +49,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
+    xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
   }
 
   /**

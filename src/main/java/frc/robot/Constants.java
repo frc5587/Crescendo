@@ -196,4 +196,15 @@ public final class Constants {
         public static final SwerveModuleConstants[] ALL_MODULE_CONSTANTS = {Mod0.MODULE_CONSTANTS, Mod1.MODULE_CONSTANTS, Mod2.MODULE_CONSTANTS, Mod3.MODULE_CONSTANTS};
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
+
+  public static final class IntakeConstants {
+    public static final int MOTOR_ID = 40;
+    public static final boolean MOTOR_INVERTED = false;
+
+    public static final int STALL_LIMIT = 15;
+    public static final int FREE_LIMIT = 20;
+
+    public static final double FORWARD_THROTTLE = 0.75;
+    public static final double REVERSE_THROTTLE = 0.75;
+  }
 }
