@@ -6,6 +6,8 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,6 +34,7 @@ public class RobotContainer {
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
         configureBindings();
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     /**
@@ -54,6 +57,8 @@ public class RobotContainer {
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
         xbox2.x().onTrue(new InstantCommand(arm::armSpeaker));
         xbox2.a().onTrue(new InstantCommand(arm::armRest));
+        xbox2.b().onTrue(new InstantCommand(() -> arm.armDistanceSetpoint(swerve.getPose())));
+        xbox2.y().onTrue(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(10))));
     }
 
     /**

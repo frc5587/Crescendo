@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -20,6 +21,7 @@ public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
+    private boolean wasManuallyDisabled = false;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -28,9 +30,10 @@ public class Arm extends PivotingArmBase {
         super(constants, leftMotor);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
+        throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
         enable();
-        throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0); // placeholder values
+        SmartDashboard.putBoolean("Arm Enabled", isEnabled());
     }
 
     public Arm() {
@@ -64,9 +67,6 @@ public class Arm extends PivotingArmBase {
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
         rightMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT)
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
-
-        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
-                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
     }
 
     public void armSpeaker() {
@@ -94,27 +94,51 @@ public class Arm extends PivotingArmBase {
                                 2))) + Math.toRadians(50));
     }
 
-    public void armDistanceSetpoint(Pose2d pose) throws Exception {
-        setGoal(poseDependantArmAngle(pose).getRotations()); // TODO: Don't implement this until PivotingArmBase uses rotations/Rotation2d
-        throw new Exception("DO NOT IMPLEMENT THIS METHOD UNLESS PivotingArmBase USES ROTATION2D or ROTATIONS!");
+    public void armDistanceSetpoint(Pose2d pose) {
+        setGoal(poseDependantArmAngle(pose).getRadians());
+    }
+
+    @Override
+    public void resetEncoders() {
+        zeroThroughBore();
+        resetToAbsolute();
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        if (SmartDashboard.getBoolean("Reset Encoders", false)) {
+        if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
             resetEncoders();
         }
-        SmartDashboard.putBoolean("Reset Encoders", false);
-
-        if (!throughBore.isConnected()) {
+        SmartDashboard.putBoolean("Reset Arm Encoders", false);
+        SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
+        if (!throughBore.isConnected() || !SmartDashboard.getBoolean("Arm Enabled", true)) {
             this.disable();
             this.stop();
+            this.wasManuallyDisabled = true;
+            SmartDashboard.putBoolean("Arm Enabled", false);
         }
+
+        if(SmartDashboard.getBoolean("Arm Enabled", true) && wasManuallyDisabled) {
+            this.enable();
+            this.wasManuallyDisabled = false;
+        }
+
+        SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
+        SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
+
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
+                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
+
+        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
     }
 
     public Rotation2d getRawAbsolutePosition() {
-        return Rotation2d.fromRotations(throughBore.get());
+        return Rotation2d.fromRotations(throughBore.getAbsolutePosition());
+    }
+
+    public Rotation2d getZeroedArmAbsolutePosition() {
+        return getRawAbsolutePosition().minus(Rotation2d.fromRotations(throughBore.getPositionOffset()));
     }
 
     public void zeroThroughBore() {
@@ -122,7 +146,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public Rotation2d getArmAbsolutePosition() {
-        return getRawAbsolutePosition().div(ArmConstants.GEARING_ARM_TO_THROUGHBORE);
+        return getZeroedArmAbsolutePosition().div(ArmConstants.GEARING_ARM_TO_THROUGHBORE);
     }
 
     public Rotation2d throughBoreToMotor(Rotation2d throughBoreRotations) {
