@@ -87,4 +87,12 @@ public class SwerveModule extends SwerveModuleBase {
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getVelocity().getValueAsDouble();
     }
+
+    public void setDriveMotorVoltage(double voltage) {
+        this.driveMotor.setVoltage(voltage);
+    }
+
+    public double getDriveMotorVoltage() {
+        return this.driveMotor.getMotorVoltage().getValueAsDouble();
+    }
 }

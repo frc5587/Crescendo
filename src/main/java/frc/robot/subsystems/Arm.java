@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends PivotingArmBase {
-    private final TalonFX leftMotor;
-    private final TalonFX rightMotor;
+    public final TalonFX leftMotor;
+    public final TalonFX rightMotor;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
 
     public static PivotingArmConstants constants = new PivotingArmConstants(
