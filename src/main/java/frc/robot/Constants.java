@@ -14,8 +14,10 @@ import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
@@ -216,10 +218,18 @@ public final class Constants {
     public static final boolean RIGHT_MOTOR_INVERTED = false;
     public static final boolean LEFT_MOTOR_INVERTED = true;
     // motor limits
-    public static final int STALL_LIMIT = 20;
-    public static final int FREE_LIMIT = 25;
+    public static final int STALL_LIMIT = 30;
+    public static final int FREE_LIMIT = 35;
     // motor speeds
     public static final double FORWARD_THROTTLE = 0.75;
     public static final double REVERSE_THROTTLE = 0.75;
   }
+
+  public static final class FieldConstants {
+        public static final Translation3d BLUE_SPEAKER_OPENING_TRANSLATION = new Translation3d(0, 9.406, 3.267);
+        public static final Pose2d BLUE_SUBWOOFER_FRONT_POSE = new Pose2d(0.92, 9.406, new Rotation2d());
+        
+        public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 9.406, 3.267);
+        public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(24.2143, 9.406, new Rotation2d());
+    }
 }

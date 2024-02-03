@@ -52,8 +52,8 @@ public class RobotContainer {
         xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.x().onTrue(new InstantCommand(arm::ArmSpeaker));
-        xbox2.a().onTrue(new InstantCommand(arm::ArmRest));
+        xbox2.x().onTrue(new InstantCommand(arm::armSpeaker));
+        xbox2.a().onTrue(new InstantCommand(arm::armRest));
     }
 
     /**

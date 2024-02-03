@@ -7,9 +7,14 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.FieldConstants;
 
 public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
@@ -72,16 +77,34 @@ public class Arm extends PivotingArmBase {
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
     }
 
-    public void ArmSpeaker() {
+    public void armSpeaker() {
         setGoal(ArmConstants.SPEAKER_SETPOINT);
     }
 
-    public void ArmAmp() {
+    public void armAmp() {
         setGoal(ArmConstants.AMP_SETPOINT);
     }
 
-    public void ArmRest() {
+    public void armRest() {
         setGoal(ArmConstants.RESTING_SETPOINT);
+    }
+
+    public Rotation2d poseDependantArmAngle(Pose2d pose) {
+        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2))) + Math.toRadians(50));
+    }
+
+    public void armDistanceSetpoint(Pose2d pose) throws Exception {
+        setGoal(poseDependantArmAngle(pose).getRotations()); // TODO: Don't implement this until PivotingArmBase uses rotations/Rotation2d
+        throw new Exception("DO NOT IMPLEMENT THIS METHOD UNLESS PivotingArmBase USES ROTATION2D or ROTATIONS!");
     }
 
     @Override
