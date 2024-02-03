@@ -14,6 +14,8 @@ import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Shooter;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -24,8 +26,8 @@ public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
   protected final Arm arm = new Arm();
-  // The robot's subsystems and commands are defined here...
 private final Intake intake = new Intake();
+private final Shooter shooter = new Shooter();
 
 private final CommandXboxController xbox = new DeadbandCommandXboxController(0);
 private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
@@ -50,6 +52,8 @@ private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1)
    */
   private void configureBindings() {
     xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+    xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+    xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
   }
 
   /**
