@@ -44,9 +44,9 @@ public final class Constants {
    public static final boolean RIGHT_MOTOR_INVERTED = true;
     
    //Values TBD, placeholders for now
-    public static final double SPEAKER_SETPOINT = Math.toRadians(40);
-    public static final double AMP_SETPOINT = Math.toRadians(7);
-    public static final double RESTING_SETPOINT = Math.toRadians(0);
+    public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
+    public static final double AMP_SETPOINT = Units.degreesToRadians(7);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(1.5);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16/64;
