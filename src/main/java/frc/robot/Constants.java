@@ -45,17 +45,17 @@ public final class Constants {
     
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
-    public static final double AMP_SETPOINT = Units.degreesToRadians(7);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1.5);
+    public static final double AMP_SETPOINT = Units.degreesToRadians(83);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(3);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
-    public static final double GEARING_ARM_TO_THROUGHBORE = 16/64;
+    public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
     public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(4), Rotation2d.fromDegrees(90)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
-    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0); // TODO: Replace this placeholder
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(0.5, 0.3));
+    public static final ProfiledPIDController PID = new ProfiledPIDController(2, 0, 0.28713, new Constraints(2, 1));
     public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
@@ -203,11 +203,11 @@ public final class Constants {
     public static final int MOTOR_ID = 40;
     public static final boolean MOTOR_INVERTED = false;
 
-    public static final int STALL_LIMIT = 15;
+    public static final int STALL_LIMIT = 25;
     public static final int FREE_LIMIT = 20;
 
-    public static final double FORWARD_THROTTLE = 0.75;
-    public static final double REVERSE_THROTTLE = 0.75;
+    public static final double FORWARD_THROTTLE = 1;
+    public static final double REVERSE_THROTTLE = 1;
   }
 
   public static final class ShooterConstants {
@@ -221,8 +221,8 @@ public final class Constants {
     public static final int STALL_LIMIT = 30;
     public static final int FREE_LIMIT = 35;
     // motor speeds
-    public static final double FORWARD_THROTTLE = 1;
-    public static final double REVERSE_THROTTLE = 1;
+    public static final double FORWARD_THROTTLE = .8;
+    public static final double REVERSE_THROTTLE = .8;
   }
 
   public static final class FieldConstants {
@@ -231,5 +231,31 @@ public final class Constants {
         
         public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 9.406, 3.267);
         public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(24.2143, 9.406, new Rotation2d());
+    }
+
+    public static final class LimelightConstants {
+        public static final double MOUNT_ANGLE = 30;
+        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
+        public static final double DISTANCE_OFFSET = 0; // not needed
+    }
+
+    public static final class AutoConstants {
+        public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 0.25; // 3. // in m/s^2 
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4.; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
+
+        // TODO set rotation + translation PID values
+        public static final double ROTATION_KP = 0.05;
+        public static final double ROTATION_KI = 0;
+        public static final double ROTATION_KD = 0;
+
+        public static final double TRANSLATION_KP = 0.05;
+        public static final double TRANSLATION_KI = 0;
+        public static final double TRANSLATION_KD = 0;
+
+        public static final double DRIVE_BASE_RADIUS = 0.47;
+        
     }
 }
