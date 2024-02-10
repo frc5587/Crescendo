@@ -37,7 +37,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public Arm() {
-        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID), new TalonFX(ArmConstants.RIGHT_MOTOR_ID));
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore")); 
     }
 
     @Override
