@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.math.util.Units;

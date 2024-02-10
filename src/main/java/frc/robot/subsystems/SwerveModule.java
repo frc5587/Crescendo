@@ -25,6 +25,7 @@ public class SwerveModule extends SwerveModuleBase {
         configureAngleEncoder();
         configureAngleMotor();
         configureDriveMotor();
+
     }
 
     @Override
