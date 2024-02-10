@@ -39,6 +39,8 @@ public class Swerve extends SwerveBase {
             SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
             SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
         }
+
+        SmartDashboard.putData("Field", field);
         
 
     }

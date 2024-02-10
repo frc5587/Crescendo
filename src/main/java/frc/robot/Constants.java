@@ -46,14 +46,14 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(7);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1.5);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(3);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
-    public static final double GEARING_ARM_TO_THROUGHBORE = 16/64;
+    public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
     public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(4), Rotation2d.fromDegrees(90)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
-    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0); // TODO: Replace this placeholder
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
     public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(0.5, 0.3));
     public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
@@ -203,11 +203,11 @@ public final class Constants {
     public static final int MOTOR_ID = 40;
     public static final boolean MOTOR_INVERTED = false;
 
-    public static final int STALL_LIMIT = 15;
+    public static final int STALL_LIMIT = 25;
     public static final int FREE_LIMIT = 20;
 
-    public static final double FORWARD_THROTTLE = 0.75;
-    public static final double REVERSE_THROTTLE = 0.75;
+    public static final double FORWARD_THROTTLE = 1;
+    public static final double REVERSE_THROTTLE = 1;
   }
 
   public static final class ShooterConstants {
