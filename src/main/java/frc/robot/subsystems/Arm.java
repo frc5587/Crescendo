@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import org.frc5587.lib.subsystems.PivotingArmBase;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -20,24 +22,27 @@ import frc.robot.Constants.FieldConstants;
 public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
+    private final Supplier<Pose2d> poseSupplier;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
     private boolean wasManuallyDisabled = false;
+    private boolean manualMode = true;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
 
-    public Arm(TalonFX leftMotor, TalonFX rightMotor) {
+    public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier) {
         super(constants, leftMotor);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
+        this.poseSupplier = poseSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
     }
 
-    public Arm() {
-        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore")); 
+    public Arm(Supplier<Pose2d> poseSupplier) {
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), poseSupplier); 
     }
 
     @Override
@@ -91,7 +96,7 @@ public class Arm extends PivotingArmBase {
                                 - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(50));
+                                2))) + Math.toRadians(63));
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -131,6 +136,14 @@ public class Arm extends PivotingArmBase {
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
 
         SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+
+        if(!manualMode) {
+            armDistanceSetpoint(poseSupplier.get());
+        }
+    }
+
+    public void setManualMode(boolean manualMode) {
+        this.manualMode = manualMode;
     }
 
     public Rotation2d getRawAbsolutePosition() {

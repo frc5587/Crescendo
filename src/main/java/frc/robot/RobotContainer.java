@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.math.util.Units;
@@ -17,16 +13,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmDistancePose;
+import frc.robot.commands.ArmToIntake;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
-
-    private final Swerve swerve = new Swerve();
-    private final Arm arm = new Arm();
+    private final Limelight limelight = new Limelight();
+    private final Swerve swerve = new Swerve(limelight);
+    private final Arm arm = new Arm(swerve::getPose);
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
 
@@ -43,7 +42,7 @@ public class RobotContainer {
         PowerDistribution pd = new PowerDistribution();
         pd.clearStickyFaults();
         pd.close();
-
+        // arm.setDefaultCommand(armDistancePose);
     }
 
     /**
@@ -65,10 +64,9 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.x().onTrue(new InstantCommand(arm::armSpeaker));
-        xbox2.a().onTrue(new InstantCommand(arm::armRest));
-        xbox2.b().onTrue(new InstantCommand(() -> arm.armDistanceSetpoint(swerve.getPose())));
-        xbox2.y().onTrue(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(10))));
+        xbox2.y().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
+        xbox2.a().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        xbox2.b().whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
     }
 
     /**

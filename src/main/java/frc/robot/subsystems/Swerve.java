@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -26,11 +27,13 @@ public class Swerve extends SwerveBase {
                     new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
     };
 
-   
+   private Limelight limelight;
+   private Field2d limelightField = new Field2d();
 
-    public Swerve() {
+    public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
-
+        this.limelight = limelight;
+        this.limelightField.setRobotPose(limelight.getLimelightPose());
         // Auto Config
             AutoBuilder.configureHolonomic(
                 this::getOdometryPose, // Robot pose supplier
@@ -79,5 +82,17 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putData("Field", field);
+        this.limelightField.setRobotPose(limelight.getLimelightPose());
+
+        SmartDashboard.putData("LimelightField", limelightField);
+
+        
+        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1.5) { // if the target is super close, we can set the pose to the limelight pose
+            resetOdometry(limelight.getLimelightPose());
+        }
+        if(limelight.hasTarget()) {
+            poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
+            poseEstimator.update(getYaw(), getModulePositions());
+        }
     }
 }

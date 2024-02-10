@@ -45,7 +45,7 @@ public final class Constants {
     
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
-    public static final double AMP_SETPOINT = Units.degreesToRadians(7);
+    public static final double AMP_SETPOINT = Units.degreesToRadians(83);
     public static final double RESTING_SETPOINT = Units.degreesToRadians(3);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
@@ -55,7 +55,7 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(0.5, 0.3));
+    public static final ProfiledPIDController PID = new ProfiledPIDController(2, 0, 0.28713, new Constraints(2, 1));
     public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
@@ -221,8 +221,8 @@ public final class Constants {
     public static final int STALL_LIMIT = 30;
     public static final int FREE_LIMIT = 35;
     // motor speeds
-    public static final double FORWARD_THROTTLE = 1;
-    public static final double REVERSE_THROTTLE = 1;
+    public static final double FORWARD_THROTTLE = .8;
+    public static final double REVERSE_THROTTLE = .8;
   }
 
   public static final class FieldConstants {
