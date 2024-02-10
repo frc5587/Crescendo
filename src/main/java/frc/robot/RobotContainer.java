@@ -6,15 +6,12 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmDistancePose;
-import frc.robot.commands.ArmToIntake;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
