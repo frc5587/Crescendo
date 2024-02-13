@@ -33,7 +33,10 @@ public class Intake extends SimpleMotorBase {
     public void periodic() {
         SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
 
-        if (colorSensor.getProximity() > 1000) /*placeholder value*/{
+        while (colorSensor.getProximity() > 1000) /*placeholder value*/{
+            if (Shooter.leftMotor.get() != 0) {
+                break;
+            }
             stop();
         }
     }
