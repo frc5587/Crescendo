@@ -23,6 +23,7 @@ public final class Constants {
 
     public static final int STALL_LIMIT = 15;
     public static final int FREE_LIMIT = 20;
+  }
 
   public static final class ShooterConstants {
     // motor ports
