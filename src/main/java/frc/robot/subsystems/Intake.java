@@ -20,8 +20,6 @@ public class Intake extends SimpleMotorBase {
     
     public Intake() {
         super(motor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
-
-        SmartDashboard.putNumber("Color Measurement Proximity", colorSensor.getProximity());
     }
 
     @Override
@@ -29,5 +27,14 @@ public class Intake extends SimpleMotorBase {
         motor.restoreFactoryDefaults();
         motor.setInverted(IntakeConstants.MOTOR_INVERTED);
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
+    }
+    
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
+
+        if (colorSensor.getProximity() > 1000) /*placeholder value*/{
+            stop();
+        }
     }
 }
