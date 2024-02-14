@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SimpleMotorBase {
-    public static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+    private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
     
     public Shooter() {
@@ -25,5 +25,9 @@ public class Shooter extends SimpleMotorBase {
         rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         rightMotor.follow(leftMotor);
 
+    }
+
+    public double getMotorSpeeds() {
+        return leftMotor.get();
     }
 }

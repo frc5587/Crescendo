@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import org.frc5587.lib.subsystems.SimpleMotorBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -34,7 +36,7 @@ public class Intake extends SimpleMotorBase {
         SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
 
         while (colorSensor.getProximity() > 1000) /*placeholder value*/{
-            if (Shooter.leftMotor.get() != 0) {
+            if (.get() != 0) {
                 break;
             }
             stop();
