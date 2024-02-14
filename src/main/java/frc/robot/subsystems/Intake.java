@@ -19,9 +19,11 @@ public class Intake extends SimpleMotorBase {
     private static CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 colorSensor = new ColorSensorV3(i2cPort);
+    private final DoubleSupplier shooterSpeedSupplier;
     
-    public Intake() {
+    public Intake(DoubleSupplier shooterSpeedSupplier) {
         super(motor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
+        this.shooterSpeedSupplier = shooterSpeedSupplier;
     }
 
     @Override
@@ -35,10 +37,7 @@ public class Intake extends SimpleMotorBase {
     public void periodic() {
         SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
 
-        while (colorSensor.getProximity() > 1000) /*placeholder value*/{
-            if (.get() != 0) {
-                break;
-            }
+        if(colorSensor.getProximity() < 1000 && shooterSpeedSupplier.getAsDouble() == 0) {
             stop();
         }
     }

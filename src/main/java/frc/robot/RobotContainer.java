@@ -19,8 +19,8 @@ import frc.robot.subsystems.Shooter;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
+  private final Intake intake = new Intake(shooter::getMotorSpeeds);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController xbox = new CommandXboxController(0);
   private final CommandXboxController xbox2 = new CommandXboxController(1);
