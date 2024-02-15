@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.61,
-      "y": 7.15
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -15,6 +9,36 @@
           "type": "path",
           "data": {
             "pathName": "amp_dep_preloaded"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shooter::forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake::forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake::forward"
           }
         },
         {
@@ -27,6 +51,42 @@
           "type": "path",
           "data": {
             "pathName": "ring2_dep"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shooter::forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake::forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shooter::stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake::stop"
           }
         },
         {
