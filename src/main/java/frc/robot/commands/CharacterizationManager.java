@@ -18,4 +18,8 @@ public class CharacterizationManager {
     public void characterizationPeriodic() {
         SmartDashboard.putNumber(null, 0);
     }
+
+    public ArmCharacterization getArmChar() {
+        return this.armCharacterization;
+    }
 }

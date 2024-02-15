@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class ArmCharacterization extends CharacterizationBase {
@@ -22,16 +23,16 @@ public class ArmCharacterization extends CharacterizationBase {
 
     @Override
     public double getMechanismPosition() {
-        return arm.getEncoderPosition();
+        return arm.getAngleDegrees() / 360;
     }
 
     @Override
     public double getMechanismVelocity() {
-        return arm.getEncoderVelocity();
+        return arm.getEncoderVelocity() / ArmConstants.GEARING_MOTOR_TO_ARM;
     }
 
     @Override
     public double getMechanismAcceleration() {
-        return arm.leftMotor.getAcceleration().getValueAsDouble();
+        return arm.leftMotor.getAcceleration().getValueAsDouble() / ArmConstants.GEARING_MOTOR_TO_ARM;
     }
 }

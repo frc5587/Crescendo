@@ -6,9 +6,13 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.CharacterizationManager;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
@@ -23,17 +27,25 @@ public class RobotContainer {
 
   protected final Swerve swerve = new Swerve();
   protected final Arm arm = new Arm();
+  private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve);
 
   private final DeadbandCommandXboxController xbox =
       new DeadbandCommandXboxController(0);
 
       private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
            () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
+
+    private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
   
   public RobotContainer() {
     // Configure the trigger bindings
     swerve.setDefaultCommand(driveCommand);
     configureBindings();
+    charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
+    charChooser.addOption("Arm Q Bwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kReverse));
+    charChooser.addOption("Arm D Fwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kForward));
+    charChooser.addOption("Arm D Bwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kReverse));
+    SmartDashboard.putData("Char", charChooser);
   }
 
   /**
@@ -55,6 +67,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-return null;
+
+return charChooser.getSelected();
   }
 }

@@ -4,10 +4,12 @@ import java.util.function.Consumer;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -26,8 +28,8 @@ public abstract class CharacterizationBase {
     protected final Subsystem subsystem;
     protected Mechanism armMechanism;
     protected MutableMeasure<Velocity<Voltage>> quasistaticRamp = MutableMeasure
-            .mutable(Units.Volts.per(Units.Second).of(0));
-    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+            .mutable(Units.Volts.per(Units.Second).of(0.25));
+    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(1.5));
 
     protected MutableMeasure<Voltage> outputVoltage = MutableMeasure.mutable(Units.Volts.of(0));
     protected MutableMeasure<Angle> mechanismAngle = MutableMeasure.mutable(Units.Rotations.of(0));
@@ -48,7 +50,7 @@ public abstract class CharacterizationBase {
     }
 
     private Consumer<SysIdRoutineLog> logRotational() {
-        return (log) -> log.motor("motor")
+        return (log) -> {log.motor("motor")
                 .voltage(outputVoltage
                         .mut_replace(Units.Volts.of(getMotorVoltage())))
                 .angularPosition(
@@ -57,6 +59,11 @@ public abstract class CharacterizationBase {
                         .mut_replace(Units.RotationsPerSecond.of(getMechanismVelocity())))
                 .angularAcceleration(angularAccel.mut_replace(Units.RotationsPerSecond.per(Units.Second)
                         .of(getMechanismAcceleration())));
+                        SmartDashboard.putNumber("Voltage", outputVoltage.magnitude());
+                        SmartDashboard.putNumber("Position", mechanismAngle.magnitude());
+                        SmartDashboard.putNumber("Velocity", angularVelocity.magnitude());
+                        SmartDashboard.putNumber("Acceleration", angularAccel.magnitude());
+                };
     }
 
     private Consumer<SysIdRoutineLog> logLinear() {

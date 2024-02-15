@@ -37,7 +37,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public Arm() {
-        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID), new TalonFX(ArmConstants.RIGHT_MOTOR_ID));
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"));
     }
 
     @Override
@@ -67,9 +67,6 @@ public class Arm extends PivotingArmBase {
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
         rightMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT)
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
-
-        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
-                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
     }
 
     public void ArmSpeaker() {
@@ -96,6 +93,8 @@ public class Arm extends PivotingArmBase {
             this.disable();
             this.stop();
         }
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
+                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
     }
 
     public double getRawAbsolutePosition() {
