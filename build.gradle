@@ -58,7 +58,7 @@ repositories {
 
 dependencies {
     
-    implementation 'org.frc5587:TitanLib:swerve-SNAPSHOT'
+    implementation 'org.frc5587:TitanLib:crescendo-testing-SNAPSHOT'
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
