@@ -55,8 +55,8 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(2, 0, 0.28713, new Constraints(2, 1));
-    public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(1.75, 0, 0, new Constraints(2, 1.5));
+    public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.325, 0.5, 0.02);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
 
