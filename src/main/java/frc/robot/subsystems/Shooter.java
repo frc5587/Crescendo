@@ -28,5 +28,10 @@ public class Shooter extends SimpleMotorBase {
         leftMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         rightMotor.follow(leftMotor);
+
+    }
+
+    public double getMotorSpeeds() {
+        return leftMotor.get();
     }
 }

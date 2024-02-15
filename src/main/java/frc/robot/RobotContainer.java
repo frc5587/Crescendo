@@ -23,8 +23,8 @@ public class RobotContainer {
     private final Limelight limelight = new Limelight();
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
-    private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
+    private final Intake intake = new Intake(shooter::getMotorSpeeds);
 
     private final CommandXboxController xbox = new DeadbandCommandXboxController(0);
     private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
