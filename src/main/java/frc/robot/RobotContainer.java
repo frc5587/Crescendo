@@ -6,13 +6,20 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
@@ -26,6 +33,7 @@ public class RobotContainer {
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
     private final Intake intake = new Intake(shooter::getMotorSpeeds);
+    private final SendableChooser<Command> autoChooser;
 
     private final CommandXboxController xbox = new DeadbandCommandXboxController(0);
     private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
@@ -41,6 +49,16 @@ public class RobotContainer {
         pd.clearStickyFaults();
         pd.close();
         // arm.setDefaultCommand(armDistancePose);
+        // Initializing autoChooser
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // Pathplanner Auto Commands
+        NamedCommands.registerCommand("intakeForward", new RunCommand(() -> new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY))));
+        NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
+        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
+        NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         CameraServer.startAutomaticCapture(0);
     }
 
@@ -59,8 +77,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.rightBumper().whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        xbox2.leftBumper().whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
         xbox2.y().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
@@ -74,6 +92,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return autoChooser.getSelected();
     }
 }

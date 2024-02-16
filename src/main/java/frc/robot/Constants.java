@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.frc5587.lib.pid.FPID;
@@ -208,6 +209,12 @@ public final class Constants {
 
     public static final double FORWARD_THROTTLE = .75;
     public static final double REVERSE_THROTTLE = .25;
+    public static final double WHEEL_RADIUS = 1;
+    public static final double GEARING = 12;
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 3.9107, 0.081738);
+    public static final PIDController PID = new PIDController(1.5841, 0, 0);
+    public static final double MINIMUM_VELOCITY = 4;
+    public static final double SWERVE_VELOCITY_OFFSET = 1;
   }
 
   public static final class ShooterConstants {
