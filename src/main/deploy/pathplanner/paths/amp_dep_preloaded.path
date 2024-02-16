@@ -41,7 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "shooter::forward"
+                "name": "shooterForward"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "armAim"
               }
             }
           ]

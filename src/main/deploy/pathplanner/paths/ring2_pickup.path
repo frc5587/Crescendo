@@ -43,6 +43,12 @@
               "data": {
                 "name": "intakeForward"
               }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "armRest"
+              }
             }
           ]
         }

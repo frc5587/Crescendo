@@ -41,13 +41,19 @@
             {
               "type": "named",
               "data": {
-                "name": "intake::stop"
+                "name": "intakeStop"
               }
             },
             {
               "type": "named",
               "data": {
                 "name": "shooterStop"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "armRest"
               }
             }
           ]
