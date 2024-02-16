@@ -69,7 +69,7 @@ public class Swerve extends SwerveBase {
         super.periodic();
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
         SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
-        if(SmartDashboard.getBoolean("Zero Yaw", true)) {
+        if(SmartDashboard.getBoolean("Zero Yaw", false)) {
             gyro.zeroYaw();
         }
         SmartDashboard.putBoolean("Zero Yaw", false);
@@ -87,7 +87,7 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putData("LimelightField", limelightField);
 
         
-        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1.5) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());
         }
         if(limelight.hasTarget()) {

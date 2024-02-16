@@ -9,6 +9,7 @@ import org.frc5587.lib.control.DeadbandCommandXboxController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,7 +38,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-            () -> -xbox.getRightX(), () -> xbox.rightBumper().getAsBoolean());
+            () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -57,6 +58,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        CameraServer.startAutomaticCapture(0);
     }
 
     /**
