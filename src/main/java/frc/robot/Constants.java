@@ -55,7 +55,7 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.6, 0, 0.3, new Constraints(3, 1.5));
+    public static final ProfiledPIDController PID = new ProfiledPIDController(5.2, 0.07, 0.7, new Constraints(Math.PI, Math.PI));
     public static final ArmFeedforward FF = new ArmFeedforward(0., 0.02, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
@@ -247,15 +247,15 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = 0.05;
+        public static final double ROTATION_KP = .05;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 0.05;
+        public static final double TRANSLATION_KP = 3;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 
-        public static final double DRIVE_BASE_RADIUS = 0.47;
+        public static final double DRIVE_BASE_RADIUS = 1.219;
         
     }
 }

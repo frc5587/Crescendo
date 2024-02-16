@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import org.frc5587.lib.math.Conversions;
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
 import com.ctre.phoenix6.controls.PositionDutyCycle;
@@ -8,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.util.swervelib.util.CTREConfigs;
 
@@ -91,5 +93,13 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getVelocity().getValueAsDouble();
+    }
+
+    @Override
+    public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(
+            Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(-1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
+            getAngle()
+        );
     }
 }

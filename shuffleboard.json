@@ -713,15 +713,15 @@
               "_showGlyph": false
             }
           },
-          "5,3": {
+          "5,4": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Gyro yaw",
-              "_title": "SmartDashboard/Gyro yaw",
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Zero Yaw",
+              "_title": "SmartDashboard/Zero Yaw",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -733,21 +733,21 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Yaw offset",
-              "_title": "SmartDashboard/Yaw offset",
+              "_source0": "network_table:///SmartDashboard/Yaw Offset",
+              "_title": "SmartDashboard/Yaw Offset",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "5,4": {
+          "5,3": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/Zero Yaw",
-              "_title": "SmartDashboard/Zero Yaw",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Yaw Offset",
+              "_title": "SmartDashboard/Yaw Offset",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -1011,6 +1011,32 @@
               "fps": -1,
               "imageWidth": -1,
               "imageHeight": -1
+            }
+          },
+          "9,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Goal Degrees",
+              "_title": "SmartDashboard/Arm Goal Degrees",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Relative Pos",
+              "_title": "SmartDashboard/Arm Relative Pos",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }

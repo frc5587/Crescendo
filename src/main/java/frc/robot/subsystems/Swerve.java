@@ -9,7 +9,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
@@ -34,9 +36,10 @@ public class Swerve extends SwerveBase {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
+        ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
         // Auto Config
             AutoBuilder.configureHolonomic(
-                this::getOdometryPose, // Robot pose supplier
+                this::getPose, // Robot pose supplier
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -45,23 +48,20 @@ public class Swerve extends SwerveBase {
                         new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
                         AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
                         AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                        replanningConfig // Default path replanning config. See the API for the options here
                 ),
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
+                () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
                 this // Reference to this subsystem to set requirements
-        );
+            );
     }
 
+    @Override
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
+    }
+
+    
  
     
     @Override
@@ -87,8 +87,9 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putData("LimelightField", limelightField);
 
         
-        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && limelight.getTargetSpacePose().getZ() <= 1) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());
+            gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
         }
         if(limelight.hasTarget()) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
