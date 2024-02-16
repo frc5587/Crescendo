@@ -6,6 +6,7 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,7 +31,7 @@ public class RobotContainer {
     private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-            () -> -xbox.getRightX(), () -> xbox.rightBumper().getAsBoolean());
+            () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -40,6 +41,7 @@ public class RobotContainer {
         pd.clearStickyFaults();
         pd.close();
         // arm.setDefaultCommand(armDistancePose);
+        CameraServer.startAutomaticCapture(0);
     }
 
     /**

@@ -39,6 +39,7 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
+        
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -96,7 +97,7 @@ public class Arm extends PivotingArmBase {
                                 - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(60));
+                                2))) + Math.toRadians(56));
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -140,6 +141,8 @@ public class Arm extends PivotingArmBase {
         if(!manualMode) {
             armDistanceSetpoint(poseSupplier.get());
         }
+
+        SmartDashboard.putData("Arm PID", this.getController());
     }
 
     public void setManualMode(boolean manualMode) {
