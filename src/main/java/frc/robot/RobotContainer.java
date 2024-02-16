@@ -7,6 +7,7 @@ package frc.robot;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -49,6 +50,13 @@ public class RobotContainer {
         // Initializing autoChooser
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        // Pathplanner Auto Commands
+        NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
+        NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
+        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
+        NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
     }
 
     /**

@@ -12,57 +12,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shooter::forward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake::forward"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake::forward"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring2_pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring2_dep"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shooter::forward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
           }
         },
         {
@@ -84,9 +36,33 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring2_dep"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "intake::stop"
+            "name": "intake::forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

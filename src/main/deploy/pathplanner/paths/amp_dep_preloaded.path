@@ -4,31 +4,15 @@
     {
       "anchor": {
         "x": 0.5,
-        "y": 7.145128364330803
+        "y": 7.31
       },
       "prevControl": null,
       "nextControl": {
         "x": 0.5255780682454098,
-        "y": 7.156822518773242
+        "y": 7.321694154442439
       },
       "isLocked": false,
       "linkedName": "aa_startpoint"
-    },
-    {
-      "anchor": {
-        "x": 1.8852482149408742,
-        "y": 5.70674736791069
-      },
-      "prevControl": {
-        "x": 2.834664484139039,
-        "y": 6.607197259978565
-      },
-      "nextControl": {
-        "x": 1.5967543595833824,
-        "y": 5.4331326539577764
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.3655780682454097,
-        "y": 5.57338830887795
+        "x": 2.3764027015233515,
+        "y": 6.4083966344570875
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shooter::forward"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 4.0,
