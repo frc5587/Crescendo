@@ -108,11 +108,18 @@ public class Arm extends PivotingArmBase {
     @Override
     public void periodic() {
         super.periodic();
-        if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
-            resetEncoders();
+        if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
+            if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+                resetEncoders();
+            }
+            SmartDashboard.putBoolean("Reset Arm Encoders", false);
+            SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
+
+            SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        
+            SmartDashboard.putData("Arm PID", this.getController());
         }
-        SmartDashboard.putBoolean("Reset Arm Encoders", false);
-        SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
+        
         if (!throughBore.isConnected() || !SmartDashboard.getBoolean("Arm Enabled", true)) {
             this.disable();
             this.stop();
@@ -131,13 +138,9 @@ public class Arm extends PivotingArmBase {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
 
-        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
-
         if(!manualMode) {
             armDistanceSetpoint(poseSupplier.get());
         }
-
-        SmartDashboard.putData("Arm PID", this.getController());
     }
 
     public void setManualMode(boolean manualMode) {

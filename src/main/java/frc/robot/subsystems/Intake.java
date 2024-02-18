@@ -9,7 +9,6 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -53,9 +52,6 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
-        
-        SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
-        SmartDashboard.putBoolean("Color Sensor Connected?", colorSensor.isConnected());
 
         if(colorSensor.getProximity() > 250 && shooterSpeedSupplier.getAsDouble() == 0) {
             stop();

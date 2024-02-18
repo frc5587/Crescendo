@@ -60,6 +60,7 @@ public class Swerve extends SwerveBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        SmartDashboard.putBoolean("Swerve Debug On?", false);
     }
 
  
@@ -67,25 +68,25 @@ public class Swerve extends SwerveBase {
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
-        SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
-        if(SmartDashboard.getBoolean("Zero Yaw", false)) {
-            gyro.zeroYaw();
-        }
-        SmartDashboard.putBoolean("Zero Yaw", false);
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-
-        for (int i = 0; i < swerveModules.length; i++) {
-            SmartDashboard.putNumber("M"+i+" Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
-            SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
-            SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
+        if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
+            SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
+            SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
+            if(SmartDashboard.getBoolean("Zero Yaw", false)) {
+                gyro.zeroYaw();
+            }
+            SmartDashboard.putBoolean("Zero Yaw", false);
+    
+            for(int i = 0; i < swerveModules.length; i++) {
+                SmartDashboard.putNumber("M"+i+" Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
+                SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
+                SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
+            }
         }
 
         SmartDashboard.putData("Field", field);
         this.limelightField.setRobotPose(limelight.getLimelightPose());
 
         SmartDashboard.putData("LimelightField", limelightField);
-
         
         if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());

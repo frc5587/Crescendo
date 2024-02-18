@@ -77,13 +77,20 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox2.rightBumper().whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
-        xbox2.leftBumper().whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.y().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
-        xbox2.a().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
-        xbox2.b().whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
+        Trigger rB = xbox2.rightBumper();
+        Trigger lB = xbox2.leftBumper();
+        Trigger rT = xbox2.rightTrigger();
+        Trigger lT = xbox2.leftTrigger();
+        Trigger y = xbox2.y();
+        Trigger a = xbox2.a();
+        Trigger b = xbox2.b();
+        rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
+        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+        lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
+        y.onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
+        a.onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        b.whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
     }
 
     /**
