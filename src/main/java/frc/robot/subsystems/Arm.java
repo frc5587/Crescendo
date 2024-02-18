@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -139,12 +138,6 @@ public class Arm extends PivotingArmBase {
         }
 
         SmartDashboard.putData("Arm PID", this.getController());
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        SmartDashboard.putNumber("Old", poseDependantArmAngle(poseSupplier.get()).getDegrees());
-        SmartDashboard.putNumber("New", newPoseDependantArmAngle(poseSupplier.get()).getDegrees());
     }
 
     public void setManualMode(boolean manualMode) {
