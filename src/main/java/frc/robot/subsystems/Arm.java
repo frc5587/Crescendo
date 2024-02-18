@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -88,16 +89,11 @@ public class Arm extends PivotingArmBase {
     }
 
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(56));
+        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
+                pose.getTranslation().getDistance((DriverStation.getAlliance().get().equals(Alliance.Blue))
+                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.toTranslation2d()
+                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.toTranslation2d())
+                + Math.toRadians(56)));
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -143,6 +139,12 @@ public class Arm extends PivotingArmBase {
         }
 
         SmartDashboard.putData("Arm PID", this.getController());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        SmartDashboard.putNumber("Old", poseDependantArmAngle(poseSupplier.get()).getDegrees());
+        SmartDashboard.putNumber("New", newPoseDependantArmAngle(poseSupplier.get()).getDegrees());
     }
 
     public void setManualMode(boolean manualMode) {
