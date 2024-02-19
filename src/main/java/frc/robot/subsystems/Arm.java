@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 
@@ -83,8 +84,22 @@ public class Arm extends PivotingArmBase {
         setGoal(ArmConstants.AMP_SETPOINT);
     }
 
+    public InstantCommand armAmpCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armAmp();
+        });
+    }
+
     public void armRest() {
         setGoal(ArmConstants.RESTING_SETPOINT);
+    }
+
+    public InstantCommand armRestCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armRest();
+        });
     }
 
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
@@ -145,6 +160,14 @@ public class Arm extends PivotingArmBase {
 
     public void setManualMode(boolean manualMode) {
         this.manualMode = manualMode;
+    }
+
+    public InstantCommand enableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(true));
+    }
+
+    public InstantCommand disableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(false));
     }
 
     public Rotation2d getRawAbsolutePosition() {

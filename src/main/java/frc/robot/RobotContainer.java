@@ -84,13 +84,15 @@ public class RobotContainer {
         Trigger y = xbox2.y();
         Trigger a = xbox2.a();
         Trigger b = xbox2.b();
+        Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
         rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
         lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
         rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
         lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        y.onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
-        a.onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
-        b.whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
+        y.onTrue(arm.armAmpCommand());
+        a.onTrue(arm.armRestCommand());
+        b.onTrue(arm.disableManualMode());
+        intakeLimitSwitch.onTrue(arm.disableManualMode());
     }
 
     /**
