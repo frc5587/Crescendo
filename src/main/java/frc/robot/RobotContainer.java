@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
@@ -40,6 +41,7 @@ public class RobotContainer {
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
             () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
+    private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -93,6 +95,7 @@ public class RobotContainer {
         a.onTrue(arm.armRestCommand());
         b.onTrue(arm.disableManualMode());
         intakeLimitSwitch.onTrue(arm.disableManualMode());
+        xbox.povDown().whileTrue(autoRotateToShoot);
     }
 
     /**
