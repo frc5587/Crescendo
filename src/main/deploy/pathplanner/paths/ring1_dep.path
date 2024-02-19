@@ -68,6 +68,12 @@
         "data": {
           "commands": [
             {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.5
+              }
+            },
+            {
               "type": "named",
               "data": {
                 "name": "intakeForward"
@@ -98,5 +104,5 @@
   "reversed": false,
   "folder": "ring1",
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
