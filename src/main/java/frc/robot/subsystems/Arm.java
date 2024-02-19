@@ -27,6 +27,7 @@ public class Arm extends PivotingArmBase {
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
+    private boolean breakModeEnabled = true;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -38,9 +39,11 @@ public class Arm extends PivotingArmBase {
         this.poseSupplier = poseSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
+        getController().setTolerance(Units.degreesToRadians(1));
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
-        
+        SmartDashboard.putBoolean("Arm Debug On?", false);
+        SmartDashboard.putBoolean("Break Mode Enabled", breakModeEnabled);
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -102,12 +105,25 @@ public class Arm extends PivotingArmBase {
         });
     }
 
+    // public Rotation2d poseDependantArmAngle(Pose2d pose) {
+    //     return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
+    //             pose.getTranslation().getDistance((DriverStation.getAlliance().get().equals(Alliance.Blue))
+    //                     ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.toTranslation2d()
+    //                     : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.toTranslation2d())
+    //             + Math.toRadians(56)));
+    // }
+
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
-                pose.getTranslation().getDistance((DriverStation.getAlliance().get().equals(Alliance.Blue))
-                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.toTranslation2d()
-                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.toTranslation2d())
-                + Math.toRadians(56)));
+        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2))) + Math.toRadians(56)).times(1.05);
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -133,6 +149,12 @@ public class Arm extends PivotingArmBase {
             SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
         
             SmartDashboard.putData("Arm PID", this.getController());
+
+            if(SmartDashboard.getBoolean("Break Mode Enabled", true) != breakModeEnabled) {
+                this.breakModeEnabled = SmartDashboard.getBoolean("Break Mode Enabled", true);
+                leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+                rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+            }
         }
         
         if (!throughBore.isConnected() || !SmartDashboard.getBoolean("Arm Enabled", true)) {

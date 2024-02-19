@@ -56,14 +56,14 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.6, 0, 0.3, new Constraints(3, 1.5));
-    public static final ArmFeedforward FF = new ArmFeedforward(0., 0.02, 1.5, 0.);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, new Constraints(Math.PI, Math.PI));
+    public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
 
   }
     public static final class DrivetrainConstants {
-        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
