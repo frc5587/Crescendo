@@ -238,6 +238,8 @@ public final class Constants {
         
         public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 9.406, 3.267);
         public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(24.2143, 9.406, new Rotation2d());
+
+        public static final Pose2d BLUE_AMP_POSE = new Pose2d(2, 0, Rotation2d.fromDegrees(90));
     }
 
     public static final class LimelightConstants {
