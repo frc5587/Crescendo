@@ -30,10 +30,40 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armRest"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterStop"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeForward"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.5,
-    "maxAcceleration": 0.25,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 90.0,
     "maxAngularAcceleration": 90.0
   },
@@ -43,7 +73,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ring1",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }
