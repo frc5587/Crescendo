@@ -5,10 +5,11 @@
   "pathFolders": [
     "-amp",
     "-middle",
+    "-stage",
+    "pathplanning",
     "ring1",
     "ring2",
-    "ring3",
-    "-stage"
+    "ring3"
   ],
   "autoFolders": [],
   "defaultMaxVel": 0.5,

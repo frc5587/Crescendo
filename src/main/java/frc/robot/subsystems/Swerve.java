@@ -5,6 +5,7 @@ import org.frc5587.lib.subsystems.SwerveBase;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -34,6 +35,7 @@ public class Swerve extends SwerveBase {
 
    private Limelight limelight;
    private Field2d limelightField = new Field2d();
+   private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
 
     public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
@@ -71,8 +73,11 @@ public class Swerve extends SwerveBase {
 
     public Command ampLineUp() {
         return AutoBuilder.pathfindToPose(FieldConstants.BLUE_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        /* alternate ampLineUp command in case first one does not work
+        return AutoBuilder.pathfindThenFollowPath(ampPath, AutoConstants.CONSTRAINTS, 0);
+        */
     }
-    
+
     @Override
     public void periodic() {
         super.periodic();
