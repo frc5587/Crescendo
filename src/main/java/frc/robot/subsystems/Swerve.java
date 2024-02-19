@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.FieldConstants;
 
 public class Swerve extends SwerveBase {
      private static SwerveModule[] swerveModules = {
@@ -66,7 +68,10 @@ public class Swerve extends SwerveBase {
     public Pose2d getPose() {
         return new Pose2d(super.getOdometryPose().getX() * -1, super.getOdometryPose().getY(), super.getOdometryPose().getRotation());
     }
- 
+
+    public Command ampLineUp() {
+        return AutoBuilder.pathfindToPose(FieldConstants.BLUE_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+    }
     
     @Override
     public void periodic() {

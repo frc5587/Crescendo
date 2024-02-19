@@ -83,6 +83,7 @@ public class RobotContainer {
         xbox2.y().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
         xbox2.a().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         xbox2.b().whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
+        xbox.povDown().onTrue(swerve.ampLineUp());
     }
 
     /**
