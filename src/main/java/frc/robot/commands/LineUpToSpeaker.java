@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.Swerve;
 
-public class LineUpToAmp extends Command {
+public class LineUpToSpeaker extends Command {
     private final Swerve swerve;
     private boolean rotatingDone, strafingDone = false;
 
-    public LineUpToAmp(Swerve swerve) {
+    public LineUpToSpeaker(Swerve swerve) {
         this.swerve = swerve;
     }
 
@@ -31,27 +31,27 @@ public class LineUpToAmp extends Command {
         }
         else {
             if(DriverStation.getAlliance().equals(Alliance.Blue)) {
-                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_AMP_POSE.getX()) > 0.25) {
+                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.25) {
                 swerve.setChassisSpeeds(new ChassisSpeeds(.25, 0, 0));
                 }
-                if (Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_AMP_POSE.getY()) > 0.25) {
+                if (Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.25) {
                     swerve.setChassisSpeeds(new ChassisSpeeds(0, .25, 0));
                 }
-                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_AMP_POSE.getX()) < 0.25 && Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_AMP_POSE.getY()) < 0.25) {
+                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) < 0.25 && Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) < 0.25) {
                     strafingDone = true; }
             }
             else if(DriverStation.getAlliance().equals(Alliance.Red))
             {
 
-                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_AMP_POSE.getX()) > 0.25) {
+                if (Math.abs(swerve.getPose().getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.25) {
                     swerve.setChassisSpeeds(new ChassisSpeeds(.25, 0, 0));
                     }
 
-                if (Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_AMP_POSE.getY()) > 0.25) {
-                        swerve.setChassisSpeeds(new ChassisSpeeds(0, .25, 0));
+                if (Math.abs(swerve.getPose().getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.25) {
+                    swerve.setChassisSpeeds(new ChassisSpeeds(0, .25, 0));
                     }
 
-            if (Math.abs(swerve.getPose().getX() - FieldConstants.RED_AMP_POSE.getX()) < 0.25 && Math.abs(swerve.getPose().getY() - FieldConstants.RED_AMP_POSE.getY()) < 0.25) {
+            if (Math.abs(swerve.getPose().getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()) < 0.25 && Math.abs(swerve.getPose().getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()) < 0.25) {
                 strafingDone = true; }   
                     }
                  }
