@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import org.frc5587.lib.subsystems.SimpleMotorBase;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -11,7 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SimpleMotorBase {
     private static CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
     private static RelativeEncoder encoder = motor.getEncoder();
     private double setpoint;
@@ -21,6 +23,7 @@ public class Intake extends SubsystemBase {
     private final DoubleSupplier shooterSpeedSupplier;
     
     public Intake(DoubleSupplier shooterSpeedSupplier) {
+        super(motor, IntakeConstants.FORWARD_THROTTLE, IntakeConstants.REVERSE_THROTTLE);
         this.shooterSpeedSupplier = shooterSpeedSupplier;
         configureMotors();
     }
@@ -45,9 +48,10 @@ public class Intake extends SubsystemBase {
         return ((encoder.getVelocity() / 60) * (2*Math.PI) * (IntakeConstants.WHEEL_RADIUS / IntakeConstants.GEARING));
     }
 
-    public void stop() {
-        setVelocity(0);
-    }
+    // public void stop() {
+    //     // setVelocity(0);
+    //     stop();
+    // }
     
     public boolean getLimitSwitch() {
         return !limitSwitch.get();
@@ -55,7 +59,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
+        // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
 
         if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() == 0) {
             stop();
