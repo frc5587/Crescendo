@@ -9,8 +9,10 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -26,6 +28,7 @@ public class Arm extends PivotingArmBase {
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
+    private boolean breakModeEnabled = true;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -39,6 +42,7 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
+        SmartDashboard.putBoolean("Break Mode Enabled", true);
         
     }
 
@@ -110,6 +114,11 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
     }
 
+    public void chinUp() {
+        //  = new ProfiledPIDController(6., 0., 0., new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+        setGoal(0);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
@@ -130,6 +139,12 @@ public class Arm extends PivotingArmBase {
             this.wasManuallyDisabled = false;
         }
 
+        if(SmartDashboard.getBoolean("Break Mode Enabled", true) != breakModeEnabled) {
+            this.breakModeEnabled = SmartDashboard.getBoolean("Break Mode Enabled", true);
+            leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+            rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+        }
+
         SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
         SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
 
@@ -143,6 +158,8 @@ public class Arm extends PivotingArmBase {
         }
 
         SmartDashboard.putData("Arm PID", this.getController());
+
+
     }
 
     public void setManualMode(boolean manualMode) {

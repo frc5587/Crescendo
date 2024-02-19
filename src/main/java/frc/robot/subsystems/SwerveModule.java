@@ -98,7 +98,7 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(-1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
+            Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(1), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
             getAngle()
         );
     }

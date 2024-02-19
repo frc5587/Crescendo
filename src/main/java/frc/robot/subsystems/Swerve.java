@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,7 +37,7 @@ public class Swerve extends SwerveBase {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
-        ReplanningConfig replanningConfig = new ReplanningConfig(false, false);
+        ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         // Auto Config
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
@@ -61,7 +62,10 @@ public class Swerve extends SwerveBase {
         setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
     }
 
-    
+    @Override
+    public Pose2d getPose() {
+        return new Pose2d(super.getOdometryPose().getX() * -1, super.getOdometryPose().getY(), super.getOdometryPose().getRotation());
+    }
  
     
     @Override
@@ -87,10 +91,10 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putData("LimelightField", limelightField);
 
         
-        if(limelight.hasTarget() && limelight.getTargetSpacePose().getZ() <= 1) { // if the target is super close, we can set the pose to the limelight pose
-            resetOdometry(limelight.getLimelightPose());
-            gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
-        }
+        // if(limelight.hasTarget() && limelight.getTargetSpacePose().getZ() <= 1) { // if the target is super close, we can set the pose to the limelight pose
+        //     resetOdometry(limelight.getLimelightPose());
+        //     gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
+        // }
         if(limelight.hasTarget()) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
             poseEstimator.update(getYaw(), getModulePositions());

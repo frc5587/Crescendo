@@ -6,6 +6,7 @@ import org.frc5587.lib.subsystems.SimpleMotorBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +22,7 @@ public class Intake extends SimpleMotorBase {
     private final I2C.Port i2cPort = I2C.Port.kMXP;
     private final ColorSensorV3 colorSensor = new ColorSensorV3(i2cPort);
     private final DoubleSupplier shooterSpeedSupplier;
+    private final DigitalInput limitSwitch = new DigitalInput(1);
     
     public Intake(DoubleSupplier shooterSpeedSupplier) {
         super(motor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
@@ -38,8 +40,9 @@ public class Intake extends SimpleMotorBase {
     public void periodic() {
         SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
         SmartDashboard.putBoolean("Color Sensor Connected?", colorSensor.isConnected());
+        SmartDashboard.putBoolean("Limit Switch", !limitSwitch.get());
 
-        if(colorSensor.getProximity() > 250 && shooterSpeedSupplier.getAsDouble() == 0) {
+        if(!limitSwitch.get() && shooterSpeedSupplier.getAsDouble() == 0) { //colorSensor.getProximity() > 250 && 
             stop();
         }
     }
