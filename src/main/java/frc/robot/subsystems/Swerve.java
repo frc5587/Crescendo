@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -63,8 +64,13 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Debug On?", false);
     }
 
- 
+    @Override
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
+    }
     
+
     @Override
     public void periodic() {
         super.periodic();

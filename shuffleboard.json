@@ -661,9 +661,9 @@
               "_showGlyph": false
             }
           },
-          "5,0": {
+          "4,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -674,9 +674,9 @@
               "_showGlyph": false
             }
           },
-          "7,0": {
+          "5,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -687,9 +687,9 @@
               "_showGlyph": false
             }
           },
-          "5,1": {
+          "4,1": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -700,9 +700,9 @@
               "_showGlyph": false
             }
           },
-          "7,1": {
+          "5,1": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -815,6 +815,38 @@
               "_title": "SmartDashboard/Gyro Yaw",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Speaker Location",
+              "_title": "SmartDashboard/Speaker Location",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          },
+          "6,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Target",
+              "_title": "SmartDashboard/Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
             }
           }
         }
