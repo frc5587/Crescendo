@@ -140,7 +140,6 @@ public class Arm extends PivotingArmBase {
 
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
-
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
