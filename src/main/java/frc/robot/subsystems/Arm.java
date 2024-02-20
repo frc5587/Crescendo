@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -31,6 +32,7 @@ public class Arm extends PivotingArmBase {
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
+        
 
     public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier) {
         super(constants, leftMotor);
@@ -134,6 +136,22 @@ public class Arm extends PivotingArmBase {
     public void resetEncoders() {
         zeroThroughBore();
         resetToAbsolute();
+    }
+
+    @Override
+    public void useOutput(double output, TrapezoidProfile.State setpoint) {
+
+        /** SOFT LIMITS */
+        /** output should be feedforward + calculated PID. */
+        /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
+        if(getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0) {
+            setVoltage(0);
+        }
+
+        /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
+        else if(getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0) {
+            setVoltage(0);
+        }
     }
 
     @Override
