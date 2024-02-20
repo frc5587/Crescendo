@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
@@ -38,8 +40,10 @@ public class RobotContainer {
     public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
     public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
-    private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-            () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
+    private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
+            () -> xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
+    private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
+    private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -97,6 +101,8 @@ public class RobotContainer {
         b.onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
         intakeLimitSwitch.onTrue(arm.disableManualMode());
+        xbox.povDown().whileTrue(autoRotateToShoot);
+        xbox.povUp().whileTrue(lineUpToSpeaker);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,8 +63,6 @@ public class Swerve extends SwerveBase {
         );
         SmartDashboard.putBoolean("Swerve Debug On?", false);
     }
-
- 
     
     @Override
     public void periodic() {
@@ -88,12 +87,19 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getX() <= 1. && limelight.getTargetSpacePose().getX() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());
         }
         if(limelight.hasTarget()) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
             poseEstimator.update(getYaw(), getModulePositions());
         }
+    }
+    /**
+     * Sets the module states based on chassis speeds.
+     */
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 }
