@@ -33,6 +33,10 @@ public class SwerveModule extends SwerveModuleBase {
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
+    public Rotation2d getNonZeroedAbsoluteEncoderValue() {
+        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
+    }
+
     @Override
     protected void setAngleMotorPosition(Rotation2d position) {
         angleMotor.setControl(new PositionDutyCycle(position.getRotations()));

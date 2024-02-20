@@ -7,7 +7,12 @@ package frc.robot;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.PositionArm;
 import frc.robot.commands.SimDualStickSwerve;
@@ -22,51 +29,55 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimGyro;
 import frc.robot.subsystems.SimSwerve;
 import frc.robot.subsystems.SimSwerveModule;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.DeadbandedCommandXboxController;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
+    private final Limelight limelight = new Limelight();
+    private final Swerve swerve = new Swerve(limelight);
+    private final Arm arm = new Arm(swerve::getPose);
+    private final Shooter shooter = new Shooter();
+    private final Intake intake = new Intake(shooter::getMotorSpeeds);
+    private final SendableChooser<Command> autoChooser;
 
-    protected final Swerve swerve = new Swerve();
-    protected final Arm arm = new Arm();
     protected final SimSwerve simSwerve = new SimSwerve(
             new SimGyro() {}, new SimSwerveModule() {}, new SimSwerveModule() {},
             new SimSwerveModule() {}, new SimSwerveModule() {});
 
-    private final SendableChooser<Command> autoChooser;
-    private final DeadbandCommandXboxController xbox = new DeadbandCommandXboxController(0, 0.2);
+    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
+    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-            () -> {
-                return -xbox.getRightX();
-            }, () -> xbox.rightBumper().negate().getAsBoolean());
+            () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
+    private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final SimDualStickSwerve simDriveCommand = new SimDualStickSwerve(simSwerve, () -> -xbox.getRawAxis(1),
             () -> xbox.getRawAxis(0),
             () -> -xbox.getRawAxis(2), () -> xbox.rightBumper().negate().getAsBoolean());
-
-    private final PositionArm positionArm = new PositionArm(arm, simSwerve::getPose);
-
-    /*
-     * Constructor
-     */
+             
     public RobotContainer() {
-        // Configure the trigger bindings
         swerve.setDefaultCommand(driveCommand);
         simSwerve.setDefaultCommand(simDriveCommand);
-        arm.setDefaultCommand(positionArm);
         configureBindings();
-
+        DriverStation.silenceJoystickConnectionWarning(true);
+        PowerDistribution pd = new PowerDistribution();
+        pd.clearStickyFaults();
+        pd.close();
+        // arm.setDefaultCommand(armDistancePose);
         // Initializing autoChooser
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        // Pathplanner Auto Commands
+        NamedCommands.registerCommand("intakeForward", new RunCommand(() -> new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY))));
+        NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
+        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
+        NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        CameraServer.startAutomaticCapture(0);
     }
 
     /**
@@ -84,9 +95,27 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().onTrue(new InstantCommand(arm::ArmSpeaker));
-        xbox.y().onTrue(new InstantCommand(arm::ArmRest));
-        xbox.rightBumper().whileTrue(new RunCommand(() -> SmartDashboard.putBoolean("Robot Oriented Drive", true))).onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Robot Oriented Drive", false)));
+        Trigger rB = xbox2.rightBumper();
+        Trigger lB = xbox2.leftBumper();
+        Trigger rT = xbox2.rightTrigger();
+        Trigger lT = xbox2.leftTrigger();
+        Trigger y = xbox2.y();
+        Trigger a = xbox2.a();
+        Trigger b = xbox2.b();
+        Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
+        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
+        lB.whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        rB.whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        
+        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+        lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
+        y.onTrue(arm.armAmpCommand());
+        a.onTrue(arm.armRestCommand());
+        b.onTrue(arm.disableManualMode());
+        xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
+        intakeLimitSwitch.onTrue(arm.disableManualMode());
+        xbox.povDown().whileTrue(autoRotateToShoot);
     }
 
     /**
