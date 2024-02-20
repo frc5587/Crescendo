@@ -36,6 +36,7 @@ public class Swerve extends SwerveBase {
    private Limelight limelight;
    private Field2d limelightField = new Field2d();
    private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
+   private PathPlannerPath subwooferPath = PathPlannerPath.fromPathFile("subwooferPath");
 
     public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
@@ -76,6 +77,13 @@ public class Swerve extends SwerveBase {
         return AutoBuilder.pathfindToPose(FieldConstants.BLUE_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
         /* alternate ampLineUp command in case first one does not work
         return AutoBuilder.pathfindThenFollowPath(ampPath, AutoConstants.CONSTRAINTS, 0);
+        */
+    }
+
+    public Command subwooferLineUp() {
+        return AutoBuilder.pathfindToPose(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE, AutoConstants.CONSTRAINTS, 0, 0);
+        /* alternate subwooferLineUp command in case first one does not work
+        return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
         */
     }
 
