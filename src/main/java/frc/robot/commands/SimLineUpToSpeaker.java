@@ -19,55 +19,95 @@ public class SimLineUpToSpeaker extends Command {
     }
 
     @Override
-    public void execute() {
-        Pose2d currentPose = swerve.getPose();
-        if(!rotatingDone) {
-            if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-            Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
-                currentPose.getY() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY(),
-                currentPose.getX() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-            ));
-            if(currentPose.getRotation().getDegrees() > targetAngle.getDegrees()) {
-                swerve.runVelocity(new ChassisSpeeds(0, 0, -1));
-            }
-            else {
-                swerve.runVelocity(new ChassisSpeeds(0, 0, 1));
-            }
-            if(Math.abs(currentPose.getRotation().getDegrees() - targetAngle.getDegrees()) < 2) {
-                rotatingDone = true;
-            }
-        }
-        }
-        else {
-            if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-                if (Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.25) {
-                swerve.runVelocity(new ChassisSpeeds(Math.copySign(1., currentPose.getX() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()), 0, 0));
-                }
-                if (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.25) {
-                    swerve.runVelocity(new ChassisSpeeds(0, -Math.copySign(1., currentPose.getY() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()), 0));
-                }
-                if (Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) < 0.25 && Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) < 0.25) {
-                    strafingDone = true;
-                }
-            }
-            else if(DriverStation.getAlliance().get().equals(Alliance.Red))
-            {
-
-                if (Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.25) {
-                    swerve.runVelocity(new ChassisSpeeds(.25, 0, 0));
-                    }
-
-                if (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.25) {
-                    swerve.runVelocity(new ChassisSpeeds(0, .25, 0));
-                    }
-
-            if (Math.abs(currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()) < 0.25 && Math.abs(currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()) < 0.25) {
-                strafingDone = true; }   
-                    }
-                 }
-    
+    public void initialize() {
+        rotatingDone = false;
+        strafingDone = false;
     }
 
+    @Override
+    public void execute() {
+        Pose2d currentPose = swerve.getPose();
+            if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+                Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
+                        currentPose.getY() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY(),
+                        currentPose.getX() - FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()));
+                if (currentPose.getRotation().getDegrees() > targetAngle.getDegrees()) {
+                    swerve.runVelocity(new ChassisSpeeds(0, 0, -1));
+                } else {
+                    swerve.runVelocity(new ChassisSpeeds(0, 0, 1));
+                }
+                if (Math.abs(currentPose.getRotation().getDegrees() - targetAngle.getDegrees()) < 2) {
+                    rotatingDone = true;
+                }
+
+                if ((Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.1)
+                        && (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.1)) {
+                    swerve.runVelocity(new ChassisSpeeds(
+                            -Math.copySign(1., currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()),
+                            -Math.copySign(1., currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()),
+                            0));
+                } else {
+                    if (Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) > 0.1) {
+                        swerve.runVelocity(
+                                new ChassisSpeeds(
+                                        -Math.copySign(1.,
+                                                currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()),
+                                        0, 0));
+                    }
+                    if (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.1) {
+                        swerve.runVelocity(
+                                new ChassisSpeeds(0,
+                                        -Math.copySign(1.,
+                                                currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()),
+                                        0));
+                    }
+                    if (Math.abs(currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()) < 0.1
+                            && Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) < 0.1) {
+                        strafingDone = true;
+                    }
+                }
+            }
+            else if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+                Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
+                        currentPose.getY() - FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY(),
+                        currentPose.getX() - FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()));
+                if (currentPose.getRotation().getDegrees() > targetAngle.getDegrees()) {
+                    swerve.runVelocity(new ChassisSpeeds(0, 0, -1));
+                } else {
+                    swerve.runVelocity(new ChassisSpeeds(0, 0, 1));
+                }
+                if (Math.abs(currentPose.getRotation().getDegrees() - targetAngle.getDegrees()) < 2) {
+                    rotatingDone = true;
+                }
+                if ((Math.abs(currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()) > 0.1)
+                        && (Math.abs(currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()) > 0.1)) {
+                    swerve.runVelocity(new ChassisSpeeds(
+                            -Math.copySign(1., currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()),
+                            -Math.copySign(1., currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()),
+                            0));
+                } else {
+                    if (Math.abs(currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()) > 0.1) {
+                        swerve.runVelocity(
+                                new ChassisSpeeds(
+                                        -Math.copySign(1.,
+                                                currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()),
+                                        0, 0));
+                    }
+                    if (Math.abs(currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()) > 0.1) {
+                        swerve.runVelocity(
+                                new ChassisSpeeds(0,
+                                        -Math.copySign(1.,
+                                                currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()),
+                                        0));
+                    }
+                    if (Math.abs(currentPose.getX() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getX()) < 0.1
+                            && Math.abs(currentPose.getY() - FieldConstants.RED_SUBWOOFER_FRONT_POSE.getY()) < 0.1) {
+                        strafingDone = true;
+                    }
+            }
+        }
+
+    }
 
     @Override
     public boolean isFinished() {
