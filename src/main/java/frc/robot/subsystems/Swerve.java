@@ -44,6 +44,7 @@ public class Swerve extends SwerveBase {
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         // Auto Config
+        
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -60,11 +61,6 @@ public class Swerve extends SwerveBase {
                 this // Reference to this subsystem to set requirements
             );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
-    }
-
-    @Override
-    public Pose2d getPose() {
-        return new Pose2d(super.getOdometryPose().getX() * -1, super.getOdometryPose().getY(), super.getOdometryPose().getRotation());
     }
 
     public Command ampLineUp() {
@@ -117,7 +113,7 @@ public class Swerve extends SwerveBase {
      * Sets the module states based on chassis speeds.
      */
     public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        setModuleStates(kinematics.toSwerveModuleStates(speeds));
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
     }
 }

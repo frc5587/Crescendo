@@ -52,16 +52,15 @@ public class RobotContainer {
         pd.clearStickyFaults();
         pd.close();
         // arm.setDefaultCommand(armDistancePose);
-        // Initializing autoChooser
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        // Pathplanner Auto Commands
         NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
         NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        
         CameraServer.startAutomaticCapture(0);
     }
 
