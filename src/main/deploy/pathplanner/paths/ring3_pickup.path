@@ -12,15 +12,15 @@
         "y": 3.7607943703122872
       },
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 2.084048840462353,
+        "x": 2.12,
         "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.0758308900398013,
+        "x": 2.111782049577448,
         "y": 4.153968238603511
       },
       "nextControl": null,

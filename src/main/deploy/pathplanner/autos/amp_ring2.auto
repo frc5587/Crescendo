@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5,
-      "y": 7.31
+      "x": 1.34,
+      "y": 5.55
     },
     "rotation": 0
   },
@@ -12,15 +12,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "amp_dep_preloaded"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterForward"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armAim"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 2.0
           }
         },
         {
@@ -48,21 +61,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 1.0
+            "pathName": "ring1_pickup"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "intakeForward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "ring1_dep"
           }
         },
         {

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1106605315774734,
-        "y": 6.981410202136645
+        "x": 1.2434776320462886,
+        "y": 5.377598458597583
       },
       "isLocked": false,
       "linkedName": "pickup_1_end"
@@ -20,12 +20,12 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.3317800506347321,
-        "y": 5.599319696191608
+        "x": 1.365,
+        "y": 5.5933012701892215
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     }
   ],
   "rotationTargets": [],

@@ -12,7 +12,7 @@
         "y": 5.55
       },
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "stop shooter, prep intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",

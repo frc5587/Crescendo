@@ -20,12 +20,12 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.3764027015233515,
+        "x": 2.376402701523351,
         "y": 6.4083966344570875
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     }
   ],
   "rotationTargets": [],

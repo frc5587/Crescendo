@@ -8,19 +8,19 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3899999999999997,
+        "x": 3.84,
         "y": 5.55
       },
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 4.4,
+        "x": 4.1,
         "y": 5.57
       },
       "prevControl": {
-        "x": 4.3500000000000005,
+        "x": 4.05,
         "y": 5.57
       },
       "nextControl": null,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "stop all",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
