@@ -236,10 +236,10 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-        public static final Translation3d BLUE_SPEAKER_OPENING_TRANSLATION = new Translation3d(0, 9.406, 3.267);
+        public static final Translation3d BLUE_SPEAKER_OPENING_TRANSLATION = new Translation3d(0.01, 5.556, 3.267);
         public static final Pose2d BLUE_SUBWOOFER_FRONT_POSE = new Pose2d(0.92, 5.556, new Rotation2d());
         
-        public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 9.406, 3.267);
+        public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(25.6387, 5.556, 3.267);
         public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(24.2143, 9.406, new Rotation2d());
 
         public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));

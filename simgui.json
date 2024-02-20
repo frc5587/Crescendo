@@ -12,6 +12,11 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Limelight LEDs": "String Chooser",
+      "/SmartDashboard/LimelightField": "Field2d",
+      "/SmartDashboard/Speaker Location": "Field2d",
+      "/SmartDashboard/Target": "Field2d",
       "/SmartDashboard/field": "Field2d"
     },
     "windows": {
@@ -21,5 +26,8 @@
         }
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }

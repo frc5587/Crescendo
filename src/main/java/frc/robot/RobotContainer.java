@@ -24,7 +24,9 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.PositionArm;
+import frc.robot.commands.SimAutoRotateToShoot;
 import frc.robot.commands.SimDualStickSwerve;
+import frc.robot.commands.SimLineUpToSpeaker;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SimGyro;
 import frc.robot.subsystems.SimSwerve;
@@ -54,10 +56,12 @@ public class RobotContainer {
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
             () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
+    private final SimAutoRotateToShoot simAutoRotateToShoot = new SimAutoRotateToShoot(simSwerve);
+    private final SimLineUpToSpeaker simLineUpToSpeaker = new SimLineUpToSpeaker(simSwerve);
     private final SimDualStickSwerve simDriveCommand = new SimDualStickSwerve(simSwerve, () -> -xbox.getRawAxis(1),
             () -> xbox.getRawAxis(0),
             () -> -xbox.getRawAxis(2), () -> xbox.rightBumper().negate().getAsBoolean());
-             
+
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
         simSwerve.setDefaultCommand(simDriveCommand);
@@ -115,7 +119,8 @@ public class RobotContainer {
         b.onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
         intakeLimitSwitch.onTrue(arm.disableManualMode());
-        xbox.povDown().whileTrue(autoRotateToShoot);
+        xbox.povDown().whileTrue(simAutoRotateToShoot);
+        xbox.povUp().whileTrue(simLineUpToSpeaker);
     }
 
     /**
