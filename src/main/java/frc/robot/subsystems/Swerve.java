@@ -63,12 +63,6 @@ public class Swerve extends SwerveBase {
     }
 
     @Override
-    public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
-    }
-
-    @Override
     public Pose2d getPose() {
         return new Pose2d(super.getOdometryPose().getX() * -1, super.getOdometryPose().getY(), super.getOdometryPose().getRotation());
     }
@@ -86,7 +80,7 @@ public class Swerve extends SwerveBase {
         return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
         */
     }
-
+    
     @Override
     public void periodic() {
         super.periodic();
@@ -110,13 +104,20 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        // if(limelight.hasTarget() && limelight.getTargetSpacePose().getZ() <= 1) { // if the target is super close, we can set the pose to the limelight pose
-        //     resetOdometry(limelight.getLimelightPose());
-        //     gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
-        // }
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getX() <= 1. && limelight.getTargetSpacePose().getX() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+            resetOdometry(limelight.getLimelightPose());
+            gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
+        }
         if(limelight.hasTarget()) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
             poseEstimator.update(getYaw(), getModulePositions());
         }
+    }
+    /**
+     * Sets the module states based on chassis speeds.
+     */
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 }

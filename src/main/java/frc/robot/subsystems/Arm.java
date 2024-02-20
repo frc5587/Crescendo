@@ -125,7 +125,7 @@ public class Arm extends PivotingArmBase {
                                 - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(56)).times(1.05);
+                                2))) + Math.toRadians(72)).times(1.05);
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -145,6 +145,7 @@ public class Arm extends PivotingArmBase {
 
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
+        super.useOutput(output, setpoint);
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
