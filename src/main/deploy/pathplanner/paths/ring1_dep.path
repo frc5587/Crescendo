@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0606605315774735,
+        "x": 2.46,
         "y": 6.981410202136645
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0379610065904963,
+        "x": 2.4373004750130227,
         "y": 6.936859875927226
       },
       "isLocked": false,
@@ -54,35 +54,6 @@
               "type": "named",
               "data": {
                 "name": "shooterForward"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 1.0
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeForward"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
               }
             }
           ]
