@@ -4,45 +4,63 @@ import java.util.function.DoubleSupplier;
 
 import org.frc5587.lib.subsystems.SimpleMotorBase;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorSensorV3;
-
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterConstants;
 
 public class Intake extends SimpleMotorBase {
     private static CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
-    private final I2C.Port i2cPort = I2C.Port.kMXP;
-    private final ColorSensorV3 colorSensor = new ColorSensorV3(i2cPort);
-    private final DoubleSupplier shooterSpeedSupplier;
+    private static RelativeEncoder encoder = motor.getEncoder();
+    private double setpoint;
+    // private final I2C.Port i2cPort = I2C.Port.kMXP;
+    // private final ColorSensorV3 colorSensor = new ColorSensorV3(i2cPort);
     private final DigitalInput limitSwitch = new DigitalInput(1);
+    private final DoubleSupplier shooterSpeedSupplier;
     
     public Intake(DoubleSupplier shooterSpeedSupplier) {
-        super(motor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
+        super(motor, IntakeConstants.FORWARD_THROTTLE, IntakeConstants.REVERSE_THROTTLE);
         this.shooterSpeedSupplier = shooterSpeedSupplier;
+        configureMotors();
     }
 
-    @Override
     public void configureMotors() {
+        resetEncoders();
         motor.restoreFactoryDefaults();
         motor.setInverted(IntakeConstants.MOTOR_INVERTED);
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
+        motor.setIdleMode(IdleMode.kBrake);
     }
+
+    public void resetEncoders() {
+        encoder.setPosition(0);
+    }
+
+    public void setVelocity(double velocity) {
+        setpoint = velocity;
+    }
+
+    public double getMeasurement() {
+        return ((encoder.getVelocity() / 60) * (2*Math.PI) * (IntakeConstants.WHEEL_RADIUS / IntakeConstants.GEARING));
+    }
+
+    // public void stop() {
+    //     // setVelocity(0);
+    //     stop();
+    // }
     
+    public boolean getLimitSwitch() {
+        return !limitSwitch.get();
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Color Sensor Proximity", colorSensor.getProximity());
-        SmartDashboard.putBoolean("Color Sensor Connected?", colorSensor.isConnected());
-        SmartDashboard.putBoolean("Limit Switch", !limitSwitch.get());
+        // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
 
-        if(!limitSwitch.get() && shooterSpeedSupplier.getAsDouble() == 0) { //colorSensor.getProximity() > 250 && 
+        if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() == 0) {
             stop();
         }
     }

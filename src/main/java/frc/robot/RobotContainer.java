@@ -4,12 +4,11 @@
 
 package frc.robot;
 
-import org.frc5587.lib.control.DeadbandCommandXboxController;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,6 +23,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.DeadbandedCommandXboxController;
 
 public class RobotContainer {
     private final Limelight limelight = new Limelight();
@@ -31,11 +31,10 @@ public class RobotContainer {
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
     private final Intake intake = new Intake(shooter::getMotorSpeeds);
-
-    private final CommandXboxController xbox = new DeadbandCommandXboxController(0);
-    private final CommandXboxController xbox2 = new DeadbandCommandXboxController(1);
-
     private final SendableChooser<Command> autoChooser;
+
+    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
+    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
             () -> -xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());
@@ -76,14 +75,27 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.y().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armAmp();}));
-        xbox2.a().onTrue(new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
-        xbox2.b().whileTrue(new InstantCommand(() -> {arm.setManualMode(false);}));
+        Trigger rB = xbox2.rightBumper();
+        Trigger lB = xbox2.leftBumper();
+        Trigger rT = xbox2.rightTrigger();
+        Trigger lT = xbox2.leftTrigger();
+        Trigger y = xbox2.y();
+        Trigger a = xbox2.a();
+        Trigger b = xbox2.b();
+        Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
+        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
+        lB.whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        rB.whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        
+        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+        lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
+        y.onTrue(arm.armAmpCommand());
+        a.onTrue(arm.armRestCommand());
+        b.onTrue(arm.disableManualMode());
+        xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
         xbox.povDown().onTrue(swerve.ampLineUp());
+        intakeLimitSwitch.onTrue(arm.disableManualMode());
     }
 
     /**

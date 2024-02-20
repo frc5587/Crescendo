@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -52,18 +53,18 @@ public final class Constants {
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
-    public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(4), Rotation2d.fromDegrees(90)};
+    public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(87)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(5.2, 0.07, 0.7, new Constraints(Math.PI, Math.PI));
+    public static final ProfiledPIDController PID = new ProfiledPIDController(3.6, 0, 0.3, new Constraints(3, 1.5));
     public static final ArmFeedforward FF = new ArmFeedforward(0., 0.02, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
 
   }
     public static final class DrivetrainConstants {
-        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
@@ -209,6 +210,12 @@ public final class Constants {
 
     public static final double FORWARD_THROTTLE = .75;
     public static final double REVERSE_THROTTLE = .25;
+    public static final double WHEEL_RADIUS = 1;
+    public static final double GEARING = 12;
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 3.9107, 0.081738);
+    public static final PIDController PID = new PIDController(1.5841, 0, 0);
+    public static final double MINIMUM_VELOCITY = 4;
+    public static final double SWERVE_VELOCITY_OFFSET = 1;
   }
 
   public static final class ShooterConstants {

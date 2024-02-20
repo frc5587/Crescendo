@@ -9,7 +9,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -18,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 
@@ -32,6 +32,7 @@ public class Arm extends PivotingArmBase {
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
+        
 
     public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier) {
         super(constants, leftMotor);
@@ -40,10 +41,11 @@ public class Arm extends PivotingArmBase {
         this.poseSupplier = poseSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
+        getController().setTolerance(Units.degreesToRadians(1));
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
-        SmartDashboard.putBoolean("Break Mode Enabled", true);
-        
+        SmartDashboard.putBoolean("Arm Debug On?", false);
+        SmartDashboard.putBoolean("Break Mode Enabled", breakModeEnabled);
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -87,9 +89,31 @@ public class Arm extends PivotingArmBase {
         setGoal(ArmConstants.AMP_SETPOINT);
     }
 
+    public InstantCommand armAmpCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armAmp();
+        });
+    }
+
     public void armRest() {
         setGoal(ArmConstants.RESTING_SETPOINT);
     }
+
+    public InstantCommand armRestCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armRest();
+        });
+    }
+
+    // public Rotation2d poseDependantArmAngle(Pose2d pose) {
+    //     return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
+    //             pose.getTranslation().getDistance((DriverStation.getAlliance().get().equals(Alliance.Blue))
+    //                     ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.toTranslation2d()
+    //                     : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.toTranslation2d())
+    //             + Math.toRadians(56)));
+    // }
 
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
         return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
@@ -101,7 +125,7 @@ public class Arm extends PivotingArmBase {
                                 - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(56));
+                                2))) + Math.toRadians(56)).times(1.05);
     }
 
     public void armDistanceSetpoint(Pose2d pose) {
@@ -120,13 +144,41 @@ public class Arm extends PivotingArmBase {
     }
 
     @Override
+    public void useOutput(double output, TrapezoidProfile.State setpoint) {
+        /** SOFT LIMITS */
+        /** output should be feedforward + calculated PID. */
+        /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
+        if(getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0) {
+            setVoltage(0);
+        }
+
+        /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
+        else if(getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0) {
+            setVoltage(0);
+        }
+    }
+
+    @Override
     public void periodic() {
         super.periodic();
-        if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
-            resetEncoders();
+        if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
+            if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+                resetEncoders();
+            }
+            SmartDashboard.putBoolean("Reset Arm Encoders", false);
+            SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
+
+            SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        
+            SmartDashboard.putData("Arm PID", this.getController());
+
+            if(SmartDashboard.getBoolean("Break Mode Enabled", true) != breakModeEnabled) {
+                this.breakModeEnabled = SmartDashboard.getBoolean("Break Mode Enabled", true);
+                leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+                rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+            }
         }
-        SmartDashboard.putBoolean("Reset Arm Encoders", false);
-        SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
+        
         if (!throughBore.isConnected() || !SmartDashboard.getBoolean("Arm Enabled", true)) {
             this.disable();
             this.stop();
@@ -151,19 +203,22 @@ public class Arm extends PivotingArmBase {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
 
-        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
-
         if(!manualMode) {
             armDistanceSetpoint(poseSupplier.get());
         }
-
         SmartDashboard.putData("Arm PID", this.getController());
-
-
     }
 
     public void setManualMode(boolean manualMode) {
         this.manualMode = manualMode;
+    }
+
+    public InstantCommand enableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(true));
+    }
+
+    public InstantCommand disableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(false));
     }
 
     public Rotation2d getRawAbsolutePosition() {
