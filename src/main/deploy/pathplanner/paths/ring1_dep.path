@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2434776320462886,
-        "y": 5.377598458597583
+        "x": 2.0379610065904963,
+        "y": 6.936859875927226
       },
       "isLocked": false,
       "linkedName": "pickup_1_end"
@@ -70,7 +70,7 @@
             {
               "type": "wait",
               "data": {
-                "waitTime": 0.5
+                "waitTime": 1.0
               }
             },
             {
