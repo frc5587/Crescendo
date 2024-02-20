@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
@@ -15,6 +11,7 @@ import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;

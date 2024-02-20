@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.frc5587.lib.control.DeadbandCommandXboxController;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -23,18 +21,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
-import frc.robot.commands.PositionArm;
 import frc.robot.commands.SimAutoRotateToShoot;
 import frc.robot.commands.SimDualStickSwerve;
 import frc.robot.commands.SimLineUpToSpeaker;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.SimGyro;
-import frc.robot.subsystems.SimSwerve;
-import frc.robot.subsystems.SimSwerveModule;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.SimGyro;
+import frc.robot.subsystems.SimSwerve;
+import frc.robot.subsystems.SimSwerveModule;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.DeadbandedCommandXboxController;
 
