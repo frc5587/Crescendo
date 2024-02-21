@@ -46,21 +46,21 @@ public class Swerve extends SwerveBase {
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         // Auto Config
         
-            AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
-                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants TODO set
-                        new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
-                        AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
-                        AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
-                        replanningConfig // Default path replanning config. See the API for the options here
-                ),
-                () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
-                this // Reference to this subsystem to set requirements
-            );
+            // AutoBuilder.configureHolonomic(
+            //     this::getPose, // Robot pose supplier
+            //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            //     this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            //     this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            //             new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants TODO set
+            //             new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
+            //             AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
+            //             AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
+            //             replanningConfig // Default path replanning config. See the API for the options here
+            //     ),
+            //     () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
+            //     this // Reference to this subsystem to set requirements
+            // );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
     }
 

@@ -2,6 +2,11 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,8 +17,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class SimSwerve extends SubsystemBase {
@@ -28,6 +35,7 @@ public class SimSwerve extends SubsystemBase {
             new ModuleIOInputsAutoLogged(),
             new ModuleIOInputsAutoLogged(),
             new ModuleIOInputsAutoLogged() };
+    private ChassisSpeeds chassisState;
 
     private final double maxLinearSpeed = DrivetrainConstants.MAX_SPEED;
     private final double maxAngularSpeed = DrivetrainConstants.MAX_ANGULAR_VELOCITY;
@@ -71,10 +79,25 @@ public class SimSwerve extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             driveFeedback[i] = new PIDController(driveKp, 0.0, driveKd,
                     0.02);
-            turnFeedback[i] = new PIDController(turnKp, 0.0, turnKd,
+            turnFeedback[i] = new PIDController(1.5, 0.0, turnKd,
                     0.02);
             turnFeedback[i].enableContinuousInput(-Math.PI, Math.PI);
         }
+        AutoBuilder.configureHolonomic(
+                this::getPose, // Robot pose supplier
+                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::runVelocity, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants TODO set
+                        new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
+                        AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
+                        AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig(true, true) // Default path replanning config. See the API for the options here
+                ),
+                () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
+                this // Reference to this subsystem to set requirements
+            );
     }
 
     @Override
@@ -210,7 +233,7 @@ public class SimSwerve extends SubsystemBase {
                     moduleInputs[i].driveVelocityRadPerSec * wheelRadius,
                     turnPositions[i]);
         }
-        ChassisSpeeds chassisState = kinematics.toChassisSpeeds(measuredStates);
+        chassisState = kinematics.toChassisSpeeds(measuredStates);
         fieldVelocity = new Translation2d(chassisState.vxMetersPerSecond,
                 chassisState.vyMetersPerSecond).rotateBy(getRotation());
 
@@ -243,6 +266,10 @@ public class SimSwerve extends SubsystemBase {
     public void runVelocity(ChassisSpeeds speeds) {
         driveMode = DriveMode.NORMAL;
         closedLoopSetpoint = speeds;
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return chassisState;
     }
 
     /** Stops the drive. */
