@@ -12,9 +12,9 @@
     "ring3"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 0.5,
-  "defaultMaxAccel": 0.5,
+  "defaultMaxVel": 3.0,
+  "defaultMaxAccel": 1.0,
   "defaultMaxAngVel": 90.0,
   "defaultMaxAngAccel": 90.0,
-  "maxModuleSpeed": 0.5
+  "maxModuleSpeed": 3.0
 }
