@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.46,
-        "y": 6.981410202136645
+        "x": 2.6995861908390486,
+        "y": 6.980217946547005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4373004750130227,
-        "y": 6.936859875927226
+        "x": 2.6768866658520714,
+        "y": 6.935667620337586
       },
       "isLocked": false,
-      "linkedName": "pickup_1_end"
+      "linkedName": "ring1_pickup"
     },
     {
       "anchor": {
@@ -62,8 +62,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 90.0,
     "maxAngularAcceleration": 90.0
   },
@@ -75,5 +75,5 @@
   "reversed": false,
   "folder": "ring1",
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

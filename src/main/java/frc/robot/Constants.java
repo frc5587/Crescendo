@@ -252,8 +252,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double MAX_SPEED_MPS = 3.;  // in m/s 
-        public static final double MAX_ACCEL_MPS_2 = 1; // 3. // in m/s^2 
+        public static final double MAX_SPEED_MPS = 5.;  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 2.5; // 3. // in m/s^2 
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4.; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
