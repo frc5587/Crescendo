@@ -47,7 +47,7 @@ public class LineUpToSpeaker extends Command {
                     && (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.1)) {
                 swerve.drive(new Translation2d(
                         -Math.copySign(1., currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getX()),
-                        -Math.copySign(1., currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY())),
+                        Math.copySign(1., currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY())),
                         rotatingDone ? 0 : -Math.copySign(1., currentPose.getRotation().getDegrees() - targetAngle.getDegrees()),
                         true, true);
             }
@@ -59,7 +59,7 @@ public class LineUpToSpeaker extends Command {
                             true, true);
                 }
                 else if (Math.abs(currentPose.getY() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY()) > 0.1) {
-                    swerve.drive(new Translation2d(0, -Math.copySign(1.,
+                    swerve.drive(new Translation2d(0, Math.copySign(1.,
                             currentPose.getX() - FieldConstants.BLUE_SUBWOOFER_FRONT_POSE.getY())),
                             rotatingDone ? 0 : -Math.copySign(1., currentPose.getRotation().getDegrees() - targetAngle.getDegrees()),
                             true, true);

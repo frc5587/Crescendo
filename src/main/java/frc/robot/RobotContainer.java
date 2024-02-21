@@ -15,12 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.SimAutoRotateToShoot;
 import frc.robot.commands.SimDualStickSwerve;
 import frc.robot.commands.SimLineUpToSpeaker;
@@ -57,6 +56,7 @@ public class RobotContainer {
     private final SimDualStickSwerve simDriveCommand = new SimDualStickSwerve(simSwerve, () -> -xbox.getRawAxis(1),
             () -> xbox.getRawAxis(0),
             () -> -xbox.getRawAxis(2), () -> xbox.rightBumper().negate().getAsBoolean());
+    private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -67,16 +67,15 @@ public class RobotContainer {
         pd.clearStickyFaults();
         pd.close();
         // arm.setDefaultCommand(armDistancePose);
-        // Initializing autoChooser
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        // Pathplanner Auto Commands
-        NamedCommands.registerCommand("intakeForward", new RunCommand(() -> new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY))));
+        NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
         NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        
         CameraServer.startAutomaticCapture(0);
     }
 
@@ -114,9 +113,10 @@ public class RobotContainer {
         a.onTrue(arm.armRestCommand());
         b.onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
+        xbox.povDown().onTrue(swerve.ampLineUp());
         intakeLimitSwitch.onTrue(arm.disableManualMode());
-        xbox.povDown().whileTrue(simAutoRotateToShoot);
-        xbox.povUp().whileTrue(simLineUpToSpeaker);
+        xbox.povDown().whileTrue(simAutoRotateToShoot.alongWith(autoRotateToShoot));
+        xbox.povUp().whileTrue(simLineUpToSpeaker.alongWith(lineUpToSpeaker));
     }
 
     /**

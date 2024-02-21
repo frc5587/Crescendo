@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -13,10 +14,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.FieldConstants;
 
 public class Swerve extends SwerveBase {
      private static SwerveModule[] swerveModules = {
@@ -32,14 +36,18 @@ public class Swerve extends SwerveBase {
     
    private Limelight limelight;
    private Field2d limelightField = new Field2d();
+   private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
+   private PathPlannerPath subwooferPath = PathPlannerPath.fromPathFile("subwooferPath");
 
     public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
+        ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         // Auto Config
+        
             AutoBuilder.configureHolonomic(
-                this::getOdometryPose, // Robot pose supplier
+                this::getPose, // Robot pose supplier
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -48,28 +56,26 @@ public class Swerve extends SwerveBase {
                         new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
                         AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
                         AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                        replanningConfig // Default path replanning config. See the API for the options here
                 ),
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
+                () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
                 this // Reference to this subsystem to set requirements
-        );
-        SmartDashboard.putBoolean("Swerve Debug On?", false);
+            );
+            SmartDashboard.putBoolean("Swerve Debug On?", false);
     }
 
-    @Override
-    public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
+    public Command ampLineUp() {
+        return AutoBuilder.pathfindToPose(FieldConstants.BLUE_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        /* alternate ampLineUp command in case first one does not work
+        return AutoBuilder.pathfindThenFollowPath(ampPath, AutoConstants.CONSTRAINTS, 0);
+        */
+    }
+
+    public Command subwooferLineUp() {
+        return AutoBuilder.pathfindToPose(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE, AutoConstants.CONSTRAINTS, 0, 0);
+        /* alternate subwooferLineUp command in case first one does not work
+        return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
+        */
     }
     
 
@@ -103,12 +109,20 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && limelight.getTargetSpacePose().getX() <= 1) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getX() <= 1. && limelight.getTargetSpacePose().getX() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());
+            gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
         }
         if(limelight.hasTarget()) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
             poseEstimator.update(getYaw(), getModulePositions());
         }
+    }
+    /**
+     * Sets the module states based on chassis speeds.
+     */
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
     }
 }

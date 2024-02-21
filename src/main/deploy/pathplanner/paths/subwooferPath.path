@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5,
-        "y": 4.12
+        "x": 2.46,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5524738998195946,
-        "y": 4.15508246332732
+        "x": 1.46,
+        "y": 5.55
       },
       "isLocked": false,
-      "linkedName": "ma_startpoint"
+      "linkedName": "ring2_pickup"
     },
     {
       "anchor": {
@@ -20,15 +20,21 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.778380996424856,
-        "y": 5.433058455581198
+        "x": 1.4400000000000002,
+        "y": 5.55
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "subwoofer_dep"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -43,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "-middle",
+  "folder": "pathplanning",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

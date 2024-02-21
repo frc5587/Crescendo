@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.119131303789673,
-        "y": 5.57
+        "x": 2.46,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1691313037896727,
-        "y": 5.57
+        "x": 2.51,
+        "y": 5.55
       },
       "isLocked": false,
       "linkedName": "ring2_pickup"
@@ -25,14 +25,14 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "stop, rev, & aim",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intake::stop"
+                "name": "intakeStop"
               }
             },
             {
@@ -62,8 +62,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.25,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 90.0,
     "maxAngularAcceleration": 90.0
   },
@@ -73,7 +73,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ring2",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

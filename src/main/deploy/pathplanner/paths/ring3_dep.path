@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.084048840462353,
+        "x": 2.12,
         "y": 4.1046482092964185
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1340488404623534,
-        "y": 4.1046482092964185
+        "x": 1.2749511869854007,
+        "y": 5.693953876442489
       },
       "isLocked": false,
       "linkedName": "ring3_pickup"
@@ -20,20 +20,20 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.29,
-        "y": 5.55
+        "x": 1.3634735781392946,
+        "y": 5.505852620357054
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "dep_preloaded_end"
+      "linkedName": "subwoofer_dep"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.25,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 90.0,
     "maxAngularAcceleration": 90.0
   },
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ring3",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }
