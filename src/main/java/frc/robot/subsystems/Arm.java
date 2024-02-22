@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.time.Instant;
 import java.util.function.Supplier;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
@@ -89,6 +90,17 @@ public class Arm extends PivotingArmBase {
 
     public void armAmp() {
         setGoal(ArmConstants.AMP_SETPOINT);
+    }
+
+    public void armStage() {
+        setGoal(ArmConstants.STAGE_SETPOINT);
+    }
+    
+    public InstantCommand armStageCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armStage();
+        });
     }
 
     public InstantCommand armAmpCommand() {

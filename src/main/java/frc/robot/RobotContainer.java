@@ -102,6 +102,7 @@ public class RobotContainer {
         intakeLimitSwitch.onTrue(arm.disableManualMode());
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);
+        xbox2.povLeft().onTrue(arm.armStageCommand());
     }
 
     /**
