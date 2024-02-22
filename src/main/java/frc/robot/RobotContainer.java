@@ -92,7 +92,7 @@ public class RobotContainer {
         lB.whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         rB.whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         
-        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
         lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
         y.onTrue(arm.armAmpCommand());
         a.onTrue(arm.armRestCommand());

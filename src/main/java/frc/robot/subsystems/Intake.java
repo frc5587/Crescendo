@@ -60,7 +60,7 @@ public class Intake extends SimpleMotorBase {
     public void periodic() {
         // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
 
-        if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() == 0) {
+        if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() < 0.55) {
             stop();
         }
     }
