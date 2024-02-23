@@ -43,7 +43,8 @@ public class Intake extends PIDSubsystem {
     }
 
     public void forward() {
-        setVelocity(swerveSpeedSupplier.getAsDouble() * 2.);
+        double swerveSpeed = Math.abs(swerveSpeedSupplier.getAsDouble());
+        setVelocity(swerveSpeed * 2. < IntakeConstants.MINIMUM_VELOCITY ? IntakeConstants.MINIMUM_VELOCITY : swerveSpeed * 2.);
     }
 
     public void backward() {
