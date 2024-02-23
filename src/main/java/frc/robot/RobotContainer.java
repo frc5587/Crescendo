@@ -85,18 +85,19 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.a().onTrue(arm.armRestCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
         xbox2.y().onTrue(arm.armAmpCommand());
         xbox2.povUp().onTrue(arm.prepareToClimb());
         xbox2.povDown().onTrue(arm.chinUp());
+        xbox2.povLeft().onTrue(arm.armStageCommand());
+        xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
         intakeLimitSwitch.onTrue(arm.disableManualMode());
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);
-        xbox2.povLeft().onTrue(arm.armStageCommand());
     }
 
     /**
