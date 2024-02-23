@@ -116,4 +116,12 @@ public class Swerve extends SwerveBase {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
     }
+
+    /**
+     * Returns the linear velocity of this swerve in meters per second.
+     * @return
+     */
+    public double getLinearVelocity() {
+        return Math.atan2(getChassisSpeeds().vyMetersPerSecond, getChassisSpeeds().vxMetersPerSecond);
+    }
 }

@@ -58,7 +58,9 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, new Constraints(Math.PI, Math.PI));
+    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
+    public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
     public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
@@ -213,8 +215,8 @@ public final class Constants {
     public static final double REVERSE_THROTTLE = .25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 3.9107, 0.081738);
-    public static final PIDController PID = new PIDController(1.5841, 0, 0);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 1, 1);
+    public static final PIDController PID = new PIDController(1, 0, 0);
     public static final double MINIMUM_VELOCITY = 4;
     public static final double SWERVE_VELOCITY_OFFSET = 1;
   }

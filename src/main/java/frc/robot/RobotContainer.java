@@ -33,7 +33,7 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
-    private final Intake intake = new Intake(shooter::getMotorSpeeds);
+    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity);
     private final SendableChooser<Command> autoChooser;
 
     public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);

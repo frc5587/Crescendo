@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
@@ -47,8 +48,8 @@ public class Arm extends PivotingArmBase {
         getController().setTolerance(Units.degreesToRadians(1));
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
-        SmartDashboard.putBoolean("Arm Debug On?", false);
         SmartDashboard.putBoolean("Break Mode Enabled", breakModeEnabled);
+        SmartDashboard.putBoolean("Arm Debug On?", false);
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -142,7 +143,7 @@ public class Arm extends PivotingArmBase {
                                 2))) + Math.toRadians(72)).times(1.05);
     }
 
-    public void armDistanceSetpoint(Pose2d pose) {
+    public void armToDistanceSetpoint(Pose2d pose) {
         setGoal(poseDependantArmAngle(pose).getRadians());
     }
 
@@ -150,11 +151,6 @@ public class Arm extends PivotingArmBase {
     public void resetEncoders() {
         zeroThroughBore();
         resetToAbsolute();
-    }
-
-    public void chinUp() {
-        //  = new ProfiledPIDController(6., 0., 0., new TrapezoidProfile.Constraints(Math.PI, Math.PI));
-        setGoal(0);
     }
 
     @Override
@@ -173,18 +169,36 @@ public class Arm extends PivotingArmBase {
         }
     }
 
+    public Command chinUp() {
+        return new InstantCommand(() -> {
+            getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
+            armRest();
+        }, this);
+    }
+
     @Override
     public void periodic() {
-        super.periodic();
+        if(!manualMode) {
+            armToDistanceSetpoint(poseSupplier.get());
+        }
+
+        super.periodic(); // This is after the manual mode check because we want the new setpoint to be set before output is calculated + used.
+
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
+                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
+
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
-            if (SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+            if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
                 resetEncoders();
             }
             SmartDashboard.putBoolean("Reset Arm Encoders", false);
+            
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
             SmartDashboard.putNumber("Throughbore Offset", throughBore.getPositionOffset());
             SmartDashboard.putBoolean("Arm Limit Switch", magLimitSwitch.get());
 
+            SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
+            SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
             SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
         
             SmartDashboard.putData("Arm PID", this.getController());
@@ -194,6 +208,11 @@ public class Arm extends PivotingArmBase {
                 leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
                 rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
             }
+
+            if(SmartDashboard.getBoolean("Reset Constraints", false) && getController().getConstraints().equals(ArmConstants.CLIMB_CONSTRAINTS)) {
+                getController().setConstraints(ArmConstants.DEFAULT_CONSTRAINTS);
+            }
+            SmartDashboard.putBoolean("Reset Constraints", false);
         }
         
         if(magLimitSwitch.get()) {
@@ -211,23 +230,6 @@ public class Arm extends PivotingArmBase {
             this.enable();
             this.wasManuallyDisabled = false;
         }
-
-        if(SmartDashboard.getBoolean("Break Mode Enabled", true) != breakModeEnabled) {
-            this.breakModeEnabled = SmartDashboard.getBoolean("Break Mode Enabled", true);
-            leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-            rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-        }
-
-        SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
-        SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
-
-        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
-                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
-
-        if(!manualMode) {
-            armDistanceSetpoint(poseSupplier.get());
-        }
-        SmartDashboard.putData("Arm PID", this.getController());
     }
 
     public void setManualMode(boolean manualMode) {
