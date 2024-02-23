@@ -81,25 +81,20 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        Trigger rB = xbox2.rightBumper();
-        Trigger lB = xbox2.leftBumper();
-        Trigger rT = xbox2.rightTrigger();
-        Trigger lT = xbox2.leftTrigger();
-        Trigger y = xbox2.y();
-        Trigger a = xbox2.a();
-        Trigger b = xbox2.b();
         Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
         // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
         // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
-        lB.whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
-        rB.whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         
-        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
-        lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        y.onTrue(arm.armAmpCommand());
-        a.onTrue(arm.armRestCommand());
-        b.onTrue(arm.disableManualMode());
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
+        xbox2.a().onTrue(arm.armRestCommand());
+        xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
+        xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.povUp().onTrue(arm.prepareToClimb());
+        xbox2.povDown().onTrue(arm.chinUp());
         intakeLimitSwitch.onTrue(arm.disableManualMode());
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);

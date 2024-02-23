@@ -162,6 +162,13 @@ public class Arm extends PivotingArmBase {
         }, this);
     }
 
+    public Command prepareToClimb() {
+        return new InstantCommand(() -> {
+            getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
+            setGoal(Units.degreesToRadians(88));
+        }, this);
+    }
+
     @Override
     public void periodic() {
         if(!manualMode) {
