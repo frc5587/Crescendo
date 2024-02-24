@@ -30,7 +30,37 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "stop all, slow shooter",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterIdle"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeStop"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "armRest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.5,
