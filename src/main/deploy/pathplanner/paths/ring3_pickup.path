@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3400000000047436,
-        "y": 3.7607943703122872
+        "x": 1.340000000003977,
+        "y": 4.05
       },
       "isLocked": false,
       "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 2.12,
+        "x": 2.3,
         "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.111782049577448,
-        "y": 4.153968238603511
+        "x": 2.25,
+        "y": 4.1046482092964185
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,37 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "prep intake, slow shooter",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armRest"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterIdle"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeForward"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.5,
