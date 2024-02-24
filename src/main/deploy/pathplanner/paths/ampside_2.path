@@ -3,36 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.7,
-        "y": 5.55
+        "x": 7.825878671700363,
+        "y": 7.437482225391801
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.75,
-        "y": 5.55
+        "x": 6.825878671700364,
+        "y": 7.437482225391801
       },
       "isLocked": false,
-      "linkedName": "ring2_pickup"
+      "linkedName": "ampside_mid_end"
     },
     {
       "anchor": {
-        "x": 1.34,
-        "y": 5.55
+        "x": 6.738322308553448,
+        "y": 1.7424290119235524
       },
       "prevControl": {
-        "x": 2.34,
-        "y": 5.55
+        "x": 8.04932410193955,
+        "y": 3.0142964234175333
+      },
+      "nextControl": {
+        "x": 5.954813960909972,
+        "y": 0.9823089731649555
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7041386162544403,
+        "y": 4.420390379242297
+      },
+      "prevControl": {
+        "x": 0.7041386162544401,
+        "y": 2.4203903792422974
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "subwoofer_dep"
+      "linkedName": "source_dep"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "stop, rev, & aim",
+      "name": "stop intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -43,7 +59,18 @@
               "data": {
                 "name": "intakeStop"
               }
-            },
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "prep shoot",
+      "waypointRelativePos": 1.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
             {
               "type": "named",
               "data": {
@@ -69,11 +96,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": -60.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "ring2",
-  "previewStartingState": null,
+  "folder": "-amp",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

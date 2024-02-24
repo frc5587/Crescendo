@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.34,
-      "y": 5.55
+      "x": 0.7041386162544403,
+      "y": 4.420390379242297
     },
-    "rotation": 0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shooterForward"
+                  "name": "armAim"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
+                  "name": "shooterForward"
                 }
               }
             ]
@@ -51,67 +51,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ring2_pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring2_dep"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
+            "pathName": "simplesourcedep"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring1_pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring1_dep"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
+            "name": "shooterStop"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "intakeStop"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring2_crossline"
+            "name": "armRest"
           }
         }
       ]

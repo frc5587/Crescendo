@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import org.frc5587.lib.subsystems.SimpleMotorBase;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -15,6 +18,7 @@ public class Shooter extends SimpleMotorBase {
     public Shooter() {
         super(leftMotor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
         configureMotors();
+        idleSpeed();
     }
 
     @Override
@@ -31,7 +35,16 @@ public class Shooter extends SimpleMotorBase {
 
     }
 
+    public void idleSpeed() {
+        motors.set(forwardThrottle / 4);
+    }
+
     public double getMotorSpeeds() {
         return leftMotor.get();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Shooter Speed", getMotorSpeeds());
     }
 }

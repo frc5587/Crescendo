@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -26,6 +27,7 @@ import frc.robot.commands.SimLineUpToSpeaker;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Photon;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SimGyro;
 import frc.robot.subsystems.SimSwerve;
@@ -35,10 +37,11 @@ import frc.robot.util.DeadbandedCommandXboxController;
 
 public class RobotContainer {
     private final Limelight limelight = new Limelight();
+    private final Photon photon = new Photon();
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
-    private final Intake intake = new Intake(shooter::getMotorSpeeds);
+    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity);
     private final SendableChooser<Command> autoChooser;
 
     protected final SimSwerve simSwerve = new SimSwerve(
@@ -70,6 +73,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
         NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
@@ -94,26 +98,22 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        Trigger rB = xbox2.rightBumper();
-        Trigger lB = xbox2.leftBumper();
-        Trigger rT = xbox2.rightTrigger();
-        Trigger lT = xbox2.leftTrigger();
-        Trigger y = xbox2.y();
-        Trigger a = xbox2.a();
-        Trigger b = xbox2.b();
         Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
         // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
         // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
-        lB.whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
-        rB.whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         
-        rT.whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stop));
-        lT.whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::stop));
-        y.onTrue(arm.armAmpCommand());
-        a.onTrue(arm.armRestCommand());
-        b.onTrue(arm.disableManualMode());
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.a().onTrue(arm.armRestCommand());
+        xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.enableManualMode().andThen(new InstantCommand(() -> arm.setGoal(Units.degreesToRadians(3)))));
-        xbox.povDown().onTrue(swerve.ampLineUp());
+        xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.povUp().onTrue(arm.armStageCommand());
+        xbox2.povDown().onTrue(arm.chinUp());
+        xbox2.povLeft().onTrue(arm.armStageCommand());
+        xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
         intakeLimitSwitch.onTrue(arm.disableManualMode());
         xbox.povDown().whileTrue(simAutoRotateToShoot.alongWith(autoRotateToShoot));
         xbox.povUp().whileTrue(simLineUpToSpeaker.alongWith(lineUpToSpeaker));

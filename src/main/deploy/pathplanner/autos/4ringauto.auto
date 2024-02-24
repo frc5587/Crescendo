@@ -111,7 +111,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ring2_crossline"
+            "pathName": "ring3_pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ring3_dep"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeForward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         }
       ]

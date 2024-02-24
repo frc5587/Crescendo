@@ -9,18 +9,18 @@
       "prevControl": null,
       "nextControl": {
         "x": 1.3399999999999999,
-        "y": 7.05
+        "y": 7.049999999999999
       },
       "isLocked": false,
       "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 2.6995861908390486,
+        "x": 2.3,
         "y": 6.980217946547005
       },
       "prevControl": {
-        "x": 1.9495861908390486,
+        "x": 1.7999999999999998,
         "y": 6.980217946547005
       },
       "nextControl": null,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "stop shooter, prep intake",
+      "name": "slow shooter, prep intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -47,7 +47,7 @@
             {
               "type": "named",
               "data": {
-                "name": "shooterStop"
+                "name": "shooterIdle"
               }
             },
             {

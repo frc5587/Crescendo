@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.34,
-      "y": 5.55
+      "x": 0.6924444618120005,
+      "y": 6.677362186633205
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shooterForward"
+                  "name": "armAim"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
+                  "name": "shooterForward"
                 }
               }
             ]
@@ -49,69 +49,27 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "ring2_pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring2_dep"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
+            "name": "intakeStop"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring1_pickup"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ring1_dep"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
+            "name": "shooterIdle"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "name": "armRest"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ring2_crossline"
+            "pathName": "simpleampdep"
           }
         }
       ]

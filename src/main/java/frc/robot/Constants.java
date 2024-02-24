@@ -48,17 +48,20 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(3);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
     public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(87)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
-    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(376); // TODO: Replace this placeholder
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.6, 0, 0.3, new Constraints(3, 1.5));
-    public static final ArmFeedforward FF = new ArmFeedforward(0., 0.02, 1.5, 0.);
+    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
+    public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
+    public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
 
@@ -209,12 +212,12 @@ public final class Constants {
     public static final int FREE_LIMIT = 20;
 
     public static final double FORWARD_THROTTLE = .75;
-    public static final double REVERSE_THROTTLE = .25;
+    public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 3.9107, 0.081738);
-    public static final PIDController PID = new PIDController(1.5841, 0, 0);
-    public static final double MINIMUM_VELOCITY = 4;
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
+    public static final PIDController PID = new PIDController(0.15, 0, 0.0);
+    public static final double MINIMUM_VELOCITY = 30;
     public static final double SWERVE_VELOCITY_OFFSET = 1;
   }
 
@@ -258,11 +261,11 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = .05;
+        public static final double ROTATION_KP = .5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 3;
+        public static final double TRANSLATION_KP = 5;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 

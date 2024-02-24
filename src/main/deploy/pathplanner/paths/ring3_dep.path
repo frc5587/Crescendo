@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.12,
+        "x": 2.3,
         "y": 4.1046482092964185
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2749511869854007,
-        "y": 5.693953876442489
+        "x": 1.4052913544468053,
+        "y": 5.431108325384486
       },
       "isLocked": false,
       "linkedName": "ring3_pickup"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.3634735781392946,
-        "y": 5.505852620357054
+        "x": 1.3679596451735372,
+        "y": 5.508548121372248
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,37 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "stop, rev, aim",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeStop"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterForward"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "armAim"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.5,
