@@ -151,6 +151,10 @@ public class Arm extends PivotingArmBase {
         setGoal(poseDependantArmAngle(pose).getRadians());
     }
 
+    public void armToDistanceSetpoint() {
+        setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
+    }
+
     @Override
     public void resetEncoders() {
         zeroThroughBore();
@@ -246,7 +250,7 @@ public class Arm extends PivotingArmBase {
 
     @Override
     public void simulationPeriodic() {
-        armPose = new Pose3d(0, -0.625, 0.22, new Rotation3d(getController().getGoal().position, 0, 0));
+        armPose = new Pose3d(-0.33, 0., 0.22, new Rotation3d(getController().getGoal().position, 0, -Units.degreesToRadians(90.)));
         Logger.recordOutput("Arm Pose", armPose);
     }
 

@@ -38,15 +38,15 @@ import frc.robot.util.DeadbandedCommandXboxController;
 public class RobotContainer {
     private final Limelight limelight = new Limelight();
     private final Photon photon = new Photon();
+    protected final SimSwerve simSwerve = new SimSwerve(
+            new SimGyro() {}, new SimSwerveModule() {}, new SimSwerveModule() {},
+            new SimSwerveModule() {}, new SimSwerveModule() {});
     private final Swerve swerve = new Swerve(limelight);
-    private final Arm arm = new Arm(swerve::getPose);
+    private final Arm arm = new Arm(simSwerve::getPose);
     private final Shooter shooter = new Shooter();
     private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity);
     private final SendableChooser<Command> autoChooser;
 
-    protected final SimSwerve simSwerve = new SimSwerve(
-            new SimGyro() {}, new SimSwerveModule() {}, new SimSwerveModule() {},
-            new SimSwerveModule() {}, new SimSwerveModule() {});
 
     public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
     public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
@@ -76,7 +76,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
-        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false); arm.armToDistanceSetpoint(simSwerve.getPose());}));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
