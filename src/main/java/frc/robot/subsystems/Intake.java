@@ -76,6 +76,7 @@ public class Intake extends PIDSubsystem {
         // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
         SmartDashboard.putNumber("Intake Setpoint", getSetpoint());
         SmartDashboard.putNumber("Intake Measurement", getMeasurement());
+        SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
         if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() < 0.55) {
             stop();
         }

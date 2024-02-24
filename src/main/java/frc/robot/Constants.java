@@ -243,8 +243,17 @@ public final class Constants {
         public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(16.53, 5.556, 3.267);
         public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(15.20, 5.556, new Rotation2d());
 
-        public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));
-        public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
+    public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));
+    public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
+
+    public static final Translation2d[] BLUE_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
+    public static final Translation2d[] RED_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
     }
 
     public static final class LimelightConstants {
@@ -265,7 +274,7 @@ public final class Constants {
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 5;
+        public static final double TRANSLATION_KP = 5.5;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 

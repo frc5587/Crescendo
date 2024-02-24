@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FieldConstants;
 
 public class Arm extends PivotingArmBase {
@@ -264,6 +265,24 @@ public class Arm extends PivotingArmBase {
 
     public InstantCommand disableManualMode() {
         return new InstantCommand(() -> this.setManualMode(false));
+    }
+
+    public boolean inAutoAimSpace(Pose2d pose) {
+        boolean withinX;
+        boolean withinY;
+        if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
+            withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        else {
+            withinX = pose.getX() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        return withinX && withinY;
+    }
+    
+    public Command travelSetpoint() {
+        return enableManualMode().andThen(new InstantCommand(() -> this.setGoal(Units.degreesToRadians(6))));
     }
 
     public Rotation2d getRawAbsolutePosition() {
