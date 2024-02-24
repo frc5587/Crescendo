@@ -266,6 +266,10 @@ public class Arm extends PivotingArmBase {
         }
         return withinX && withinY;
     }
+    
+    public Command travelSetpoint() {
+        return enableManualMode().andThen(new InstantCommand(() -> this.setGoal(Units.degreesToRadians(6))));
+    }
 
     public Rotation2d getRawAbsolutePosition() {
         double abs = throughBore.getAbsolutePosition();

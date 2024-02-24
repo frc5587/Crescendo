@@ -31,7 +31,7 @@ public class Limelight extends LimelightBase {
 
     public Pose3d getTargetSpacePose() {
         double[] limelightBotPose = limelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
-        return new Pose3d(limelightBotPose[0], limelightBotPose[1], limelightBotPose[2], new Rotation3d(0, 0, Rotation2d.fromDegrees(limelightBotPose[5]).getRadians()));
+        return new Pose3d(limelightBotPose[0], limelightBotPose[1], Math.abs(limelightBotPose[2]), new Rotation3d(0, 0, Rotation2d.fromDegrees(limelightBotPose[4]).getRadians()));
     }
 
     public void periodic() {
