@@ -76,8 +76,8 @@ public class Arm extends PivotingArmBase {
         leftMotor.setNeutralMode(NeutralModeValue.Brake);
         rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        leftMotor.setInverted(true);
-        rightMotor.setInverted(true);
+        leftMotor.setInverted(false);
+        rightMotor.setInverted(false);
 
         leftMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT)
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));

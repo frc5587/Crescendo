@@ -26,7 +26,7 @@ public class AutoRotateToShoot extends Command {
     public void execute() {
         Pose2d currentPose = swerve.getPose();
         Rotation2d currentAngle = swerve.getYaw();
-        Rotation2d targetAngle = Rotation2d.fromRadians(-Math.atan2(
+        Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
                 currentPose.getY() - (DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getY(),
                 currentPose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getX()
             ));
