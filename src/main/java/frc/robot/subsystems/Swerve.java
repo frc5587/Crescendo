@@ -100,11 +100,15 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getX() <= 1. && limelight.getTargetSpacePose().getX() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             resetOdometry(limelight.getLimelightPose());
             gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
+            SmartDashboard.putBoolean("Within Range", true);
         }
-        if(limelight.hasTarget()) {
+        else {
+            SmartDashboard.putBoolean("Within Range", false);
+        }
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 3.5)) {
             poseEstimator.addVisionMeasurement(getEstimatedPose(), 0);
             poseEstimator.update(getYaw(), getModulePositions());
         }

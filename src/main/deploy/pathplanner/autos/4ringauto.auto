@@ -115,6 +115,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ring3_dep"
@@ -130,6 +136,31 @@
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterIdle"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armRest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeStop"
+                }
+              }
+            ]
           }
         }
       ]
