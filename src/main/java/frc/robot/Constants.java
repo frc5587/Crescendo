@@ -245,6 +245,15 @@ public final class Constants {
 
     public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));
     public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
+
+    public static final Translation2d[] BLUE_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
+    public static final Translation2d[] RED_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
     }
 
     public static final class LimelightConstants {
