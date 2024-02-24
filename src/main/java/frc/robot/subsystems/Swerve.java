@@ -113,7 +113,7 @@ public class Swerve extends SwerveBase {
      * Sets the module states based on chassis speeds.
      */
     public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
     }
 
