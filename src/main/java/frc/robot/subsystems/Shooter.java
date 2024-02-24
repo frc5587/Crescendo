@@ -36,7 +36,7 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public void idleSpeed() {
-        motors.set(forwardThrottle / 2);
+        motors.set(forwardThrottle / 4);
     }
 
     public double getMotorSpeeds() {

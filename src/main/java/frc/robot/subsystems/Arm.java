@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.time.Instant;
 import java.util.function.Supplier;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
@@ -50,6 +49,7 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
         SmartDashboard.putBoolean("Break Mode Enabled", breakModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
+        configureMotors();
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -77,7 +77,7 @@ public class Arm extends PivotingArmBase {
         rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
         leftMotor.setInverted(true);
-        rightMotor.setInverted(false);
+        rightMotor.setInverted(true);
 
         leftMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(ArmConstants.STALL_LIMIT)
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
@@ -153,6 +153,10 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
     }
 
+    public boolean getLimitSwitch() {
+        return !magLimitSwitch.get();
+    }
+
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
         super.useOutput(output, setpoint);
@@ -176,13 +180,6 @@ public class Arm extends PivotingArmBase {
         }, this);
     }
 
-    public Command prepareToClimb() {
-        return new InstantCommand(() -> {
-            getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
-            setGoal(Units.degreesToRadians(88));
-        }, this);
-    }
-
     @Override
     public void periodic() {
         if(!manualMode) {
@@ -202,7 +199,7 @@ public class Arm extends PivotingArmBase {
             
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
             SmartDashboard.putNumber("Throughbore Offset", throughBore.getPositionOffset());
-            SmartDashboard.putBoolean("Arm Limit Switch", magLimitSwitch.get());
+            SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitch());
 
             SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
             SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
@@ -222,7 +219,7 @@ public class Arm extends PivotingArmBase {
             SmartDashboard.putBoolean("Reset Constraints", false);
         }
         
-        if(magLimitSwitch.get()) {
+        if(getLimitSwitch()) {
             setEncoderPosition(new Rotation2d());
         }
 
@@ -236,6 +233,10 @@ public class Arm extends PivotingArmBase {
         if(SmartDashboard.getBoolean("Arm Enabled", true) && wasManuallyDisabled) {
             this.enable();
             this.wasManuallyDisabled = false;
+        }
+        else if(!SmartDashboard.getBoolean("Arm Enabled", true) && !wasManuallyDisabled) {
+            wasManuallyDisabled = true;
+            this.disable();
         }
     }
 
@@ -260,7 +261,7 @@ public class Arm extends PivotingArmBase {
         Rotation2d abs = getRawAbsolutePosition().minus(Rotation2d.fromRotations(throughBore.getPositionOffset()));
         SmartDashboard.putNumber("Abs in Rotations", abs.getRotations());
     
-        return abs.plus(Rotation2d.fromRotations(abs.getRotations() < 0 ? abs.getRotations() + 0.25 : abs.getRotations()));
+        return abs;//abs.plus(Rotation2d.fromRotations(abs.getRotations() < 0 ? abs.getRotations() + 0.25 : abs.getRotations()));
     }
 
     public void zeroThroughBore() {
@@ -272,7 +273,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public Rotation2d throughBoreToMotor(Rotation2d throughBoreRotations) {
-        return throughBoreRotations.div(ArmConstants.GEARING_THROUGHBORE_TO_MOTOR);
+        return throughBoreRotations.times(ArmConstants.GEARING_THROUGHBORE_TO_MOTOR);
     }
 
     public void resetToAbsolute() {

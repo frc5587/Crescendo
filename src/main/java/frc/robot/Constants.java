@@ -48,8 +48,8 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(3);
-    public static final double STAGE_SETPOINT = Units.degreesToRadians(90);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
@@ -212,12 +212,12 @@ public final class Constants {
     public static final int FREE_LIMIT = 20;
 
     public static final double FORWARD_THROTTLE = .75;
-    public static final double REVERSE_THROTTLE = .25;
+    public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.10904, 1, 1);
-    public static final PIDController PID = new PIDController(1, 0, 0);
-    public static final double MINIMUM_VELOCITY = 4;
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
+    public static final PIDController PID = new PIDController(0.15, 0, 0.0);
+    public static final double MINIMUM_VELOCITY = 30;
     public static final double SWERVE_VELOCITY_OFFSET = 1;
   }
 
@@ -261,11 +261,11 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = .05;
+        public static final double ROTATION_KP = .5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
-        public static final double TRANSLATION_KP = 3;
+        public static final double TRANSLATION_KP = 5;
         public static final double TRANSLATION_KI = 0;
         public static final double TRANSLATION_KD = 0;
 

@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.IntakeConstants;
 
@@ -28,6 +29,7 @@ public class Intake extends PIDSubsystem {
         motor.setInverted(IntakeConstants.MOTOR_INVERTED);
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
         motor.setIdleMode(IdleMode.kBrake);
+        this.enable();
     }
 
     public void resetEncoders() {
@@ -43,30 +45,37 @@ public class Intake extends PIDSubsystem {
     }
 
     public void forward() {
-        double swerveSpeed = Math.abs(swerveSpeedSupplier.getAsDouble());
-        setVelocity(swerveSpeed * 2. < IntakeConstants.MINIMUM_VELOCITY ? IntakeConstants.MINIMUM_VELOCITY : swerveSpeed * 2.);
+        motor.set(IntakeConstants.FORWARD_THROTTLE);
+        // double swerveSpeed = Math.abs(swerveSpeedSupplier.getAsDouble());
+        // setVelocity(swerveSpeed * 15. < IntakeConstants.MINIMUM_VELOCITY ? IntakeConstants.MINIMUM_VELOCITY : swerveSpeed * IntakeConstants.MINIMUM_VELOCITY);
     }
 
     public void backward() {
-        setVelocity(-IntakeConstants.REVERSE_THROTTLE);
+        // setVelocity(-IntakeConstants.REVERSE_THROTTLE);
+        motor.set(-IntakeConstants.REVERSE_THROTTLE);
     }
 
     public void stop() {
-        setVelocity(0);
+        // setVelocity(0);
+        motor.set(0.);
     }
     
     public boolean getLimitSwitch() {
         return !limitSwitch.get();
     }
+
     @Override
     protected void useOutput(double output, double setpoint) {
         motor.setVoltage(IntakeConstants.FF.calculate(setpoint) + output);
+        SmartDashboard.putNumber("Intake Output", output);
     }
 
     @Override
     public void periodic() {
+        // super.periodic();
         // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
-
+        SmartDashboard.putNumber("Intake Setpoint", getSetpoint());
+        SmartDashboard.putNumber("Intake Measurement", getMeasurement());
         if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() < 0.55) {
             stop();
         }

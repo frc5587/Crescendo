@@ -655,19 +655,69 @@
               "_showGlyph": false
             }
           },
-          "4,3": {
+          "7,2": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Arm Limit Switch",
-              "_title": "/SmartDashboard/Arm Limit Switch",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Abs in Degrees",
+              "_title": "/SmartDashboard/Abs in Degrees",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_showGlyph": false
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Abs in Rotations",
+              "_title": "/SmartDashboard/Abs in Rotations",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Intake Measurement",
+              "_title": "SmartDashboard/Intake Measurement",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Intake Output",
+              "_title": "SmartDashboard/Intake Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Intake Setpoint",
+              "_title": "SmartDashboard/Intake Setpoint",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
