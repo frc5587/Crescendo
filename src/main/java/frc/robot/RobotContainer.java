@@ -39,7 +39,10 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
-    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity, (rumbleMagnitude) -> xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude));
+    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity, (rumbleMagnitude) -> {
+            xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+            xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+    });
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
