@@ -11,7 +11,11 @@
     "ring2",
     "ring3"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "amp side",
+    "middle side",
+    "source side"
+  ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 90.0,

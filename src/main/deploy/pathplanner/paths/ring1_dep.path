@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3616141930585097,
-        "y": 5.333294272721475
+        "x": 1.2486770493486836,
+        "y": 5.4153479106181175
       },
       "isLocked": false,
       "linkedName": "ring1_pickup"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.8991929034707455,
-        "y": 6.379037572555044
+        "x": 1.969320391049838,
+        "y": 6.327145961456972
       },
       "nextControl": null,
       "isLocked": false,
