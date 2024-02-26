@@ -12,6 +12,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,16 +31,16 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.util.DeadbandedCommandXboxController;
 
 public class RobotContainer {
+    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
+    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
+
     private final Limelight limelight = new Limelight();
     private final Photon photon = new Photon();
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
-    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity);
+    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity, (rumbleMagnitude) -> xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude));
     private final SendableChooser<Command> autoChooser;
-
-    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
-    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), () -> xbox.rightBumper().negate().getAsBoolean());

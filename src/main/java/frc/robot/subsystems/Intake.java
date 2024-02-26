@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -15,11 +16,13 @@ public class Intake extends PIDSubsystem {
     private CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
     private final DigitalInput limitSwitch = new DigitalInput(1);
     private final DoubleSupplier shooterSpeedSupplier, swerveSpeedSupplier;
+    private final DoubleConsumer rumbleConsumer;
     
-    public Intake(DoubleSupplier shooterSpeedSupplier, DoubleSupplier swerveSpeedSupplier) {
+    public Intake(DoubleSupplier shooterSpeedSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
         this.shooterSpeedSupplier = shooterSpeedSupplier;
         this.swerveSpeedSupplier = swerveSpeedSupplier;
+        this.rumbleConsumer = rumbleConsumer;
         configureMotors();
     }
 
@@ -79,6 +82,9 @@ public class Intake extends PIDSubsystem {
         SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
         if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() < 0.55) {
             stop();
+        }
+        if(getLimitSwitch()) {
+            rumbleConsumer.accept(0.8);
         }
     }
 
