@@ -234,6 +234,8 @@ public final class Constants {
     // motor speeds
     public static final double FORWARD_THROTTLE = .8;
     public static final double REVERSE_THROTTLE = .8;
+
+    public static final double MAX_MOTOR_SPEED_RPS = 1;
   }
 
   public static final class FieldConstants {

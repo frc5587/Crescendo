@@ -7,10 +7,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.MathShared;
 import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.IntakeConstants;
@@ -21,7 +19,7 @@ public class Intake extends PIDSubsystem {
     private final DoubleSupplier shooterSpeedSupplier, swerveSpeedSupplier;
     private final DoubleConsumer rumbleConsumer;
     private double limitSwitchTimerEndTime = MathSharedStore.getTimestamp() + 1;
-    private boolean switchTimeHasBeenSet, timeAlreadyExpiredThisLoop = false;
+    private boolean switchTimeHasBeenSet = false;
     
     public Intake(DoubleSupplier shooterSpeedSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
