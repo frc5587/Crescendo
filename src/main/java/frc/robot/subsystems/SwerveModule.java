@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -27,7 +28,11 @@ public class SwerveModule extends SwerveModuleBase {
         configureAngleEncoder();
         configureAngleMotor();
         configureDriveMotor();
+    }
 
+    public void setBrakeMode(boolean enabled) {
+        angleMotor.setNeutralMode(enabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+        driveMotor.setNeutralMode(enabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
     }
 
     @Override

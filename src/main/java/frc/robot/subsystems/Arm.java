@@ -31,7 +31,7 @@ public class Arm extends PivotingArmBase {
     private final DigitalInput magLimitSwitch = new DigitalInput(2);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
-    private boolean breakModeEnabled = true;
+    private boolean brakeModeEnabled = true;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -47,7 +47,7 @@ public class Arm extends PivotingArmBase {
         getController().setTolerance(Units.degreesToRadians(1));
         enable();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
-        SmartDashboard.putBoolean("Break Mode Enabled", breakModeEnabled);
+        SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         configureMotors();
     }
@@ -207,16 +207,17 @@ public class Arm extends PivotingArmBase {
         
             SmartDashboard.putData("Arm PID", this.getController());
 
-            if(SmartDashboard.getBoolean("Break Mode Enabled", true) != breakModeEnabled) {
-                this.breakModeEnabled = SmartDashboard.getBoolean("Break Mode Enabled", true);
-                leftMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-                rightMotor.setNeutralMode(breakModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-            }
-
+            
             if(SmartDashboard.getBoolean("Reset Constraints", false) && getController().getConstraints().equals(ArmConstants.CLIMB_CONSTRAINTS)) {
                 getController().setConstraints(ArmConstants.DEFAULT_CONSTRAINTS);
             }
             SmartDashboard.putBoolean("Reset Constraints", false);
+        }
+        
+        if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
+            this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
+            leftMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+            rightMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
         }
         
         if(getLimitSwitch()) {

@@ -4,6 +4,7 @@ import org.frc5587.lib.subsystems.SwerveBase;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -37,6 +38,7 @@ public class Swerve extends SwerveBase {
    private Field2d limelightField = new Field2d();
    private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
    private PathPlannerPath subwooferPath = PathPlannerPath.fromPathFile("subwooferPath");
+    private boolean brakeModeEnabled = true;
 
     public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
@@ -61,6 +63,7 @@ public class Swerve extends SwerveBase {
                 this // Reference to this subsystem to set requirements
             );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
+            SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
     }
 
     public Command ampLineUp() {
@@ -92,6 +95,13 @@ public class Swerve extends SwerveBase {
                 SmartDashboard.putNumber("M"+i+" Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
+            }
+        }
+
+        if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
+            this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
+            for(SwerveModule mod : swerveModules) {
+                mod.setBrakeMode(brakeModeEnabled);
             }
         }
 
