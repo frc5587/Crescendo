@@ -90,7 +90,7 @@ public class Intake extends PIDSubsystem {
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() > virtualSwitchTimerEndTime) {
             virtualLimitSwitchValue = true;
         }
-        if(getVirtualLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean()) {
+        if(getLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean() && motor.get() > 0.) {
             stop();
         }
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {

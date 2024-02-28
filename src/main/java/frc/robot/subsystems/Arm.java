@@ -162,15 +162,9 @@ public class Arm extends PivotingArmBase {
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
-        if(getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0) {
+        if((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.) || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.) || (getLimitSwitch() && output < 0)) {
             setVoltage(0);
         }
-
-        /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
-        else if(getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0) {
-            setVoltage(0);
-        }
-
         else {
             super.useOutput(output, setpoint);
         }
