@@ -84,12 +84,8 @@ public class Swerve extends SwerveBase {
     public void periodic() {
         super.periodic();
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
-            SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
-            if(SmartDashboard.getBoolean("Zero Yaw", false)) {
-                gyro.zeroYaw();
-            }
-            SmartDashboard.putBoolean("Zero Yaw", false);
+            
     
             for(int i = 0; i < swerveModules.length; i++) {
                 SmartDashboard.putNumber("M"+i+" Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
@@ -97,7 +93,11 @@ public class Swerve extends SwerveBase {
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
             }
         }
-
+        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
+        if(SmartDashboard.getBoolean("Zero Yaw", false)) {
+            gyro.zeroYaw();
+        }
+        SmartDashboard.putBoolean("Zero Yaw", false);
         if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
             for(SwerveModule mod : swerveModules) {
