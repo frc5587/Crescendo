@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -100,15 +101,17 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putData("LimelightField", limelightField);
         
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
-            resetOdometry(limelight.getLimelightPose());
-            // gyro.setYawZeroOffset(gyro.getUnZeroedYaw().plus(limelight.getLimelightPose().getRotation()));
+            // resetOdometry(limelight.getLimelightPose());
+            odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+            poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+            gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
             SmartDashboard.putBoolean("Within Range", true);
         }
         else {
             SmartDashboard.putBoolean("Within Range", false);
         }
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 3.5)) {
-            poseEstimator.addVisionMeasurement(getEstimatedPose(), limelight.calculateFPGAFrameTimestamp());
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 3.5) && !DriverStation.isAutonomousEnabled()) {
+            poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
             poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
         }
     }

@@ -36,7 +36,7 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
     private final Shooter shooter = new Shooter();
-    private final Intake intake = new Intake(shooter::getMotorSpeeds, swerve::getLinearVelocity, (rumbleMagnitude) -> {
+    private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
             xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
@@ -92,7 +92,7 @@ public class RobotContainer {
         
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.rightTrigger().and(xbox2.leftTrigger()).whileTrue(autoShootWhenLinedUp);
+        xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.armRestCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.travelSetpoint());

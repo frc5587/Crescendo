@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
@@ -16,15 +17,14 @@ import frc.robot.Constants.IntakeConstants;
 public class Intake extends PIDSubsystem {
     private CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
     private final DigitalInput limitSwitch = new DigitalInput(1);
-    private final DoubleSupplier shooterSpeedSupplier, swerveSpeedSupplier;
+    private final BooleanSupplier shooterSpunUpSupplier;
     private final DoubleConsumer rumbleConsumer;
-    private double limitSwitchTimerEndTime = MathSharedStore.getTimestamp() + 1;
-    private boolean switchTimeHasBeenSet = false;
+    private double rumbleTimerEndTime, virtualSwitchTimerEndTime = MathSharedStore.getTimestamp() + 1;
+    private boolean switchTimeHasBeenSet, virtualLimitSwitchValue = false;
     
-    public Intake(DoubleSupplier shooterSpeedSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
+    public Intake(BooleanSupplier shooterSpunUpSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
-        this.shooterSpeedSupplier = shooterSpeedSupplier;
-        this.swerveSpeedSupplier = swerveSpeedSupplier;
+        this.shooterSpunUpSupplier = shooterSpunUpSupplier;
         this.rumbleConsumer = rumbleConsumer;
         configureMotors();
     }
@@ -70,6 +70,10 @@ public class Intake extends PIDSubsystem {
         return !limitSwitch.get();
     }
 
+    public boolean getVirtualLimitSwitch() {
+        return virtualLimitSwitchValue;
+    }
+
     @Override
     protected void useOutput(double output, double setpoint) {
         motor.setVoltage(IntakeConstants.FF.calculate(setpoint) + output);
@@ -80,26 +84,34 @@ public class Intake extends PIDSubsystem {
     public void periodic() {
         // super.periodic();
         // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
-        SmartDashboard.putNumber("Intake Setpoint", getSetpoint());
+        SmartDashboard.putNumber("Intake Setpoint", motor.get());
         SmartDashboard.putNumber("Intake Measurement", getMeasurement());
         SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
-        if(getLimitSwitch() && shooterSpeedSupplier.getAsDouble() < 0.55) {
+        if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() > virtualSwitchTimerEndTime) {
+            virtualLimitSwitchValue = true;
+        }
+        if(getVirtualLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean()) {
             stop();
         }
-        if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < limitSwitchTimerEndTime) {
+        if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {
             rumbleConsumer.accept(1.);
         }
         else if(getLimitSwitch() && !switchTimeHasBeenSet) {
-            limitSwitchTimerEndTime = MathSharedStore.getTimestamp() + .6;
+            rumbleTimerEndTime = MathSharedStore.getTimestamp() + .6;
+            virtualSwitchTimerEndTime = MathSharedStore.getTimestamp() + 0.1;
+
             switchTimeHasBeenSet = true;
             rumbleConsumer.accept(1.);
         }
         else {
             rumbleConsumer.accept(0.);
+            virtualLimitSwitchValue = false;
         }
         if(!getLimitSwitch()) {
             switchTimeHasBeenSet = false;
+            virtualLimitSwitchValue = false;
         }
+        SmartDashboard.putBoolean("Virtual Switch", virtualLimitSwitchValue);
     }
 
 }

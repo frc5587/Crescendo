@@ -44,11 +44,15 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public double getMeasuredMotorSpeeds() {
-        return leftMotor.getEncoder().getVelocity() / 60;
+        return leftMotor.getEncoder().getVelocity() / 60.;
     }
 
     public double getMeasuredMotorSpeedsAsPercentage() {
-        return leftMotor.getEncoder().getVelocity() / 60 / ShooterConstants.MAX_MOTOR_SPEED_RPS;
+        return leftMotor.getEncoder().getVelocity() / 60. / ShooterConstants.MAX_MOTOR_SPEED_RPS;
+    }
+
+    public boolean isSpunUp() {
+        return getMeasuredMotorSpeedsAsPercentage() >= ShooterConstants.FORWARD_THROTTLE;
     }
 
     @Override
@@ -56,5 +60,6 @@ public class Shooter extends SimpleMotorBase {
         SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
         SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeeds());
         SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
+        SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
     }
 }
