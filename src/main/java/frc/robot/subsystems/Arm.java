@@ -192,18 +192,11 @@ public class Arm extends PivotingArmBase {
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
 
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
-            if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
-                resetEncoders();
-            }
-            SmartDashboard.putBoolean("Reset Arm Encoders", false);
-            
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
             SmartDashboard.putNumber("Throughbore Offset", throughBore.getPositionOffset());
             SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitch());
 
             SmartDashboard.putNumber("Arm Absolute Pos", getArmAbsolutePosition().getDegrees());
-            SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
-            SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
         
             SmartDashboard.putData("Arm PID", this.getController());
 
@@ -213,6 +206,14 @@ public class Arm extends PivotingArmBase {
             }
             SmartDashboard.putBoolean("Reset Constraints", false);
         }
+
+        if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+            resetEncoders();
+        }
+        SmartDashboard.putBoolean("Reset Arm Encoders", false);
+
+        SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
+        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
         
         if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
