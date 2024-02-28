@@ -159,7 +159,6 @@ public class Arm extends PivotingArmBase {
 
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
-        super.useOutput(output, setpoint);
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
@@ -170,6 +169,10 @@ public class Arm extends PivotingArmBase {
         /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
         else if(getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0) {
             setVoltage(0);
+        }
+
+        else {
+            super.useOutput(output, setpoint);
         }
     }
 
