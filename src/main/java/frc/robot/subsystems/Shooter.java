@@ -52,7 +52,7 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public boolean isSpunUp() {
-        return getMeasuredMotorSpeedsAsPercentage() >= ShooterConstants.FORWARD_THROTTLE;
+        return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
     }
 
     @Override
