@@ -272,7 +272,7 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = .5;
+        public static final double ROTATION_KP = 3.5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 
@@ -282,6 +282,7 @@ public final class Constants {
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+        public static final PathConstraints PATHFIND_CONSTRAINTS = new PathConstraints(0.75, 1, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
         
     }
 }

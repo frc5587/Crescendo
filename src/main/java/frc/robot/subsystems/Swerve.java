@@ -73,9 +73,9 @@ public class Swerve extends SwerveBase {
 
     public Command subwooferLineUp() {
         return AutoBuilder.pathfindToPose(DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.CONSTRAINTS, 0, 0);
-        /* alternate subwooferLineUp command in case first one does not work
-        return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
-        */
+        // alternate subwooferLineUp command in case first one does not work
+        // return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
+        //
     }
     
     @Override

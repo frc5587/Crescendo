@@ -110,8 +110,8 @@ public class RobotContainer {
         // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);
-        xbox.povLeft().whileTrue(new RunCommand(swerve::subwooferLineUp));
-        xbox.povRight().whileTrue(new RunCommand(swerve::ampLineUp));
+        xbox.povLeft().whileTrue(swerve.subwooferLineUp());
+        xbox.povRight().whileTrue(swerve.ampLineUp());
     }
 
     /**
