@@ -80,6 +80,10 @@ public class Intake extends PIDSubsystem {
         SmartDashboard.putNumber("Intake Output", output);
     }
 
+    public double getMotorSetSpeed() {
+        return motor.get();
+    }
+
     @Override
     public void periodic() {
         // super.periodic();
