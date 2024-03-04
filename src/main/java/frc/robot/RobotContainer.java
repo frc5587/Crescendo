@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,6 +50,10 @@ public class RobotContainer {
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
 
+    public void zeroYaw() {
+        swerve.zeroGyro();
+    }
+
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
         configureBindings();
@@ -66,6 +69,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
@@ -104,14 +108,14 @@ public class RobotContainer {
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armRestCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
-        xbox2.povUp().onTrue(arm.armStageCommand());
+        xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.povDown().onTrue(arm.chinUp());
         xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
         // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);
-        xbox.povLeft().whileTrue(swerve.subwooferLineUp());
-        xbox.povRight().whileTrue(swerve.ampLineUp());
+        // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
+        // xbox.povRight().whileTrue(swerve.ampLineUp());
     }
 
     /**

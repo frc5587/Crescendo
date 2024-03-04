@@ -48,7 +48,7 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(2);
     public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
@@ -58,7 +58,7 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI);
+    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI / 2);
     public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
     public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
@@ -234,6 +234,8 @@ public final class Constants {
     // motor speeds
     public static final double FORWARD_THROTTLE = 0.8;
     public static final double REVERSE_THROTTLE = .5;
+    public static final double AMP_THROTTLE = 0.4;
+    public static final double IDLE_SPEED = FORWARD_THROTTLE / 4;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;
   }
@@ -272,7 +274,7 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = 3.5;
+        public static final double ROTATION_KP = .5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 

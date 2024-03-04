@@ -1,0 +1,74 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5059719106599396,
+      "y": 7.307562004567661
+    },
+    "rotation": -90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "depintoamp_1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "armAmp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeForward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterStop"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "depintoamp_2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "amp side start",
+  "choreoAuto": false
+}
