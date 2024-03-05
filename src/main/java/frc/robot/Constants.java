@@ -4,19 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.subsystems.SwerveBase.SwerveConstants;
 import org.frc5587.lib.subsystems.SwerveModuleBase.SwerveModuleConstants;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -42,25 +46,28 @@ public final class Constants {
    public static final boolean RIGHT_MOTOR_INVERTED = true;
     
    //Values TBD, placeholders for now
-    public static final double SPEAKER_SETPOINT = Math.toRadians(40);
-    public static final double AMP_SETPOINT = Math.toRadians(7);
-    public static final double RESTING_SETPOINT = Math.toRadians(70);
+    public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
+    public static final double AMP_SETPOINT = Units.degreesToRadians(83);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
-    public static final double GEARING_ARM_TO_THROUGHBORE = 24./16.;
+    public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
-    public static final double[] SOFT_LIMITS = {Math.toRadians(4), Math.toRadians(90)};
-    public static final double ZERO_OFFSET = 0.0;
-    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0); // TODO: Replace this placeholder
+    public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(87)};
+    public static final Rotation2d ZERO_OFFSET = new Rotation2d();
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final ProfiledPIDController PID = new ProfiledPIDController(3.8528, 0, 0.28713, new Constraints(1, 0.5));
-    public static final ArmFeedforward FF = new ArmFeedforward(0.46656, 0.22857, 0.45468, 0.01122);
+    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
+    public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
+    public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 40;
 
   }
     public static final class DrivetrainConstants {
-        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
@@ -76,10 +83,10 @@ public final class Constants {
          * rectangular/square 4 module swerve
          */
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
-                new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
                 new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0));
+                new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
         public static final int DRIVE_ENCODER_CPR = 1;
         public static final int ANGLE_ENCODER_CPR = 1;
@@ -150,7 +157,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(231.943);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(158.688);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     0, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -162,7 +169,7 @@ public final class Constants {
             public static final int DRIVE_ID = 11;
             public static final int ANGLE_ID = 16;
             public static final int CANCODER_ID = 51;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(278.086);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-192.845);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     1, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -174,7 +181,7 @@ public final class Constants {
             public static final int DRIVE_ID = 12;
             public static final int ANGLE_ID = 17;
             public static final int CANCODER_ID = 52;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(346.113);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-261.453);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     2, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -186,7 +193,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(339.082);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(53.287);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     3, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -195,5 +202,87 @@ public final class Constants {
         
         public static final SwerveModuleConstants[] ALL_MODULE_CONSTANTS = {Mod0.MODULE_CONSTANTS, Mod1.MODULE_CONSTANTS, Mod2.MODULE_CONSTANTS, Mod3.MODULE_CONSTANTS};
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
+    }
+
+  public static final class IntakeConstants {
+    public static final int MOTOR_ID = 40;
+    public static final boolean MOTOR_INVERTED = true;
+
+    public static final int STALL_LIMIT = 25;
+    public static final int FREE_LIMIT = 20;
+
+    public static final double FORWARD_THROTTLE = .75;
+    public static final double REVERSE_THROTTLE = 0.25;
+    public static final double WHEEL_RADIUS = 1;
+    public static final double GEARING = 12;
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
+    public static final PIDController PID = new PIDController(0.15, 0, 0.0);
+    public static final double MINIMUM_VELOCITY = 30;
+    public static final double SWERVE_VELOCITY_OFFSET = 1;
+  }
+
+  public static final class ShooterConstants {
+    // motor ports
+    public static final int LEFT_MOTOR_ID = 30;
+    public static final int RIGHT_MOTOR_ID = 31;
+
+    public static final boolean RIGHT_MOTOR_INVERTED = false;
+    public static final boolean LEFT_MOTOR_INVERTED = true;
+    // motor limits
+    public static final int STALL_LIMIT = 30;
+    public static final int FREE_LIMIT = 35;
+    // motor speeds
+    public static final double FORWARD_THROTTLE = 0.8;
+    public static final double REVERSE_THROTTLE = .5;
+
+    public static final double MAX_MOTOR_SPEED_RPS = 71.8;
+  }
+
+  public static final class FieldConstants {
+    public static final Translation3d BLUE_SPEAKER_OPENING_TRANSLATION = new Translation3d(0.01, 5.556, 3.267);
+    public static final Pose2d BLUE_SUBWOOFER_FRONT_POSE = new Pose2d(1.35, 5.556, new Rotation2d());
+    
+    public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(16.53, 5.556, 3.267);
+    public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(15.20, 5.556, new Rotation2d());
+
+    public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));
+    public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
+
+    public static final Translation2d[] BLUE_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
+    public static final Translation2d[] RED_AUTO_TRACK_BOUNDS = {
+      new Translation2d(),
+      new Translation2d()
+    };
+    }
+
+    public static final class LimelightConstants {
+        public static final double MOUNT_ANGLE = 30;
+        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
+        public static final double DISTANCE_OFFSET = 0; // not needed
+    }
+
+    public static final class AutoConstants {
+        public static final double MAX_SPEED_MPS = 5.;  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 2.5; // 3. // in m/s^2 
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4.; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 8.; // Math.PI / 4.; // in radians/s^2 
+
+        // TODO set rotation + translation PID values
+        public static final double ROTATION_KP = 3.5;
+        public static final double ROTATION_KI = 0;
+        public static final double ROTATION_KD = 0;
+
+        public static final double TRANSLATION_KP = 5.5;
+        public static final double TRANSLATION_KI = 0;
+        public static final double TRANSLATION_KD = 0;
+
+        public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
+        public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+        public static final PathConstraints PATHFIND_CONSTRAINTS = new PathConstraints(0.75, 1, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+        
     }
 }

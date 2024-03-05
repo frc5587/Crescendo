@@ -4,62 +4,123 @@
 
 package frc.robot;
 
-import org.frc5587.lib.control.DeadbandCommandXboxController;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoRotateToShoot;
+import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.CharacterizationManager;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.LineUpToSpeaker;
+import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.DeadbandedCommandXboxController;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
+    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
+    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
-  protected final Swerve swerve = new Swerve();
-  protected final Arm arm = new Arm();
-  private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve);
+    private final Limelight limelight = new Limelight();
+    private final Swerve swerve = new Swerve(limelight);
+    private final Arm arm = new Arm(swerve::getPose);
+    private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve);
+    private final Shooter shooter = new Shooter();
+    private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
+            xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+            xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+    });
+    private final SendableChooser<Command> autoChooser;
 
-  private final DeadbandCommandXboxController xbox =
-      new DeadbandCommandXboxController(0);
-
-      private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, xbox::getLeftX,
-           () -> {return -xbox.getRightX();}, () -> xbox.rightBumper().negate().getAsBoolean());
-
+    private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
+            () -> xbox.getRightX(), xbox.rightBumper().negate());
+    private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
+    private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
+    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
+    private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
-  
-  public RobotContainer() {
-    // Configure the trigger bindings
-    swerve.setDefaultCommand(driveCommand);
-    configureBindings();
-    charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
-    charChooser.addOption("Arm Q Bwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kReverse));
-    charChooser.addOption("Arm D Fwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kForward));
-    charChooser.addOption("Arm D Bwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kReverse));
-    SmartDashboard.putData("Char", charChooser);
-  }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    
-  }
+    public RobotContainer() {
+        swerve.setDefaultCommand(driveCommand);
+        configureBindings();
+        DriverStation.silenceJoystickConnectionWarning(true);
+        PowerDistribution pd = new PowerDistribution();
+        pd.clearStickyFaults();
+        pd.close();
+        // arm.setDefaultCommand(armDistancePose);
+        NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
+        NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
+        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
+        NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
+        NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
+        charChooser.addOption("Arm Q Bwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kReverse));
+        charChooser.addOption("Arm D Fwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kForward));
+        charChooser.addOption("Arm D Bwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("Char", charChooser);
+        
+        CameraServer.startAutomaticCapture(0);
+    }
+
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be
+     * created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+     * an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+     * {@link
+     * CommandXboxController
+     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings() {
+        Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
+        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
+        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.rightBumper().whileTrue(runIntakeWithArm);//.onFalse(new InstantCommand(() -> {
+        //     intake.stop();
+        //     arm.travelSetpoint();
+        // }));
+        
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
+        xbox2.a().onTrue(arm.travelSetpointCommand());
+        xbox2.b().onTrue(arm.disableManualMode());
+        xbox2.x().onTrue(arm.armRestCommand());
+        xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.povUp().onTrue(arm.armStageCommand());
+        xbox2.povDown().onTrue(arm.chinUp());
+        xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
+        // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
+        xbox.povDown().whileTrue(autoRotateToShoot);
+        xbox.povUp().whileTrue(lineUpToSpeaker);
+        xbox.povLeft().whileTrue(swerve.subwooferLineUp());
+        xbox.povRight().whileTrue(swerve.ampLineUp());
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -67,7 +128,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-return charChooser.getSelected();
+    return charChooser.getSelected();
   }
 }
