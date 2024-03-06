@@ -62,8 +62,8 @@ public final class Constants {
     public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
     public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
-    public static final int STALL_LIMIT = 35;
-    public static final int FREE_LIMIT = 40;
+    public static final int STALL_LIMIT = 40;
+    public static final int FREE_LIMIT = 35;
 
   }
     public static final class DrivetrainConstants {
@@ -208,8 +208,8 @@ public final class Constants {
     public static final int MOTOR_ID = 40;
     public static final boolean MOTOR_INVERTED = true;
 
-    public static final int STALL_LIMIT = 25;
-    public static final int FREE_LIMIT = 20;
+    public static final int STALL_LIMIT = 20;
+    public static final int FREE_LIMIT = 15;
 
     public static final double FORWARD_THROTTLE = .75;
     public static final double REVERSE_THROTTLE = 0.25;

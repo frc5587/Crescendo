@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.CharacterizationManager;
@@ -95,16 +96,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        Trigger intakeLimitSwitch = new Trigger(intake::getLimitSwitch);
-        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
-        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
-        // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.rightBumper().whileTrue(runIntakeWithArm);//.onFalse(new InstantCommand(() -> {
-        //     intake.stop();
-        //     arm.travelSetpoint();
-        // }));
-        
+        xbox2.rightBumper().whileTrue(runIntakeWithArm);
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
@@ -112,10 +105,10 @@ public class RobotContainer {
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armRestCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
-        xbox2.povUp().onTrue(arm.armStageCommand());
-        xbox2.povDown().onTrue(arm.chinUp());
-        xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
-        // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
+        xbox2.povUp().whileTrue(charManager.getArmChar().dynamic(Direction.kForward));
+        xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
+        xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));
+        xbox2.povRight().whileTrue(charManager.getArmChar().quasistatic(Direction.kReverse));;
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(lineUpToSpeaker);
         xbox.povLeft().whileTrue(swerve.subwooferLineUp());

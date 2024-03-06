@@ -24,8 +24,8 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 
 public class Arm extends PivotingArmBase {
-    private final TalonFX leftMotor;
-    private final TalonFX rightMotor;
+    public final TalonFX leftMotor;
+    public final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
     private final DigitalInput magLimitSwitch = new DigitalInput(2);
@@ -268,7 +268,7 @@ public class Arm extends PivotingArmBase {
     }
     
     public void travelSetpoint() {
-        this.setGoal(Units.degreesToRadians(6));
+        this.setGoal(Units.degreesToRadians(0));
     }
 
     public Command travelSetpointCommand() {

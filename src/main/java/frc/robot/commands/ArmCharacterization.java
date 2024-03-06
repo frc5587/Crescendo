@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
@@ -34,5 +36,15 @@ public class ArmCharacterization extends CharacterizationBase {
     @Override
     public double getMechanismAcceleration() {
         return arm.leftMotor.getAcceleration().getValueAsDouble() / ArmConstants.GEARING_MOTOR_TO_ARM;
+    }
+
+    @Override
+    public Command preRoutine() {
+        return new InstantCommand(arm::disable);
+    }
+    
+    @Override
+    public Command postRoutine() {
+        return new InstantCommand(arm::enable);
     }
 }

@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
@@ -12,6 +11,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -111,12 +111,20 @@ public abstract class CharacterizationBase {
      */
     public abstract double getMechanismAcceleration();
 
+    public Command preRoutine() {
+        return Commands.none();
+    };
+
+    public Command postRoutine() {
+        return Commands.none();
+    }
+
     public Command quasistatic(Direction direction) {
-        return routine.quasistatic(direction);
+        return preRoutine().andThen(routine.quasistatic(direction)).andThen(postRoutine());
     }
 
     public Command dynamic(Direction direction) {
-        return routine.dynamic(direction);
+        return preRoutine().andThen(routine.dynamic(direction)).andThen(postRoutine());
     }
 
     public boolean isRunning() {
