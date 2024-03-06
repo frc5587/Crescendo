@@ -76,6 +76,10 @@ public class RobotContainer {
         charChooser.addOption("Arm Q Bwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kReverse));
         charChooser.addOption("Arm D Fwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kForward));
         charChooser.addOption("Arm D Bwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kReverse));
+        charChooser.addOption("Swerve Q Fwd", charManager.getSwerveChar().quasistatic(SysIdRoutine.Direction.kForward));
+        charChooser.addOption("Swerve Q Bwd", charManager.getSwerveChar().quasistatic(SysIdRoutine.Direction.kReverse));
+        charChooser.addOption("Swerve D Fwd", charManager.getSwerveChar().dynamic(SysIdRoutine.Direction.kForward));
+        charChooser.addOption("Swerve D Bwd", charManager.getSwerveChar().dynamic(SysIdRoutine.Direction.kReverse));
         SmartDashboard.putData("Char", charChooser);
         
         CameraServer.startAutomaticCapture(0);
@@ -108,11 +112,15 @@ public class RobotContainer {
         xbox2.povUp().whileTrue(charManager.getArmChar().dynamic(Direction.kForward));
         xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
         xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));
-        xbox2.povRight().whileTrue(charManager.getArmChar().quasistatic(Direction.kReverse));;
-        xbox.povDown().whileTrue(autoRotateToShoot);
-        xbox.povUp().whileTrue(lineUpToSpeaker);
-        xbox.povLeft().whileTrue(swerve.subwooferLineUp());
-        xbox.povRight().whileTrue(swerve.ampLineUp());
+        xbox2.povRight().whileTrue(charManager.getArmChar().quasistatic(Direction.kReverse));
+        xbox.povUp().whileTrue(charManager.getSwerveChar().dynamic(Direction.kForward));
+        xbox.povDown().whileTrue(charManager.getSwerveChar().dynamic(Direction.kReverse));
+        xbox.povLeft().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kForward));
+        xbox.povRight().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kReverse));
+        // xbox.povDown().whileTrue(autoRotateToShoot);
+        // xbox.povUp().whileTrue(lineUpToSpeaker);
+        // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
+        // xbox.povRight().whileTrue(swerve.ampLineUp());
     }
 
   /**

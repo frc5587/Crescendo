@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.SwerveModule;
 
@@ -10,10 +9,6 @@ public class SwerveCharacterization extends CharacterizationBase {
     public SwerveCharacterization(Swerve swerve) {
         super(MechanismType.Linear, swerve);
         this.swerve = swerve;
-        // SysIdRoutine routine = new SysIdRoutine(
-        //     new SysIdRoutine.Config(),
-        //     new SysIdRoutine.Mechanism(this::setVoltage, this::log, this)
-        // );
     }
 
     @Override
