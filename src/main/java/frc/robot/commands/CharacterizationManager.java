@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 
@@ -22,9 +21,6 @@ public class CharacterizationManager {
     }
 
     public void characterizationPeriodic() {
-        SmartDashboard.putNumber(null, 0);
-        SmartDashboard.putBoolean("Arm Characterization Running", armCharIsRunning());
-        SmartDashboard.putBoolean("Swerve Characterization Running", swerveCharIsRunning());
     }
 
     public ArmCharacterization getArmChar() {
