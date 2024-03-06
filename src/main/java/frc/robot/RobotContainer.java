@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
+import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
@@ -49,6 +50,8 @@ public class RobotContainer {
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
+    private final ClimbWithAxis 
+    climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -102,7 +105,8 @@ public class RobotContainer {
         // }));
         
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.travelSetpointCommand());
         xbox2.b().onTrue(arm.disableManualMode());
