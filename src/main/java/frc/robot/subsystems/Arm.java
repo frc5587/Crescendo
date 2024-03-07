@@ -66,6 +66,10 @@ public class Arm extends PivotingArmBase {
         return leftMotor.getVelocity().getValueAsDouble();
     }
 
+    public double getEncoderVelocityRadPerSec() {
+        return Units.rotationsToRadians(leftMotor.getVelocity().getValueAsDouble());
+    }
+
     @Override
     public void setEncoderPosition(Rotation2d position) {
         leftMotor.setPosition(position.getRotations());

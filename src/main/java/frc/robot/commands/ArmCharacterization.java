@@ -25,12 +25,12 @@ public class ArmCharacterization extends CharacterizationBase {
 
     @Override
     public double getMechanismPosition() {
-        return arm.getPosition().getRotations();
+        return arm.getPosition().getRadians();
     }
 
     @Override
     public double getMechanismVelocity() {
-        return arm.getVelocityRotationsPerSecond();
+        return arm.getEncoderVelocityRadPerSec();
     }
 
     @Override
