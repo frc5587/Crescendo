@@ -31,12 +31,12 @@ public class SwerveCharacterization extends CharacterizationBase {
 
     @Override
     public double getMechanismVelocity() {
-        return swerve.getModuleStates()[0].speedMetersPerSecond;
+        return swerve.getLinearVelocity();
     }
 
     @Override
     public double getMechanismAcceleration() {
-        return swerve.getModuleStates()[0].speedMetersPerSecond;
+        return swerve.getLinearAcceleration();
     }
     
 }

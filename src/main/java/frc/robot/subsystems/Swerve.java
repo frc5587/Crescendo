@@ -10,6 +10,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -27,6 +29,7 @@ public class Swerve extends SwerveBase {
    private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
    private PathPlannerPath subwooferPath = PathPlannerPath.fromPathFile("subwooferPath");
     private boolean brakeModeEnabled = true;
+    private final TimeInterpolatableBuffer<Double> velocityBuffer = TimeInterpolatableBuffer.createDoubleBuffer(1.);
 
     public Swerve(Limelight limelight) {
         this(new SwerveModule[] {
@@ -130,6 +133,8 @@ public class Swerve extends SwerveBase {
             poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
             poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
         }
+        
+        velocityBuffer.addSample(MathSharedStore.getTimestamp(), getLinearVelocity());
     }
     /**
      * Sets the module states based on chassis speeds.
@@ -145,5 +150,11 @@ public class Swerve extends SwerveBase {
      */
     public double getLinearVelocity() {
         return Math.atan2(getChassisSpeeds().vyMetersPerSecond, getChassisSpeeds().vxMetersPerSecond);
+    }
+
+    public double getLinearAcceleration() {
+        //(v - u) / t = a
+        // doing samples of 3 periods to reduce noise in period length
+        return (velocityBuffer.getSample(MathSharedStore.getTimestamp()).orElseGet(() -> {return 0.;}) - velocityBuffer.getSample(MathSharedStore.getTimestamp() - 0.06).orElseGet(() -> {return 0.;})) / 0.06;
     }
 }
