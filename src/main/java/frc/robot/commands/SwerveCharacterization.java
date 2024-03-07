@@ -1,14 +1,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveCharacterization extends CharacterizationBase {
     private final Swerve swerve;
-    public SwerveCharacterization(Swerve swerve) {
+    private final Arm arm;
+    public SwerveCharacterization(Swerve swerve, Arm arm) {
         super(MechanismType.Linear, swerve);
         this.swerve = swerve;
+        this.arm = arm;
     }
 
     @Override
@@ -37,6 +42,11 @@ public class SwerveCharacterization extends CharacterizationBase {
     @Override
     public double getMechanismAcceleration() {
         return swerve.getLinearAcceleration();
+    }
+    
+    @Override
+    public Command preRoutine() {
+        return new InstantCommand(arm::travelSetpoint);
     }
     
 }

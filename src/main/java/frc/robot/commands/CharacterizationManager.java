@@ -9,7 +9,7 @@ public class CharacterizationManager {
 
     public CharacterizationManager(Arm arm, Swerve swerve) {
         this.armCharacterization = new ArmCharacterization(arm);
-        this.swerveCharacterization = new SwerveCharacterization(swerve);
+        this.swerveCharacterization = new SwerveCharacterization(swerve, arm);
     }
 
     public boolean armCharIsRunning() {
