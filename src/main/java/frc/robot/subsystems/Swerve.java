@@ -54,6 +54,7 @@ public class Swerve extends SwerveBase {
     public Swerve(SwerveModule[] swerveModules, Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.limelight = limelight;
+        this.swerveModules = swerveModules;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         // Auto Config
@@ -162,7 +163,7 @@ public class Swerve extends SwerveBase {
 
     public void setVoltage(double voltage) {
         for(SwerveModule module : swerveModules) {
-            module.setDriveMotorVoltage(voltage);
+            module.setDriveMotorVoltage(-voltage);
             module.setAngle(new Rotation2d());
         }
     }
