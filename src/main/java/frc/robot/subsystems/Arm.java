@@ -124,23 +124,23 @@ public class Arm extends PivotingArmBase {
 
     // public Rotation2d poseDependantArmAngle(Pose2d pose) {
     //     return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
-    //             pose.getTranslation().getDistance((DriverStation.getAlliance().get().equals(Alliance.Blue))
+    //             pose.getTranslation().getDistance((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue))
     //                     ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.toTranslation2d()
     //                     : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.toTranslation2d())
     //             + Math.toRadians(56)));
     // }
 
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
+        return Rotation2d.fromRadians(-Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ(), Math.sqrt(
                         Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                        Math.pow(
+                                pose.getY() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(72)).times(1.04);
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()), 2)))
+                         + Math.toRadians(72)).times(1.04);
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
@@ -254,7 +254,7 @@ public class Arm extends PivotingArmBase {
     public boolean inAutoAimSpace(Pose2d pose) {
         boolean withinX;
         boolean withinY;
-        if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
+        if(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
             withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
             withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
         }
