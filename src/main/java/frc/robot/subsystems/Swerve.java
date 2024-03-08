@@ -11,6 +11,8 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,7 +60,7 @@ public class Swerve extends SwerveBase {
         
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
-                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -156,5 +158,17 @@ public class Swerve extends SwerveBase {
         //(v - u) / t = a
         // doing samples of 3 periods to reduce noise in period length
         return (velocityBuffer.getSample(MathSharedStore.getTimestamp()).orElseGet(() -> {return 0.;}) - velocityBuffer.getSample(MathSharedStore.getTimestamp() - 0.06).orElseGet(() -> {return 0.;})) / 0.06;
+    }
+
+    public void setVoltage(double voltage) {
+        for(SwerveModule module : swerveModules) {
+            module.setDriveMotorVoltage(voltage);
+            module.setAngle(new Rotation2d());
+        }
+    }
+
+    public void resetOdometryWithYaw(Pose2d pose) {
+        resetOdometry(pose);
+        gyro.setYaw(pose.getRotation());
     }
 }

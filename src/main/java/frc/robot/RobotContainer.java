@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.CharacterizationManager;
+import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
@@ -54,6 +55,12 @@ public class RobotContainer {
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
+    private final ClimbWithAxis 
+    climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
+
+    public void zeroYaw() {
+        swerve.zeroGyro();
+    }
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
@@ -70,6 +77,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
+        NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
@@ -103,7 +111,8 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightBumper().whileTrue(runIntakeWithArm);
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.travelSetpointCommand());
         xbox2.b().onTrue(arm.disableManualMode());

@@ -50,6 +50,7 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         configureMotors();
+        // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {

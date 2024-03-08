@@ -27,6 +27,7 @@ public class AutoShootWhenLinedUp extends Command {
 
     @Override
     public void execute() {
+        
         if(readySupplier.getAsBoolean() && shooter.isSpunUp()) {
             intake.forward();
         }

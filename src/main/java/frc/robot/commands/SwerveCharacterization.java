@@ -1,11 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.SwerveModule;
 
 public class SwerveCharacterization extends CharacterizationBase {
     private final Swerve swerve;
@@ -18,10 +16,7 @@ public class SwerveCharacterization extends CharacterizationBase {
 
     @Override
     public void setVoltage(double volts) {
-        for (SwerveModule module : swerve.swerveModules) {
-            module.setDriveMotorVoltage(volts);
-            module.setAngle(new Rotation2d());
-        }
+        swerve.setVoltage(volts);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public void idleSpeed() {
-        motors.set(forwardThrottle / 4);
+        motors.set(ShooterConstants.IDLE_SPEED);
     }
 
     public double getMotorSpeeds() {
@@ -53,6 +53,10 @@ public class Shooter extends SimpleMotorBase {
 
     public boolean isSpunUp() {
         return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
+    }
+
+    public void spinUpToAmp() {
+        motors.set(ShooterConstants.AMP_THROTTLE);
     }
 
     @Override
