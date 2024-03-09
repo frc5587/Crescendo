@@ -40,14 +40,13 @@ public class RobotContainer {
     private final Limelight limelight = new Limelight();
     private final Swerve swerve = new Swerve(limelight);
     private final Arm arm = new Arm(swerve::getPose);
-    private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve);
     private final Shooter shooter = new Shooter();
     private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
-            xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
-            xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+        xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
+        xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
-    private final Arm arm = new Arm(swerve::getPose, intake::getLimitSwitch);
     private final SendableChooser<Command> autoChooser;
+    private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve, shooter);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), xbox.rightBumper().negate());
@@ -115,10 +114,14 @@ public class RobotContainer {
         // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         // xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
-        xbox2.a().onTrue(arm.armTravelCommand());
-        xbox2.b().onTrue(arm.disableManualMode());
-        xbox2.x().onTrue(arm.armRestCommand());
-        xbox2.y().onTrue(arm.armAmpCommand());
+        // xbox2.a().onTrue(arm.armTravelCommand());
+        // xbox2.b().onTrue(arm.disableManualMode());
+        // xbox2.x().onTrue(arm.armRestCommand());
+        // xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.a().onTrue(charManager.getShooterCharacterization().dynamic(Direction.kReverse));
+        xbox2.b().onTrue(charManager.getShooterCharacterization().quasistatic(Direction.kReverse));
+        xbox2.x().onTrue(charManager.getShooterCharacterization().quasistatic(Direction.kForward));
+        xbox2.y().onTrue(charManager.getShooterCharacterization().dynamic(Direction.kForward));
         xbox2.povUp().whileTrue(charManager.getArmChar().dynamic(Direction.kForward));
         xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
         xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));

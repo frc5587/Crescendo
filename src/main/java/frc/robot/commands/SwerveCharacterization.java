@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 
@@ -41,7 +40,7 @@ public class SwerveCharacterization extends CharacterizationBase {
     
     @Override
     public Command preRoutine() {
-        return new InstantCommand(arm::travelSetpoint);
+        return arm.armTravelCommand();
     }
     
 }

@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ShooterConstants;
 
@@ -50,6 +49,10 @@ public class Shooter extends ProfiledPIDSubsystem {
         return getMeasuredMotorSpeedsRPS() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
+    public double getPositionMeters() {
+        return leftMotor.getEncoder().getPosition() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
     public double getMeasuredMotorSpeedsAsPercentage() {
         return leftMotor.getEncoder().getVelocity() / 60. / ShooterConstants.MAX_MOTOR_SPEED_RPS;
     }
@@ -72,6 +75,14 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public void spinUpToAmp() {
         leftMotor.set(ShooterConstants.AMP_THROTTLE);
+    }
+
+    public void setVoltage(double voltage) {
+        leftMotor.setVoltage(voltage);
+    }
+
+    public double getVoltage() {
+        return leftMotor.get() * leftMotor.getBusVoltage();
     }
 
     @Override
