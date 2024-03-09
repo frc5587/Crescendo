@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ShooterConstants;
@@ -18,7 +20,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     public Shooter() {
         super(ShooterConstants.PID);
         configureMotors();
-        idleSpeed();
+        enable();
+        // idleSpeed();
     }
 
     public void configureMotors() {
@@ -30,12 +33,14 @@ public class Shooter extends ProfiledPIDSubsystem {
         rightMotor.setIdleMode(IdleMode.kCoast);
         leftMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
+        leftMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(0);
         rightMotor.follow(leftMotor);
-
     }
 
     public void idleSpeed() {
-        leftMotor.set(ShooterConstants.IDLE_SPEED);
+        // leftMotor.set(ShooterConstants.IDLE_SPEED);
+        setGoal(5);
     }
 
     public double getMotorSpeeds() {
@@ -50,20 +55,28 @@ public class Shooter extends ProfiledPIDSubsystem {
         return getMeasuredMotorSpeedsRPS() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
+    public double getPositionMeters() {
+        return leftMotor.getEncoder().getPosition() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
     public double getMeasuredMotorSpeedsAsPercentage() {
         return leftMotor.getEncoder().getVelocity() / 60. / ShooterConstants.MAX_MOTOR_SPEED_RPS;
     }
 
     public void forward() {
-        setGoal(0.5);
+        setGoal(20);
     }
 
     public void backward() {
-        setGoal(0.5);
+        setGoal(5);
     }
 
     public void stop() {
         setGoal(0.);
+    }
+
+    public void stopVoltage() {
+        leftMotor.set(0);
     }
 
     public boolean isSpunUp() {
@@ -74,17 +87,29 @@ public class Shooter extends ProfiledPIDSubsystem {
         leftMotor.set(ShooterConstants.AMP_THROTTLE);
     }
 
+    public void setVoltage(double voltage) {
+        leftMotor.set(voltage / RobotController.getBatteryVoltage());
+    }
+
+    public double getVoltage() {
+        return leftMotor.get() * RobotController.getBatteryVoltage();
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
-        SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeedsRPS());
-        SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
-        SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
+        super.periodic();
+        // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
+        SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
+        SmartDashboard.putNumber("Shooter Position", getPositionMeters());
+        SmartDashboard.putNumber("Shooter Volts", getVoltage());
+        // SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
+        // SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
     }
 
     @Override
     protected void useOutput(double output, State setpoint) {
-        leftMotor.set(output + ff.calculate(setpoint.position));
+        SmartDashboard.putNumber("Shooter Output", output);
+        leftMotor.setVoltage(output + ff.calculate(setpoint.position));
     }
 
     @Override
