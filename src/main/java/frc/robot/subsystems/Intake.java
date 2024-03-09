@@ -88,9 +88,9 @@ public class Intake extends PIDSubsystem {
     public void periodic() {
         // super.periodic();
         // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
-        SmartDashboard.putNumber("Intake Setpoint", motor.get());
-        SmartDashboard.putNumber("Intake Measurement", getMeasurement());
-        SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
+        // SmartDashboard.putNumber("Intake Setpoint", motor.get());
+        // SmartDashboard.putNumber("Intake Measurement", getMeasurement());
+        // SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() > virtualSwitchTimerEndTime) {
             virtualLimitSwitchValue = true;
         }
@@ -115,7 +115,7 @@ public class Intake extends PIDSubsystem {
             switchTimeHasBeenSet = false;
             virtualLimitSwitchValue = false;
         }
-        SmartDashboard.putBoolean("Virtual Switch", virtualLimitSwitchValue);
+        // SmartDashboard.putBoolean("Virtual Switch", virtualLimitSwitchValue);
     }
 
 }

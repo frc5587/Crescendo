@@ -18,7 +18,7 @@ public class Shooter extends SimpleMotorBase {
     public Shooter() {
         super(leftMotor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
         configureMotors();
-        idleSpeed();
+        // idleSpeed();
     }
 
     @Override
@@ -61,9 +61,9 @@ public class Shooter extends SimpleMotorBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
-        SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeeds());
-        SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
-        SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
+        // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
+        // SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeeds());
+        // SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
+        // SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
     }
 }

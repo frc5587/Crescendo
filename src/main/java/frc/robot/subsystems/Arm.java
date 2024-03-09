@@ -209,19 +209,19 @@ public class Arm extends PivotingArmBase {
             SmartDashboard.putBoolean("Reset Constraints", false);
         }
 
-        if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
-            resetEncoders();
-        }
-        SmartDashboard.putBoolean("Reset Arm Encoders", false);
+        // if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+        //     resetEncoders();
+        // }
+        // SmartDashboard.putBoolean("Reset Arm Encoders", false);
 
-        SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
-        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        // SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
+        // SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
         
-        if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
-            this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
-            leftMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-            rightMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
-        }
+        // if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
+        //     this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
+        //     leftMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+        //     rightMotor.setNeutralMode(brakeModeEnabled ? NeutralModeValue.Brake: NeutralModeValue.Coast);
+        // }
         
         if(getLimitSwitch()) {
             setEncoderPosition(new Rotation2d());
@@ -234,16 +234,14 @@ public class Arm extends PivotingArmBase {
         //     SmartDashboard.putBoolean("Arm Enabled", false);
         // }
 
-        if(SmartDashboard.getBoolean("Arm Enabled", true) && wasManuallyDisabled) {
-            this.enable();
-            this.wasManuallyDisabled = false;
-        }
-        else if(!SmartDashboard.getBoolean("Arm Enabled", true) && !wasManuallyDisabled) {
-            wasManuallyDisabled = true;
-            this.disable();
-        }
-        rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
-                ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
+        // if(SmartDashboard.getBoolean("Arm Enabled", true) && wasManuallyDisabled) {
+        //     this.enable();
+        //     this.wasManuallyDisabled = false;
+        // }
+        // else if(!SmartDashboard.getBoolean("Arm Enabled", true) && !wasManuallyDisabled) {
+        //     wasManuallyDisabled = true;
+        //     this.disable();
+        // }
     }
 
     public void setManualMode(boolean manualMode) {

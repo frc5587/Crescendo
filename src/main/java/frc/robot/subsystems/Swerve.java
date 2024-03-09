@@ -74,8 +74,8 @@ public class Swerve extends SwerveBase {
                 () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
                 this // Reference to this subsystem to set requirements
             );
-            SmartDashboard.putBoolean("Swerve Debug On?", false);
-            SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+            // SmartDashboard.putBoolean("Swerve Debug On?", false);
+            // SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
     }
 
     public Command ampLineUp() {
@@ -105,37 +105,37 @@ public class Swerve extends SwerveBase {
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
             }
         }
-        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
-        if(SmartDashboard.getBoolean("Zero Yaw", false)) {
-            gyro.zeroYaw();
-        }
-        SmartDashboard.putBoolean("Zero Yaw", false);
-        if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
-            this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
-            for(SwerveModule mod : swerveModules) {
-                mod.setBrakeMode(brakeModeEnabled);
-            }
-        }
+        // SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
+        // if(SmartDashboard.getBoolean("Zero Yaw", false)) {
+        //     gyro.zeroYaw();
+        // }
+        // SmartDashboard.putBoolean("Zero Yaw", false);
+        // if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
+        //     this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
+        //     for(SwerveModule mod : swerveModules) {
+        //         mod.setBrakeMode(brakeModeEnabled);
+        //     }
+        // }
 
-        SmartDashboard.putData("Field", field);
-        this.limelightField.setRobotPose(limelight.getLimelightPose());
+        // SmartDashboard.putData("Field", field);
+        // this.limelightField.setRobotPose(limelight.getLimelightPose());
 
-        SmartDashboard.putData("LimelightField", limelightField);
+        // SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
-            // resetOdometry(limelight.getLimelightPose());
-            odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
-            SmartDashboard.putBoolean("Within Range", true);
-        }
-        else {
-            SmartDashboard.putBoolean("Within Range", false);
-        }
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
-            poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
-            poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
-        }
+        // if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+        //     // resetOdometry(limelight.getLimelightPose());
+        //     odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+        //     poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+        //     // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
+        //     SmartDashboard.putBoolean("Within Range", true);
+        // }
+        // else {
+        //     SmartDashboard.putBoolean("Within Range", false);
+        // }
+        // if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
+        //     poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
+        //     poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
+        // }
         
         velocityBuffer.addSample(MathSharedStore.getTimestamp(), getLinearVelocity());
     }
