@@ -38,7 +38,7 @@ public class RunIntakeWithArm extends Command {
     @Override
     public void end(boolean interrupted) {
         if(arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {            
-            arm.travelSetpoint();
+            arm.armTravel();
         }
         intake.stop();
     }

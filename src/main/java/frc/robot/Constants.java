@@ -59,9 +59,11 @@ public final class Constants {
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
     public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI / 2);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
     public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
+    // public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
+    // public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.69209, 0.087496, 0.11401);
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
 
