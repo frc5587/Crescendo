@@ -266,7 +266,7 @@ public class Arm extends PivotingArmBase {
     }
     
     public void travelSetpoint() {
-        this.setGoal(Units.degreesToRadians(6));
+        this.setGoal(ArmConstants.TRAVEL_SETPOINT);
     }
 
     public Command travelSetpointCommand() {

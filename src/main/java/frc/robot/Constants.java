@@ -49,6 +49,7 @@ public final class Constants {
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
     public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
