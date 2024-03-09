@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -58,7 +59,7 @@ public class Swerve extends SwerveBase {
                         AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
                         replanningConfig // Default path replanning config. See the API for the options here
                 ),
-                () -> {return DriverStation.getAlliance().get().equals(Alliance.Red);},
+                () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
                 this // Reference to this subsystem to set requirements
             );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
@@ -66,14 +67,14 @@ public class Swerve extends SwerveBase {
     }
 
     public Command ampLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_AMP_POSE : FieldConstants.RED_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_AMP_POSE : FieldConstants.RED_AMP_POSE, AutoConstants.CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
         /* alternate ampLineUp command in case first one does not work
         return AutoBuilder.pathfindThenFollowPath(ampPath, AutoConstants.CONSTRAINTS, 0);
         */
     }
 
     public Command subwooferLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.CONSTRAINTS, 0, 0);
+        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.CONSTRAINTS, 0, 0);
         // alternate subwooferLineUp command in case first one does not work
         // return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
         //
@@ -118,7 +119,7 @@ public class Swerve extends SwerveBase {
             // resetOdometry(limelight.getLimelightPose());
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
+            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
             SmartDashboard.putBoolean("Within Range", true);
         }
         else {
@@ -143,5 +144,12 @@ public class Swerve extends SwerveBase {
      */
     public double getLinearVelocity() {
         return Math.atan2(getChassisSpeeds().vyMetersPerSecond, getChassisSpeeds().vxMetersPerSecond);
+    }
+
+    public void standYourGround() {
+        for(int i = 0; i < swerveModules.length; i++) {
+            swerveModules[i].setAngle(i == 2 || i == 1 ? Rotation2d.fromDegrees(135) : Rotation2d.fromDegrees(45));
+        }
+        System.out.println("Rotating to X");
     }
 }
