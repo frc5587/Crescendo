@@ -109,6 +109,7 @@ public class Intake extends PIDSubsystem {
         }
         else {
             rumbleConsumer.accept(0.);
+            
             virtualLimitSwitchValue = false;
         }
         if(!getLimitSwitch()) {

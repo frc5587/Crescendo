@@ -46,13 +46,14 @@ public class RobotContainer {
             xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
+    private final Arm arm = new Arm(swerve::getPose, intake::getLimitSwitch);
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), xbox.rightBumper().negate());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
-    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
+    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
     private final ClimbWithAxis 
@@ -114,7 +115,7 @@ public class RobotContainer {
         // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         // xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
-        xbox2.a().onTrue(arm.travelSetpointCommand());
+        xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armRestCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
