@@ -48,7 +48,7 @@ public class RobotContainer {
             () -> xbox.getRightX(), xbox.rightBumper().negate());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
-    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
+    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final ClimbWithAxis 
     climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
