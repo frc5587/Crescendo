@@ -232,7 +232,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 30;
     public static final int FREE_LIMIT = 35;
     // motor speeds
-    public static final double FORWARD_THROTTLE = 0.8;
+    public static final double FORWARD_THROTTLE = 0.65;
     public static final double REVERSE_THROTTLE = .5;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;

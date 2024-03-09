@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -137,5 +138,12 @@ public class Swerve extends SwerveBase {
      */
     public double getLinearVelocity() {
         return Math.atan2(getChassisSpeeds().vyMetersPerSecond, getChassisSpeeds().vxMetersPerSecond);
+    }
+
+    public void standYourGround() {
+        for(int i = 0; i < swerveModules.length; i++) {
+            swerveModules[i].setAngle(i == 2 || i == 1 ? Rotation2d.fromDegrees(135) : Rotation2d.fromDegrees(45));
+        }
+        System.out.println("Rotating to X");
     }
 }
