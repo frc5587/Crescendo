@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
@@ -240,6 +241,11 @@ public final class Constants {
     public static final double IDLE_SPEED = FORWARD_THROTTLE / 4;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;
+    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
+    public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(70, 35);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(1, 0, 0, CONSTRAINTS);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0, 0);
   }
 
   public static final class FieldConstants {

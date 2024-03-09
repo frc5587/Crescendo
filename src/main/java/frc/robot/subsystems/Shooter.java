@@ -1,27 +1,26 @@
 package frc.robot.subsystems;
 
-import org.frc5587.lib.subsystems.SimpleMotorBase;
-
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ShooterConstants;
 
-public class Shooter extends SimpleMotorBase {
+public class Shooter extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    
+    private static SimpleMotorFeedforward ff = ShooterConstants.FF;
+
     public Shooter() {
-        super(leftMotor, ShooterConstants.FORWARD_THROTTLE, ShooterConstants.REVERSE_THROTTLE);
+        super(ShooterConstants.PID);
         configureMotors();
         idleSpeed();
     }
 
-    @Override
     public void configureMotors() {
         leftMotor.restoreFactoryDefaults();
         rightMotor.restoreFactoryDefaults();
@@ -36,19 +35,35 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public void idleSpeed() {
-        motors.set(ShooterConstants.IDLE_SPEED);
+        leftMotor.set(ShooterConstants.IDLE_SPEED);
     }
 
     public double getMotorSpeeds() {
         return leftMotor.get();
     }
 
-    public double getMeasuredMotorSpeeds() {
+    public double getMeasuredMotorSpeedsRPS() {
         return leftMotor.getEncoder().getVelocity() / 60.;
+    }
+
+    public double getWheelSpeedsMPS() {
+        return getMeasuredMotorSpeedsRPS() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
     public double getMeasuredMotorSpeedsAsPercentage() {
         return leftMotor.getEncoder().getVelocity() / 60. / ShooterConstants.MAX_MOTOR_SPEED_RPS;
+    }
+
+    public void forward() {
+        setGoal(0.5);
+    }
+
+    public void backward() {
+        setGoal(0.5);
+    }
+
+    public void stop() {
+        setGoal(0.);
     }
 
     public boolean isSpunUp() {
@@ -56,14 +71,24 @@ public class Shooter extends SimpleMotorBase {
     }
 
     public void spinUpToAmp() {
-        motors.set(ShooterConstants.AMP_THROTTLE);
+        leftMotor.set(ShooterConstants.AMP_THROTTLE);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
-        SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeeds());
+        SmartDashboard.putNumber("Shooter Measured Speed", getMeasuredMotorSpeedsRPS());
         SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
         SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
+    }
+
+    @Override
+    protected void useOutput(double output, State setpoint) {
+        leftMotor.set(output + ff.calculate(setpoint.position));
+    }
+
+    @Override
+    protected double getMeasurement() {
+        return getWheelSpeedsMPS();
     }
 }
