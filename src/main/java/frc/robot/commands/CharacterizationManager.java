@@ -38,7 +38,7 @@ public class CharacterizationManager {
         return this.swerveCharacterization;
     }
 
-    public ShooterCharacterization getShooterCharacterization() {
+    public ShooterCharacterization getShooterChar() {
         return this.shooterCharacterization;
     }
 }

@@ -110,7 +110,7 @@ public class RobotContainer {
     private void configureBindings() {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightBumper().whileTrue(runIntakeWithArm);
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.rightTrigger().onTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
         // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         // xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
@@ -118,10 +118,10 @@ public class RobotContainer {
         // xbox2.b().onTrue(arm.disableManualMode());
         // xbox2.x().onTrue(arm.armRestCommand());
         // xbox2.y().onTrue(arm.armAmpCommand());
-        xbox2.a().onTrue(charManager.getShooterCharacterization().dynamic(Direction.kReverse));
-        xbox2.b().onTrue(charManager.getShooterCharacterization().quasistatic(Direction.kReverse));
-        xbox2.x().onTrue(charManager.getShooterCharacterization().quasistatic(Direction.kForward));
-        xbox2.y().onTrue(charManager.getShooterCharacterization().dynamic(Direction.kForward));
+        xbox2.a().whileTrue(charManager.getShooterChar().dynamic(Direction.kReverse));
+        xbox2.b().whileTrue(charManager.getShooterChar().quasistatic(Direction.kReverse));
+        xbox2.x().whileTrue(charManager.getShooterChar().quasistatic(Direction.kForward));
+        xbox2.y().whileTrue(charManager.getShooterChar().dynamic(Direction.kForward));
         xbox2.povUp().whileTrue(charManager.getArmChar().dynamic(Direction.kForward));
         xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
         xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));

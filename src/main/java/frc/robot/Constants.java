@@ -244,8 +244,8 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(70, 35);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(1, 0, 0, CONSTRAINTS);
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0, 0);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(0.21177, 0, 0, CONSTRAINTS);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.39739, 0.32121);
   }
 
   public static final class FieldConstants {

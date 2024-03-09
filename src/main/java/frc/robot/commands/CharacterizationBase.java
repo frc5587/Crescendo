@@ -27,8 +27,8 @@ public abstract class CharacterizationBase {
     protected final Subsystem subsystem;
     protected Mechanism armMechanism;
     protected MutableMeasure<Velocity<Voltage>> quasistaticRamp = MutableMeasure
-            .mutable(Units.Volts.per(Units.Second).of(0.25));
-    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(1.5));
+            .mutable(Units.Volts.per(Units.Second).of(0.5));
+    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(5.5));
 
     protected MutableMeasure<Voltage> outputVoltage = MutableMeasure.mutable(Units.Volts.of(0));
     protected MutableMeasure<Angle> mechanismAngle = MutableMeasure.mutable(Units.Radians.of(0));
@@ -44,7 +44,7 @@ public abstract class CharacterizationBase {
         this.type = type;
         this.subsystem = subsystem;
         this.armMechanism = new Mechanism((volts) -> setVoltage(volts.in(Units.Volts)), log(), subsystem);
-        this.routineConfig = new Config(quasistaticRamp, dynamicVoltage, Units.Seconds.of(10));
+        this.routineConfig = new Config(quasistaticRamp, dynamicVoltage, Units.Seconds.of(20));
         this.routine = new SysIdRoutine(routineConfig, armMechanism);
     }
 
