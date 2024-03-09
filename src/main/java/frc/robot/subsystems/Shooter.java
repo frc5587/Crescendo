@@ -80,7 +80,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public boolean isSpunUp() {
-        return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
+        // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
+        return true;
     }
 
     public void spinUpToAmp() {
@@ -99,6 +100,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     public void periodic() {
         super.periodic();
         // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
+        SmartDashboard.putData(getController());
         SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
         SmartDashboard.putNumber("Shooter Position", getPositionMeters());
         SmartDashboard.putNumber("Shooter Volts", getVoltage());

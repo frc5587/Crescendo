@@ -23,8 +23,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
@@ -57,6 +59,7 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         configureMotors();
+        SmartDashboard.putNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter);
         // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
     }
 
@@ -139,7 +142,7 @@ public class Arm extends PivotingArmBase {
     // }
 
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() / Math.sqrt(
+        double distance = Math.sqrt(
                         Math.pow(
                                 pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
@@ -148,7 +151,14 @@ public class Arm extends PivotingArmBase {
                                 - (DriverStation.getAlliance().get().equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2))) + Math.toRadians(72)).times(1.04);
+                                2));
+
+        SmartDashboard.putNumber("Arm Distance", distance);
+
+        return Rotation2d.fromRadians(
+                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ(), distance) + Math.toRadians(72))
+                .times(1.04)
+                .minus(new Rotation2d((distance-2) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
