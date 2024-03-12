@@ -141,6 +141,10 @@ public class Arm extends PivotingArmBase {
     //             + Math.toRadians(56)));
     // }
 
+    public double getShooterHeightMeters() {
+        return (ArmConstants.ARM_LENGTH_METERS * Math.sin(getAngleRadians())) + ArmConstants.SHOOTER_HEIGHT_METERS;
+    }
+
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
         double distance = Math.sqrt(
                         Math.pow(
@@ -156,9 +160,13 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putNumber("Arm Distance", distance);
 
         return Rotation2d.fromRadians(
-                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ(), distance) + Math.toRadians(72))
-                .times(1.04)
-                .minus(new Rotation2d((distance-2) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
+                // .times(1.04)[]\
+                
+                .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+        // return Rotation2d.fromDegrees(
+        //     SmartDashboard.getNumber("Manual Arm Angle", 0.0)
+        // );
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
@@ -200,6 +208,7 @@ public class Arm extends PivotingArmBase {
         if(!manualMode) {
             armToDistanceSetpoint(poseSupplier.get());
         }
+        SmartDashboard.putNumber("Shooter Height (m)", getShooterHeightMeters());
         // if(!limitSwitchSupplier && MathSharedStore.getTimestamp() > limitSwitchDelayTime) {
         //     travelSetpointCommand();
         // }

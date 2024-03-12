@@ -63,6 +63,7 @@ public class Swerve extends SwerveBase {
             );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
             SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+            resetOdometry(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE);
     }
 
     public Command ampLineUp() {

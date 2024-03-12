@@ -67,7 +67,9 @@ public final class Constants {
     // public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.69209, 0.087496, 0.11401);
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
-
+    public static final double ARM_LENGTH_METERS = 0.525;
+    public static final Rotation2d ANGLE_TO_SHOOTER = Rotation2d.fromDegrees(52.);
+    public static final double SHOOTER_HEIGHT_METERS = 0.395;
   }
     public static final class DrivetrainConstants {
         public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
