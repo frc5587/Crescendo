@@ -61,6 +61,8 @@ public class Arm extends PivotingArmBase {
         configureMotors();
         SmartDashboard.putNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter);
         // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
+        SmartDashboard.putNumber("Manual Arm Angle", 0.0);
+
     }
 
     public Arm(Supplier<Pose2d> poseSupplier, BooleanSupplier limitSwitchSupplier) {
@@ -159,14 +161,14 @@ public class Arm extends PivotingArmBase {
 
         SmartDashboard.putNumber("Arm Distance", distance);
 
-        return Rotation2d.fromRadians(
-                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
-                // .times(1.04)[]\
+        // return Rotation2d.fromRadians(
+        //         -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
+        //         // .times(1.04)[]\
                 
-                .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
-        // return Rotation2d.fromDegrees(
-        //     SmartDashboard.getNumber("Manual Arm Angle", 0.0)
-        // );
+        //         .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+        return Rotation2d.fromDegrees(
+            SmartDashboard.getNumber("Manual Arm Angle", 0.0)
+        );
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {

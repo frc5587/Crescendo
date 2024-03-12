@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -115,7 +116,7 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             // resetOdometry(limelight.getLimelightPose());
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
