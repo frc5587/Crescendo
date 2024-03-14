@@ -181,7 +181,7 @@ public class Arm extends PivotingArmBase {
     public Command chinUp() {
         return new InstantCommand(() -> {
             getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
-            armRest();
+            armStage();
         }, this);
     }
 

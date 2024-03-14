@@ -159,7 +159,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(158.688);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(158.688+23.3);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     0, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
