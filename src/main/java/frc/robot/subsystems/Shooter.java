@@ -1,26 +1,33 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private static SimpleMotorFeedforward ff = ShooterConstants.FF;
+    private static Supplier<Pose2d> poseSupplier;
 
-    public Shooter() {
+    public Shooter(Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
         configureMotors();
         enable();
+        this.poseSupplier = poseSupplier;
         // idleSpeed();
     }
 
@@ -64,7 +71,23 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void forward() {
-        setGoal(20);
+        // setGoal(20);
+        setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+    }
+
+    public double poseDepenantShooterSpeed(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+
+        return (1.3 * distance) + 11.71;
     }
 
     public void backward() {

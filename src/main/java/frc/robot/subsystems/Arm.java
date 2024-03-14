@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.Hashtable;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -22,8 +23,6 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -38,8 +37,7 @@ public class Arm extends PivotingArmBase {
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
-    private double limitSwitchEndTime = MathSharedStore.getTimestamp() + 1;
-    private boolean switchTimeHasBeenSet;
+    private Hashtable<Double, Rotation2d> distanceToAngleTable = new Hashtable<Double, Rotation2d>();
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -62,7 +60,11 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter);
         // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
         SmartDashboard.putNumber("Manual Arm Angle", 0.0);
-
+        distanceToAngleTable.put(1.3, Rotation2d.fromDegrees(7.25));
+        distanceToAngleTable.put(1.8, Rotation2d.fromDegrees(14.0));
+        distanceToAngleTable.put(2.3, Rotation2d.fromDegrees(22.3));
+        distanceToAngleTable.put(2.8, Rotation2d.fromDegrees(26.7));
+        distanceToAngleTable.put(3.3, Rotation2d.fromDegrees(30.4));
     }
 
     public Arm(Supplier<Pose2d> poseSupplier, BooleanSupplier limitSwitchSupplier) {
@@ -161,14 +163,56 @@ public class Arm extends PivotingArmBase {
 
         SmartDashboard.putNumber("Arm Distance", distance);
 
-        // return Rotation2d.fromRadians(
-        //         -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
-        //         // .times(1.04)[]\
+        return Rotation2d.fromRadians(
+                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
+                // .times(1.04)[]\
                 
-        //         .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
-        return Rotation2d.fromDegrees(
-            SmartDashboard.getNumber("Manual Arm Angle", 0.0)
-        );
+                .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+    }
+
+    public Rotation2d logBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
+    }
+
+    public Rotation2d lineBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+
+        return Rotation2d.fromRadians((0.205949 * distance) - 0.122348);
+    }
+
+    public Rotation2d interpolationArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+        
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {

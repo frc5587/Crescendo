@@ -36,7 +36,7 @@ public class RobotContainer {
 
     private final Limelight limelight = new Limelight();
     private final Swerve swerve = new Swerve(limelight);
-    private final Shooter shooter = new Shooter();
+    private final Shooter shooter = new Shooter(swerve::getPose);
     private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
             xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
