@@ -104,8 +104,8 @@ public class RobotContainer {
         // }));
         
         xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward).alongWith(arm.disableManualMode())).onFalse(new InstantCommand(shooter::idleSpeed).alongWith(arm.enableManualMode()).andThen(arm.armTravelCommand()));
-        // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());

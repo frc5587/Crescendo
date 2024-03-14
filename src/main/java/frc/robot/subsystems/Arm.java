@@ -181,6 +181,7 @@ public class Arm extends PivotingArmBase {
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
+        SmartDashboard.putNumber("Arm Distance", distance);
 
         // https://www.desmos.com/calculator/rqgtniidqa
         return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
@@ -217,7 +218,8 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
-        setGoal(poseDependantArmAngle(pose).getRadians());
+        // setGoal(poseDependantArmAngle(pose).getRadians());
+        setGoal(logBasedArmAngle(pose).getRadians());
     }
 
     @Override

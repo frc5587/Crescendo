@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -21,13 +22,14 @@ public class Shooter extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private static SimpleMotorFeedforward ff = ShooterConstants.FF;
-    private static Supplier<Pose2d> poseSupplier;
+    private Supplier<Pose2d> poseSupplier;
 
     public Shooter(Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
         configureMotors();
         enable();
         this.poseSupplier = poseSupplier;
+        getController().setTolerance(0.2);
         // idleSpeed();
     }
 
@@ -87,7 +89,8 @@ public class Shooter extends ProfiledPIDSubsystem {
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
 
-        return (1.3 * distance) + 11.71;
+        // return (1.3 * distance) + 11.71;
+        return MathUtil.clamp((2.8 * distance) + 9.86, 12.5, 21.0);
     }
 
     public void backward() {
@@ -104,7 +107,7 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public boolean isSpunUp() {
         // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
-        return true;
+        return getController().atGoal() && getController().getSetpoint().position > 8;
     }
 
     public void spinUpToAmp() {
@@ -127,6 +130,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
         SmartDashboard.putNumber("Shooter Position", getPositionMeters());
         SmartDashboard.putNumber("Shooter Volts", getVoltage());
+        SmartDashboard.putBoolean("Shooter IsSpunUp", isSpunUp());
         // SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
         // SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
     }
