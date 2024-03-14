@@ -182,7 +182,7 @@ public class Arm extends PivotingArmBase {
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
 
-        // https://www.desmos.com/calculator/xbghw2g986
+        // https://www.desmos.com/calculator/rqgtniidqa
         return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
     }
 
