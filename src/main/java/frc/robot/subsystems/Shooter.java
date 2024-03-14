@@ -90,6 +90,7 @@ public class Shooter extends ProfiledPIDSubsystem {
                                 2));
 
         // return (1.3 * distance) + 11.71;
+        // https://www.desmos.com/calculator/bplceypa5r
         return MathUtil.clamp((2.8 * distance) + 9.86, 12.5, 21.0);
     }
 
