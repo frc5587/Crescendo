@@ -3,37 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.34,
-        "y": 5.55
+        "x": 7.825878671700363,
+        "y": 7.437482225391801
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.340000000003977,
-        "y": 4.05
+        "x": 5.825878671700363,
+        "y": 7.437482225391801
       },
       "isLocked": false,
-      "linkedName": "subwoofer_dep"
+      "linkedName": "ampside_mid_end"
     },
     {
       "anchor": {
-        "x": 2.543657469625922,
-        "y": 4.379852868122284
+        "x": 4.0691922841704455,
+        "y": 5.818983847534893
       },
       "prevControl": {
-        "x": 2.4936574696259224,
-        "y": 4.379852868122284
+        "x": 4.116468212950411,
+        "y": 5.835262255257751
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3_pickup"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "prep intake, slow shooter",
-      "waypointRelativePos": 0,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,19 +47,13 @@
             {
               "type": "named",
               "data": {
-                "name": "armRest"
+                "name": "shooterForward"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "shooterIdle"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeForward"
+                "name": "armAim"
               }
             }
           ]
@@ -73,7 +73,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ring3",
-  "previewStartingState": null,
+  "folder": "5ring",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

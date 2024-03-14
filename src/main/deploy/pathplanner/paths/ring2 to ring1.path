@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.34,
+        "x": 2.45,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.340000000003977,
-        "y": 4.05
+        "x": 1.9500000000000002,
+        "y": 5.55
       },
       "isLocked": false,
-      "linkedName": "subwoofer_dep"
+      "linkedName": "ring2_pickup"
     },
     {
       "anchor": {
-        "x": 2.543657469625922,
-        "y": 4.379852868122284
+        "x": 2.5670791427174855,
+        "y": 6.710309340732804
       },
       "prevControl": {
-        "x": 2.4936574696259224,
-        "y": 4.379852868122284
+        "x": 2.413870254093689,
+        "y": 6.581751818795498
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3_pickup"
+      "linkedName": "ring1_pickup"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "prep intake, slow shooter",
+      "name": "intake forward",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -41,19 +41,24 @@
             {
               "type": "named",
               "data": {
-                "name": "armRest"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "shooterIdle"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
                 "name": "intakeForward"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "shooter forward",
+      "waypointRelativePos": 0.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterForward"
               }
             }
           ]
@@ -69,11 +74,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": 40.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "ring3",
-  "previewStartingState": null,
+  "folder": "5ring",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }
