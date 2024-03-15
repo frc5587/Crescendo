@@ -53,6 +53,7 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
         getController().setTolerance(Units.degreesToRadians(1));
         enable();
+        armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
