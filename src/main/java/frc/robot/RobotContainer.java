@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -73,6 +74,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("armRest", arm.armRestCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
+        NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
+        NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
+        NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         

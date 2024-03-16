@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.IntakeConstants;
@@ -20,7 +21,7 @@ public class Intake extends PIDSubsystem {
     private final BooleanSupplier shooterSpunUpSupplier;
     private final DoubleConsumer rumbleConsumer;
     private double rumbleTimerEndTime, virtualSwitchTimerEndTime = MathSharedStore.getTimestamp() + 1;
-    private boolean switchTimeHasBeenSet, virtualLimitSwitchValue = false;
+    private boolean switchTimeHasBeenSet, virtualLimitSwitchValue, shotIsConfirmed = false;
     
     public Intake(BooleanSupplier shooterSpunUpSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
@@ -84,6 +85,14 @@ public class Intake extends PIDSubsystem {
         return motor.get();
     }
 
+    public void confirmShot() {
+        shotIsConfirmed = true;
+    }
+
+    public void denyShot() {
+        shotIsConfirmed = false;
+    }
+
     @Override
     public void periodic() {
         // super.periodic();
@@ -94,9 +103,16 @@ public class Intake extends PIDSubsystem {
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() > virtualSwitchTimerEndTime) {
             virtualLimitSwitchValue = true;
         }
-        if(getLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean() && motor.get() > 0.) {
+        if(getLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean() && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
             stop();
-        }
+        } else if (DriverStation.isAutonomousEnabled()) {
+            if (shotIsConfirmed && getLimitSwitch()) {
+                forward();
+            } else if (getLimitSwitch()) {
+                stop();
+            } else {
+                forward();
+            }
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {
             rumbleConsumer.accept(1.);
         }

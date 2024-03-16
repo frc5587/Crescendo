@@ -47,12 +47,6 @@
             {
               "type": "named",
               "data": {
-                "name": "shooterForward"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
                 "name": "armAim"
               }
             }
