@@ -49,7 +49,7 @@ public class Swerve extends SwerveBase {
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose(),
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), 1., 1., 1.));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, .9));
         // Auto Config
         
             AutoBuilder.configureHolonomic(

@@ -32,9 +32,9 @@ public class AutoRotateToShoot extends Command {
             )).plus(Rotation2d.fromDegrees(180.));
             
             swerve.drive(new Translation2d(0, 0),
-                            Math.copySign(1., currentAngle.getDegrees() - targetAngle.getDegrees()),
+                            Math.copySign(1.274 * (currentAngle.getRadians() - targetAngle.getRadians()), currentAngle.getDegrees() - targetAngle.getDegrees()),
                             true, true);
-            if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 1.) {
+            if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 1) {
                 isFinished = true;
             }
     }
