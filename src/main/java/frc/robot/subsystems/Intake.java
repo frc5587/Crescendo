@@ -134,5 +134,5 @@ public class Intake extends PIDSubsystem {
         }
         SmartDashboard.putBoolean("Virtual Switch", virtualLimitSwitchValue);
     }
-
+    }
 }
