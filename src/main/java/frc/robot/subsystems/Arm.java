@@ -185,7 +185,7 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putNumber("Arm Distance", distance);
 
         // https://www.desmos.com/calculator/rqgtniidqa
-        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance) - Units.degreesToRadians(2.5));
     }
 
     public Rotation2d lineBasedArmAngle(Pose2d pose) {
