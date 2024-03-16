@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
@@ -59,13 +60,17 @@ public final class Constants {
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
     public static final int ENCODER_CPR = 1;
-    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
+    public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI / 2);
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.85, DEFAULT_CONSTRAINTS);
     public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
-    public static final int STALL_LIMIT = 35;
+    // public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
+    // public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.69209, 0.087496, 0.11401);
+    public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
-
+    public static final double ARM_LENGTH_METERS = 0.525;
+    public static final Rotation2d ANGLE_TO_SHOOTER = Rotation2d.fromDegrees(52.);
+    public static final double SHOOTER_HEIGHT_METERS = 0.395;
   }
     public static final class DrivetrainConstants {
         public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
@@ -158,7 +163,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(158.688);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(155.188+68.291);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     0, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -235,8 +240,20 @@ public final class Constants {
     // motor speeds
     public static final double FORWARD_THROTTLE = 0.65;
     public static final double REVERSE_THROTTLE = .5;
+    public static final double AMP_THROTTLE = 0.4;
+    public static final double IDLE_SPEED = FORWARD_THROTTLE / 4;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;
+    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
+    public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(50, 10);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
+    
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);//(0, 0.39739, 0.32121);
+
+
+    public static final double RadiansPerMeter = Units.degreesToRadians(3);
+    
   }
 
   public static final class FieldConstants {
@@ -273,7 +290,7 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = 3.5;
+        public static final double ROTATION_KP = .5;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0;
 

@@ -11,6 +11,10 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -44,11 +48,13 @@ public class Swerve extends SwerveBase {
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
+        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose(),
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), 1., 1., 1.));
         // Auto Config
         
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
-                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -63,6 +69,8 @@ public class Swerve extends SwerveBase {
             );
             SmartDashboard.putBoolean("Swerve Debug On?", false);
             SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+            SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+            resetOdometry(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE);
     }
 
     public Command ampLineUp() {
@@ -78,7 +86,12 @@ public class Swerve extends SwerveBase {
         // return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
         //
     }
-    
+
+    public void resetOdometryWithYaw(Pose2d pose) {
+        resetOdometry(pose);
+        gyro.setYaw(pose.getRotation());
+    }
+
     @Override
     public void periodic() {
         super.periodic();
@@ -109,15 +122,12 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.) && !DriverStation.isAutonomousEnabled()) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             // resetOdometry(limelight.getLimelightPose());
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
-            SmartDashboard.putBoolean("Within Range", true);
-        }
-        else {
-            SmartDashboard.putBoolean("Within Range", false);
+            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
+            SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         }
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
             poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());

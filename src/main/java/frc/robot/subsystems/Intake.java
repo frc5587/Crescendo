@@ -34,7 +34,7 @@ public class Intake extends PIDSubsystem {
         motor.restoreFactoryDefaults();
         motor.setInverted(IntakeConstants.MOTOR_INVERTED);
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
-        motor.setIdleMode(IdleMode.kBrake);
+        motor.setIdleMode(IdleMode.kCoast);
         this.enable();
     }
 
@@ -109,6 +109,7 @@ public class Intake extends PIDSubsystem {
         }
         else {
             rumbleConsumer.accept(0.);
+            
             virtualLimitSwitchValue = false;
         }
         if(!getLimitSwitch()) {

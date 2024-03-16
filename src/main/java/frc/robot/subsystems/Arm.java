@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Hashtable;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
@@ -9,6 +11,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -22,38 +25,51 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
+    private BooleanSupplier limitSwitchSupplier;
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
     private final DigitalInput magLimitSwitch = new DigitalInput(2);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
+    private Hashtable<Double, Rotation2d> distanceToAngleTable = new Hashtable<Double, Rotation2d>();
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
         
 
-    public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier) {
+    public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier, BooleanSupplier limitSwitchSupplier) {
         super(constants, leftMotor);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.poseSupplier = poseSupplier;
+        this.limitSwitchSupplier = limitSwitchSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
         getController().setTolerance(Units.degreesToRadians(1));
         enable();
+        armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         configureMotors();
+        SmartDashboard.putNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter);
+        // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
+        SmartDashboard.putNumber("Manual Arm Angle", 0.0);
+        distanceToAngleTable.put(1.3, Rotation2d.fromDegrees(7.25));
+        distanceToAngleTable.put(1.8, Rotation2d.fromDegrees(14.0));
+        distanceToAngleTable.put(2.3, Rotation2d.fromDegrees(22.3));
+        distanceToAngleTable.put(2.8, Rotation2d.fromDegrees(26.7));
+        distanceToAngleTable.put(3.3, Rotation2d.fromDegrees(30.4));
     }
 
-    public Arm(Supplier<Pose2d> poseSupplier) {
-        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), poseSupplier); 
+    public Arm(Supplier<Pose2d> poseSupplier, BooleanSupplier limitSwitchSupplier) {
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), poseSupplier, limitSwitchSupplier); 
     }
 
     @Override
@@ -130,8 +146,12 @@ public class Arm extends PivotingArmBase {
     //             + Math.toRadians(56)));
     // }
 
+    public double getShooterHeightMeters() {
+        return (ArmConstants.ARM_LENGTH_METERS * Math.sin(getAngleRadians())) + ArmConstants.SHOOTER_HEIGHT_METERS;
+    }
+
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ(), Math.sqrt(
+        double distance = Math.sqrt(
                         Math.pow(
                                 pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
@@ -139,12 +159,68 @@ public class Arm extends PivotingArmBase {
                         Math.pow(
                                 pose.getY() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()), 2)))
-                         + Math.toRadians(72)).times(1.04);
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()),
+                                2));
+
+        SmartDashboard.putNumber("Arm Distance", distance);
+
+        return Rotation2d.fromRadians(
+                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
+                // .times(1.04)[]\
+                
+                .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+    }
+
+    public Rotation2d logBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+        SmartDashboard.putNumber("Arm Distance", distance);
+
+        // https://www.desmos.com/calculator/rqgtniidqa
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance) - Units.degreesToRadians(2.5));
+    }
+
+    public Rotation2d lineBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+
+        return Rotation2d.fromRadians((0.205949 * distance) - 0.122348);
+    }
+
+    public Rotation2d interpolationArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+        
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
-        setGoal(poseDependantArmAngle(pose).getRadians());
+        // setGoal(poseDependantArmAngle(pose).getRadians());
+        setGoal(logBasedArmAngle(pose).getRadians());
     }
 
     @Override
@@ -182,6 +258,10 @@ public class Arm extends PivotingArmBase {
         if(!manualMode) {
             armToDistanceSetpoint(poseSupplier.get());
         }
+        SmartDashboard.putNumber("Shooter Height (m)", getShooterHeightMeters());
+        // if(!limitSwitchSupplier && MathSharedStore.getTimestamp() > limitSwitchDelayTime) {
+        //     travelSetpointCommand();
+        // }
 
         super.periodic(); // This is after the manual mode check because we want the new setpoint to be set before output is calculated + used.
 
@@ -265,12 +345,12 @@ public class Arm extends PivotingArmBase {
         return withinX && withinY;
     }
     
-    public void travelSetpoint() {
-        this.setGoal(ArmConstants.TRAVEL_SETPOINT);
+    public void armTravel() {
+        this.setGoal(Units.degreesToRadians(6));
     }
 
-    public Command travelSetpointCommand() {
-        return enableManualMode().andThen(new InstantCommand(() -> travelSetpoint()));
+    public Command armTravelCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armTravel()));
     }
 
     public Rotation2d getRawAbsolutePosition() {

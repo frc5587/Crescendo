@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 
@@ -19,24 +20,26 @@ public class RunIntakeWithArm extends Command {
 
     @Override
     public void initialize() {
-        if(!shooterSpunUpSupplier.getAsBoolean()) {
+        if(!shooterSpunUpSupplier.getAsBoolean() && arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {
             arm.armRest();
         }
     }
 
     @Override
     public void execute() {
-        if(intake.getLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean()) {
-            intake.stop();
+        if(shooterSpunUpSupplier.getAsBoolean() || arm.getController().getGoal().position == ArmConstants.AMP_SETPOINT || !intake.getLimitSwitch()) {
+            intake.forward();
         }
         else {
-            intake.forward();
+            intake.stop();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        arm.travelSetpoint();
+        if(arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {            
+            arm.armTravel();
+        }
         intake.stop();
     }
 }
