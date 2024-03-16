@@ -246,7 +246,7 @@ public final class Constants {
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(50, 10);
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80);
     public static final ProfiledPIDController PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);//(0, 0.39739, 0.32121);
