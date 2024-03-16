@@ -240,7 +240,7 @@ public final class Constants {
     // motor speeds
     public static final double FORWARD_THROTTLE = 0.65;
     public static final double REVERSE_THROTTLE = .5;
-    public static final double AMP_THROTTLE = 0.4;
+    public static final double AMP_THROTTLE = 12;
     public static final double IDLE_SPEED = FORWARD_THROTTLE / 4;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;

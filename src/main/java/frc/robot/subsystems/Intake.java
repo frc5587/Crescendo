@@ -100,19 +100,23 @@ public class Intake extends PIDSubsystem {
         SmartDashboard.putNumber("Intake Setpoint", motor.get());
         SmartDashboard.putNumber("Intake Measurement", getMeasurement());
         SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
+        if (DriverStation.isAutonomousEnabled()) {
+            if(shotIsConfirmed && getLimitSwitch()) {
+                forward();
+            }
+            else if(getLimitSwitch()) {
+                stop();
+            }
+            else {
+                forward();
+            }
+        }
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() > virtualSwitchTimerEndTime) {
             virtualLimitSwitchValue = true;
         }
         if(getLimitSwitch() && !shooterSpunUpSupplier.getAsBoolean() && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
             stop();
-        } else if (DriverStation.isAutonomousEnabled()) {
-            if (shotIsConfirmed && getLimitSwitch()) {
-                forward();
-            } else if (getLimitSwitch()) {
-                stop();
-            } else {
-                forward();
-            }
+        } 
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {
             rumbleConsumer.accept(1.);
         }
@@ -133,6 +137,5 @@ public class Intake extends PIDSubsystem {
             virtualLimitSwitchValue = false;
         }
         SmartDashboard.putBoolean("Virtual Switch", virtualLimitSwitchValue);
-    }
     }
 }

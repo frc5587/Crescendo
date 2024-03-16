@@ -112,7 +112,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void spinUpToAmp() {
-        leftMotor.set(ShooterConstants.AMP_THROTTLE);
+        setGoal(ShooterConstants.AMP_THROTTLE);
     }
 
     public void setVoltage(double voltage) {
