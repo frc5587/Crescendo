@@ -26,6 +26,12 @@
                 "data": {
                   "name": "armAim"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
               }
             ]
           }

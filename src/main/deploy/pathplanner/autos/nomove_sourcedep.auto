@@ -26,6 +26,12 @@
                 "data": {
                   "name": "shooterForward"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
               }
             ]
           }
@@ -39,7 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {

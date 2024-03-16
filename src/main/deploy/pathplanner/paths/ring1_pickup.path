@@ -16,56 +16,26 @@
     },
     {
       "anchor": {
-        "x": 2.5670791427174855,
-        "y": 6.710309340732804
+        "x": 2.45,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 2.0670791427174855,
-        "y": 6.710309340732804
+        "x": 1.9500000000000037,
+        "y": 7.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring1_pickup"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "slow shooter, prep intake",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "armRest"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "shooterIdle"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeForward"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 90.0,
-    "maxAngularAcceleration": 90.0
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -75,5 +45,5 @@
   "reversed": false,
   "folder": "ring1",
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
