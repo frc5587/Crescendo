@@ -16,25 +16,19 @@
     },
     {
       "anchor": {
-        "x": 4.0691922841704455,
-        "y": 5.818983847534893
+        "x": 3.9723795282112664,
+        "y": 5.691466561249813
       },
       "prevControl": {
-        "x": 4.116468212950411,
-        "y": 5.835262255257751
+        "x": 4.019655456991233,
+        "y": 5.707744968972671
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
@@ -48,6 +42,29 @@
               "type": "named",
               "data": {
                 "name": "armAim"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.2
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterForward"
               }
             }
           ]

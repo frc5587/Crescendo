@@ -3,34 +3,58 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45,
-        "y": 5.55
+        "x": 2.60221165235483,
+        "y": 5.539225686154654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9500000000000002,
-        "y": 5.55
+        "x": 2.10221165235483,
+        "y": 5.539225686154654
       },
       "isLocked": false,
       "linkedName": "ring2_pickup"
     },
     {
       "anchor": {
-        "x": 2.5670791427174855,
-        "y": 6.710309340732804
+        "x": 2.7076091812668635,
+        "y": 6.862550215827963
       },
       "prevControl": {
-        "x": 2.413870254093689,
-        "y": 6.581751818795498
+        "x": 2.461681613805452,
+        "y": 6.616622648366551
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring1_pickup"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.2
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shooterForward"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 4.0,
@@ -39,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.0,
+    "rotation": 28.0,
     "rotateFast": true
   },
   "reversed": false,

@@ -88,12 +88,6 @@
                 "data": {
                   "name": "armAim"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "rotateToShoot"
-                }
               }
             ]
           }
@@ -204,12 +198,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "rotateToShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "armAim"
                 }
               }
@@ -266,6 +254,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "confirmShot"
@@ -290,7 +284,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "armRest"
+                  "name": "armTravel"
                 }
               },
               {
