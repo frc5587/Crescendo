@@ -267,14 +267,24 @@ public final class Constants {
     public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
 
     public static final Translation2d[] BLUE_AUTO_TRACK_BOUNDS = {
-      new Translation2d(),
-      new Translation2d()
+      new Translation2d(0., 8.2),
+      new Translation2d(3.2, 0.)
     };
     public static final Translation2d[] RED_AUTO_TRACK_BOUNDS = {
       new Translation2d(),
       new Translation2d()
     };
-    }
+    public static final Translation2d[] BLUE_RESTRICTED_SPACE_BOUNDS = {
+      new Translation2d(1.9, 4.1),
+      new Translation2d(6.45, 1.7),
+      new Translation2d(6.45, 6.55)
+    };
+    public static final Translation2d[] RED_RESTRICTED_SPACE_BOUNDS = {
+      new Translation2d(1.9, 4.1),
+      new Translation2d(6.45, 1.7),
+      new Translation2d(6.45, 6.55)
+    };
+  }
 
     public static final class LimelightConstants {
         public static final double MOUNT_ANGLE = 30;

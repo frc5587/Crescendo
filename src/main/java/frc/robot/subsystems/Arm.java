@@ -11,9 +11,9 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -284,6 +284,8 @@ public class Arm extends PivotingArmBase {
             SmartDashboard.putBoolean("Reset Constraints", false);
         }
 
+        SmartDashboard.putBoolean("In Restricted Zone?", isPoseWithinTriangle(poseSupplier.get()));
+
         if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
             resetEncoders();
         }
@@ -343,6 +345,41 @@ public class Arm extends PivotingArmBase {
             withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
         }
         return withinX && withinY;
+    }
+
+    public boolean inRestrictedSpace(Pose2d pose) {
+        boolean withinX;
+        boolean withinY;
+        if(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
+            withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        else {
+            withinX = pose.getX() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        return withinX && withinY;
+    }
+
+    // Method to check if pose is within the equilateral triangle
+    public boolean isPoseWithinTriangle(Pose2d currentPose) {
+        Translation2d t1 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[0] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[0];
+        Translation2d t2 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[1] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[1];
+        Translation2d t3 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[2] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[2];
+        Translation2d currentTranslation = currentPose.getTranslation();
+        double side1 = Math.abs(crossProduct(t2.minus(t1), currentTranslation.minus(t1)));
+        double side2 = Math.abs(crossProduct(t3.minus(t2), currentTranslation.minus(t2)));
+        double side3 = Math.abs(crossProduct(t1.minus(t3), currentTranslation.minus(t3)));
+
+        // If the sum of the areas of the three triangles formed by the current pose and the triangle's vertices equals the area of the equilateral triangle, it's inside.
+        double triangleArea = Math.abs(crossProduct(t2.minus(t1), t3.minus(t1))) / 2.0;
+        double currentArea = side1 + side2 + side3;
+        return currentArea <= triangleArea; // Tolerance for double comparison
+    }
+
+    // Helper method to calculate the cross product of two 2D vectors
+    private double crossProduct(Translation2d a, Translation2d b) {
+        return a.getX() * b.getY() - a.getY() * b.getX();
     }
     
     public void armTravel() {
