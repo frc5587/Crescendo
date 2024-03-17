@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.5,
-      "y": 7.31
+      "y": 2.08
     },
     "rotation": 0
   },
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp_crossline"
+            "pathName": "source_crossline"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "source side start",
   "choreoAuto": false
 }

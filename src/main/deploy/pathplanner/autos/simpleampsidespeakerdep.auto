@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7041386162544403,
-      "y": 4.420390379242297
+      "x": 0.6924444618120005,
+      "y": 6.677362186633205
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -26,12 +26,6 @@
                 "data": {
                   "name": "shooterForward"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "denyShot"
-                }
               }
             ]
           }
@@ -45,25 +39,13 @@
         {
           "type": "named",
           "data": {
-            "name": "confirmShot"
+            "name": "intakeForward"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "simplesourcedep"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shooterStop"
           }
         },
         {
@@ -75,12 +57,24 @@
         {
           "type": "named",
           "data": {
+            "name": "shooterIdle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "armRest"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "simpleampdep"
           }
         }
       ]
     }
   },
-  "folder": "source side start",
+  "folder": "amp side start",
   "choreoAuto": false
 }

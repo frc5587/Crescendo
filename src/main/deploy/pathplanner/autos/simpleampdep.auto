@@ -18,6 +18,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "denyShot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "armAim"
                 }
               },
@@ -39,19 +45,13 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeStop"
           }
         },
         {
@@ -75,6 +75,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "amp side start",
   "choreoAuto": false
 }

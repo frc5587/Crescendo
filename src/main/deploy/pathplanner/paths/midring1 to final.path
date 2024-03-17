@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.041953595733976,
+        "x": 6.041953595733975,
         "y": 7.452119563991675
       },
       "isLocked": false,
@@ -16,40 +16,24 @@
     },
     {
       "anchor": {
-        "x": 6.738322308553448,
-        "y": 1.7424290119235524
+        "x": 3.796271211538057,
+        "y": 5.634959791571693
       },
       "prevControl": {
-        "x": 8.04932410193955,
-        "y": 3.0142964234175333
-      },
-      "nextControl": {
-        "x": 5.954813960909972,
-        "y": 0.9823089731649555
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.7041386162544403,
-        "y": 4.420390379242297
-      },
-      "prevControl": {
-        "x": 0.7041386162544401,
-        "y": 2.4203903792422974
+        "x": 3.843547140318022,
+        "y": 5.651238199294551
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "source_dep"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "stop intake",
-      "waypointRelativePos": 0,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intakeStop"
+                "name": "armAim"
               }
             }
           ]
@@ -65,8 +49,8 @@
       }
     },
     {
-      "name": "prep shoot",
-      "waypointRelativePos": 1.35,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -74,13 +58,7 @@
             {
               "type": "named",
               "data": {
-                "name": "shooterForward"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "armAim"
+                "name": "rotateToShoot"
               }
             }
           ]
@@ -96,11 +74,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.0,
-    "rotateFast": true
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "-amp",
+  "folder": "5ring",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

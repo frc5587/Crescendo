@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7041386162544403,
-      "y": 4.420390379242297
+      "x": 0.6924444618120005,
+      "y": 6.677362186633205
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -18,19 +18,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "shooterForward"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "denyShot"
+                  "name": "armAim"
                 }
               }
             ]
@@ -45,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "confirmShot"
+            "name": "intakeForward"
           }
         },
         {
@@ -57,30 +51,36 @@
         {
           "type": "path",
           "data": {
-            "pathName": "simplesourcedep"
+            "pathName": "ampside_1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ampside_2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shooterStop"
+            "name": "intakeForward"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "intakeStop"
+            "waitTime": 0.5
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "armRest"
+            "pathName": "ampside_3"
           }
         }
       ]
     }
   },
-  "folder": "source side start",
+  "folder": "amp side start",
   "choreoAuto": false
 }

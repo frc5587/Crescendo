@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6924444618120005,
-      "y": 6.677362186633205
+      "x": 0.7,
+      "y": 4.42
     },
-    "rotation": 60.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,19 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "armAim"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "shooterForward"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
+                  "name": "denyShot"
                 }
               }
             ]
@@ -39,7 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
@@ -49,38 +55,33 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "ampside_1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ampside_2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeForward"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ampside_3"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterIdle"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armRest"
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "source side start",
   "choreoAuto": false
 }

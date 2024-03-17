@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.48,
-        "y": 4.1046482092964185
+        "x": 2.4,
+        "y": 4.11
       },
       "prevControl": {
-        "x": 2.43,
-        "y": 4.1046482092964185
+        "x": 2.35,
+        "y": 4.11
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,42 +30,12 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "prep intake, slow shooter",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "armRest"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "shooterIdle"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeForward"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 2.5,
-    "maxAngularVelocity": 90.0,
-    "maxAngularAcceleration": 90.0
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0,

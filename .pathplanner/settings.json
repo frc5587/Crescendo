@@ -6,15 +6,19 @@
     "-amp",
     "-middle",
     "-source",
+    "5ring",
     "pathplanning",
     "ring1",
     "ring2",
     "ring3"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "amp side start",
+    "source side start"
+  ],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 2.5,
-  "defaultMaxAngVel": 90.0,
-  "defaultMaxAngAccel": 90.0,
+  "defaultMaxAccel": 4.0,
+  "defaultMaxAngVel": 180.0,
+  "defaultMaxAngAccel": 180.0,
   "maxModuleSpeed": 5.0
 }
