@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -16,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoRotateToShoot;
@@ -51,8 +51,7 @@ public class RobotContainer {
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
-    private final ClimbWithAxis 
-    climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
+    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -68,7 +67,7 @@ public class RobotContainer {
         // arm.setDefaultCommand(armDistancePose);
         NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
-        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterForward", new RunCommand(shooter::forward));
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());

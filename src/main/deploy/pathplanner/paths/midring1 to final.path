@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.825878671700363,
-        "y": 7.437482225391801
+        "x": 8.041953595733975,
+        "y": 7.452119563991675
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.825878671700363,
-        "y": 7.437482225391801
+        "x": 6.041953595733975,
+        "y": 7.452119563991675
       },
       "isLocked": false,
       "linkedName": "ampside_mid_end"
     },
     {
       "anchor": {
-        "x": 3.9723795282112664,
-        "y": 5.691466561249813
+        "x": 3.796271211538057,
+        "y": 5.634959791571693
       },
       "prevControl": {
-        "x": 4.019655456991233,
-        "y": 5.707744968972671
+        "x": 3.843547140318022,
+        "y": 5.651238199294551
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,19 +52,13 @@
       "name": "New Event Marker",
       "waypointRelativePos": 1.0,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.2
-              }
-            },
-            {
               "type": "named",
               "data": {
-                "name": "shooterForward"
+                "name": "rotateToShoot"
               }
             }
           ]

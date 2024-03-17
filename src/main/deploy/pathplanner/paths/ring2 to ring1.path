@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.7076091812668635,
-        "y": 6.862550215827963
+        "x": 2.7796530110891373,
+        "y": 6.912092577824167
       },
       "prevControl": {
-        "x": 2.461681613805452,
-        "y": 6.616622648366551
+        "x": 2.6264441224653408,
+        "y": 6.78353505588686
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,21 +33,21 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
-              "type": "wait",
+              "type": "named",
               "data": {
-                "waitTime": 0.2
+                "name": "armRest"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "shooterForward"
+                "name": "intakeForward"
               }
             }
           ]
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 28.0,
+    "rotation": 30.64698972764826,
     "rotateFast": true
   },
   "reversed": false,

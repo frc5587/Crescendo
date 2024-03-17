@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.35,
-        "y": 4.55
+        "x": 2.413145667812442,
+        "y": 4.311084857613674
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.85,
-        "y": 4.55
+        "x": 1.9131456678124419,
+        "y": 4.311084857613674
       },
       "isLocked": false,
       "linkedName": "ring3_sidepickup"
     },
     {
       "anchor": {
-        "x": 2.60221165235483,
-        "y": 5.539225686154654
+        "x": 2.7381305599583547,
+        "y": 5.569313877892675
       },
       "prevControl": {
-        "x": 1.6022116523548302,
-        "y": 5.539225686154654
+        "x": 1.7381305599583547,
+        "y": 5.569313877892675
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring2_pickup"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -39,21 +39,21 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.25,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
-              "type": "wait",
+              "type": "named",
               "data": {
-                "waitTime": 0.2
+                "name": "armRest"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "shooterForward"
+                "name": "intakeForward"
               }
             }
           ]
