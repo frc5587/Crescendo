@@ -115,6 +115,14 @@ public class Shooter extends ProfiledPIDSubsystem {
         setGoal(ShooterConstants.AMP_THROTTLE);
     }
 
+    public void setVoltage(double volts) {
+        leftMotor.setVoltage(volts);
+    }
+
+    public double getVoltage() {
+        return leftMotor.get() * RobotController.getBatteryVoltage();
+    }
+
     @Override
     public void periodic() {
         super.periodic();

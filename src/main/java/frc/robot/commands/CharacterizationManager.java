@@ -27,9 +27,6 @@ public class CharacterizationManager {
         return shooterCharacterization.isRunning();
     }
 
-    public void characterizationPeriodic() {
-    }
-
     public ArmCharacterization getArmChar() {
         return this.armCharacterization;
     }

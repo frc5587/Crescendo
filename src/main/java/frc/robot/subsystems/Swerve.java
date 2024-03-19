@@ -162,7 +162,7 @@ public class Swerve extends SwerveBase {
      */
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
-        setModuleStates(kinematics.toSwerveModuleStates(speeds), true);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), false);
     }
 
     /**
@@ -190,7 +190,7 @@ public class Swerve extends SwerveBase {
         resetOdometry(pose);
         gyro.setYaw(pose.getRotation());
     }
-    
+
     public void standYourGround() {
         for(int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setAngle(i == 2 || i == 1 ? Rotation2d.fromDegrees(135) : Rotation2d.fromDegrees(45));

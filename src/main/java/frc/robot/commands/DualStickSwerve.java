@@ -32,6 +32,6 @@ public class DualStickSwerve extends Command {
         
         swerve.drive(translation, rotation,
                 fieldRelativeSup.getAsBoolean(),
-                true);
+                false);
     }
 }

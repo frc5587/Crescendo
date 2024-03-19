@@ -49,6 +49,9 @@ public final class CTREConfigs {
         driveSlot0Configs.kP = Constants.DrivetrainConstants.DRIVE_FPID.kP;
         driveSlot0Configs.kI = Constants.DrivetrainConstants.DRIVE_FPID.kI;
         driveSlot0Configs.kD = Constants.DrivetrainConstants.DRIVE_FPID.kD;
+        driveSlot0Configs.kS = Constants.DrivetrainConstants.DRIVE_KS;
+        driveSlot0Configs.kV = Constants.DrivetrainConstants.DRIVE_KV;
+        driveSlot0Configs.kA = Constants.DrivetrainConstants.DRIVE_KA;
         swerveDriveFXConfig.CurrentLimits = driveCurrLimit;
         swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.DrivetrainConstants.OPEN_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.DrivetrainConstants.CLOSED_LOOP_RAMP;

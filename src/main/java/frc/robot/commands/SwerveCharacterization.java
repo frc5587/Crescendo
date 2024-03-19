@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Swerve;
 
@@ -25,12 +26,12 @@ public class SwerveCharacterization extends CharacterizationBase {
 
     @Override
     public double getMechanismPosition() {
-        return swerve.getOdometryPose().getX();
+        return swerve.swerveModules[0].getPosition().distanceMeters; // serve.getOdometryPose().getX();
     }
 
     @Override
     public double getMechanismVelocity() {
-        return swerve.getLinearVelocity();
+        return swerve.swerveModules[0].getState().speedMetersPerSecond;//swerve.getLinearVelocity();
     }
 
     @Override
@@ -40,7 +41,11 @@ public class SwerveCharacterization extends CharacterizationBase {
     
     @Override
     public Command preRoutine() {
-        return arm.armTravelCommand();
+        return arm.armTravelCommand().alongWith(new InstantCommand());
     }
     
+    @Override
+    public Command postRoutine() {
+        return new InstantCommand(swerve::stop);
+    }
 }

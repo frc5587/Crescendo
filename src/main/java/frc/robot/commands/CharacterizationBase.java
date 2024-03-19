@@ -109,7 +109,11 @@ public abstract class CharacterizationBase {
 
     public Command preRoutine() {
         return Commands.none();
-    };
+    }
+
+    public Command characterizationPeriodic() {
+        return Commands.none();
+    }
 
     public Command postRoutine() {
         return Commands.none();
