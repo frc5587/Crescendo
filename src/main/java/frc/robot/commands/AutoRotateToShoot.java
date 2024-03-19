@@ -35,7 +35,7 @@ public class AutoRotateToShoot extends Command {
             System.out.println("Target: " + targetAngle.getRadians());
             System.out.println("Error: " + (currentAngle.getDegrees() - targetAngle.getDegrees()));
             swerve.drive(new Translation2d(0, 0),
-                            5 * (currentAngle.getRadians() - targetAngle.getRadians()),
+                            8 * (currentAngle.getRadians() - targetAngle.getRadians()),
                             true, true);
             if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 2.) {
                 isFinished = true;

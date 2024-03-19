@@ -129,7 +129,7 @@ public class Swerve extends SwerveBase {
             // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         }
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5)) {
             poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
             poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
         }
