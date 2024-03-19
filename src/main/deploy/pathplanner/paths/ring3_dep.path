@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.543657469625922,
-        "y": 4.379852868122284
+        "x": 2.4,
+        "y": 4.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5585991091048692,
-        "y": 5.640670073893039
+        "x": 1.4972774652719276,
+        "y": 5.307953265070939
       },
       "isLocked": false,
       "linkedName": "ring3_pickup"
@@ -30,42 +30,12 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "stop, rev, aim",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "intakeStop"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "shooterForward"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "armAim"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 2.5,
-    "maxAngularVelocity": 90.0,
-    "maxAngularAcceleration": 90.0
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -74,6 +44,9 @@
   },
   "reversed": false,
   "folder": "ring3",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

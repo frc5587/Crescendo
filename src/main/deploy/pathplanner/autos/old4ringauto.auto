@@ -26,6 +26,12 @@
                 "data": {
                   "name": "armAim"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
               }
             ]
           }
@@ -39,13 +45,32 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "armRest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
+              }
+            ]
           }
         },
         {
@@ -55,27 +80,46 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "armAim"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ring2_dep"
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "armRest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
+              }
+            ]
           }
         },
         {
@@ -85,27 +129,46 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "armAim"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ring1_dep"
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.0
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "armRest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
+                }
+              }
+            ]
           }
         },
         {
@@ -129,7 +192,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intakeForward"
+            "name": "confirmShot"
           }
         },
         {
@@ -158,6 +221,12 @@
                 "type": "named",
                 "data": {
                   "name": "intakeStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "denyShot"
                 }
               }
             ]

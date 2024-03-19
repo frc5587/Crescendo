@@ -14,6 +14,9 @@ import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -57,6 +60,8 @@ public class Swerve extends SwerveBase {
         this.swerveModules = swerveModules;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
+        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose(),
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 1.));
         // Auto Config
         
             AutoBuilder.configureHolonomic(
@@ -74,8 +79,10 @@ public class Swerve extends SwerveBase {
                 () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
                 this // Reference to this subsystem to set requirements
             );
-            // SmartDashboard.putBoolean("Swerve Debug On?", false);
-            // SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+            SmartDashboard.putBoolean("Swerve Debug On?", false);
+            SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+            SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+            resetOdometry(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE);
     }
 
     public Command ampLineUp() {
@@ -138,6 +145,17 @@ public class Swerve extends SwerveBase {
         // }
         
         velocityBuffer.addSample(MathSharedStore.getTimestamp(), getLinearVelocity());
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+            // resetOdometry(limelight.getLimelightPose());
+            odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+            poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
+            SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+        }
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5)) {
+            poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
+            poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
+        }
     }
     /**
      * Sets the module states based on chassis speeds.
@@ -171,5 +189,12 @@ public class Swerve extends SwerveBase {
     public void resetOdometryWithYaw(Pose2d pose) {
         resetOdometry(pose);
         gyro.setYaw(pose.getRotation());
+    }
+    
+    public void standYourGround() {
+        for(int i = 0; i < swerveModules.length; i++) {
+            swerveModules[i].setAngle(i == 2 || i == 1 ? Rotation2d.fromDegrees(135) : Rotation2d.fromDegrees(45));
+        }
+        System.out.println("Rotating to X");
     }
 }

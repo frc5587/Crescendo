@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -39,12 +40,12 @@ public class RobotContainer {
 
     private final Limelight limelight = new Limelight();
     private final Swerve swerve = new Swerve(limelight);
-    private final Arm arm = new Arm(swerve::getPose);
-    private final Shooter shooter = new Shooter();
+    private final Shooter shooter = new Shooter(swerve::getPose);
     private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
         xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
         xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
+    public final Arm arm = new Arm(swerve::getPose);
     private final SendableChooser<Command> autoChooser;
     private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve, shooter);
 
@@ -55,8 +56,7 @@ public class RobotContainer {
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
-    private final ClimbWithAxis 
-    climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
+    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -72,12 +72,16 @@ public class RobotContainer {
         // arm.setDefaultCommand(armDistancePose);
         NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
-        NamedCommands.registerCommand("shooterForward", new InstantCommand(shooter::forward));
+        NamedCommands.registerCommand("shooterForward", new RunCommand(shooter::forward));
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
-        NamedCommands.registerCommand("armRest", new InstantCommand(() -> {arm.setManualMode(true); arm.armRest();}));
+        NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
+        NamedCommands.registerCommand("armRest", arm.armRestCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
+        NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
+        NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
+        NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
@@ -111,8 +115,8 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightBumper().whileTrue(runIntakeWithArm);
         xbox2.rightTrigger().onTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         // xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         // xbox2.a().onTrue(arm.armTravelCommand());
         // xbox2.b().onTrue(arm.disableManualMode());
@@ -134,6 +138,7 @@ public class RobotContainer {
         // xbox.povUp().whileTrue(lineUpToSpeaker);
         // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
         // xbox.povRight().whileTrue(swerve.ampLineUp());
+        xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
     }
 
   /**

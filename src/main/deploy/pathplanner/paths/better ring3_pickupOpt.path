@@ -3,57 +3,57 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7041386162544403,
-        "y": 4.420390379242297
+        "x": 1.34,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7509152340242001,
-        "y": 2.6779613673187472
+        "x": 2.4006601717798217,
+        "y": 4.489339828220179
       },
       "isLocked": false,
-      "linkedName": "source_dep"
+      "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 4.001890169022504,
-        "y": 2.4440782784699477
+        "x": 2.413145667812442,
+        "y": 4.311084857613674
       },
       "prevControl": {
-        "x": 3.001890169022504,
-        "y": 2.4440782784699477
+        "x": 2.3771786777955093,
+        "y": 4.345817776136625
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ring3_sidepickup"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": -30.0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "stop all, slow shooter",
-      "waypointRelativePos": 0,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
-              "type": "named",
+              "type": "wait",
               "data": {
-                "name": "shooterIdle"
+                "waitTime": 0.2
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "intakeStop"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "armRest"
+                "name": "shooterForward"
               }
             }
           ]
@@ -69,14 +69,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -25.905299158169193,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "-amp",
-  "previewStartingState": {
-    "rotation": -60.0,
-    "velocity": 0.0
-  },
+  "folder": "5ring",
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

@@ -3,32 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5,
-        "y": 2.08
+        "x": 1.34,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.0,
-        "y": 2.08
+        "x": 2.34,
+        "y": 5.55
       },
       "isLocked": false,
-      "linkedName": "sa_startpoint"
+      "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 4.0534822997636715,
-        "y": 2.08
+        "x": 7.827543491077871,
+        "y": 4.095228782712691
       },
       "prevControl": {
-        "x": 4.003482299763672,
-        "y": 2.08
+        "x": 6.744309433949165,
+        "y": 3.8220654117845814
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": -16.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -43,7 +54,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "-source",
-  "previewStartingState": null,
+  "folder": "-middle",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

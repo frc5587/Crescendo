@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
@@ -11,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class Arm extends PivotingArmBase {
     public final TalonFX leftMotor;
@@ -46,11 +49,14 @@ public class Arm extends PivotingArmBase {
         resetToAbsolute();
         getController().setTolerance(Units.degreesToRadians(1));
         enable();
+        armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         configureMotors();
+        SmartDashboard.putNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter);
         // setGoal(poseDependantArmAngle(poseSupplier.get()).getRadians());
+        SmartDashboard.putNumber("Manual Arm Angle", 0.0);
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -135,8 +141,12 @@ public class Arm extends PivotingArmBase {
     //             + Math.toRadians(56)));
     // }
 
+    public double getShooterHeightMeters() {
+        return (ArmConstants.ARM_LENGTH_METERS * Math.sin(getAngleRadians())) + ArmConstants.SHOOTER_HEIGHT_METERS;
+    }
+
     public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        return Rotation2d.fromRadians(-Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ(), Math.sqrt(
+        double distance = Math.sqrt(
                         Math.pow(
                                 pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
@@ -144,12 +154,68 @@ public class Arm extends PivotingArmBase {
                         Math.pow(
                                 pose.getY() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()), 2)))
-                         + Math.toRadians(72)).times(1.04);
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()),
+                                2));
+
+        SmartDashboard.putNumber("Arm Distance", distance);
+
+        return Rotation2d.fromRadians(
+                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
+                // .times(1.04)[]\
+                
+                .minus(new Rotation2d((distance-1.3) * SmartDashboard.getNumber("RadiansPerMeeter", ShooterConstants.RadiansPerMeter)));
+    }
+
+    public Rotation2d logBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+        SmartDashboard.putNumber("Arm Distance", distance);
+
+        // https://www.desmos.com/calculator/rqgtniidqa
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance) - Units.degreesToRadians(2.5));
+    }
+
+    public Rotation2d lineBasedArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+
+        return Rotation2d.fromRadians((0.205949 * distance) - 0.122348);
+    }
+
+    public Rotation2d interpolationArmAngle(Pose2d pose) {
+        double distance = Math.sqrt(
+                        Math.pow(
+                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((pose.getY()
+                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
+        
+        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
-        setGoal(poseDependantArmAngle(pose).getRadians());
+        // setGoal(poseDependantArmAngle(pose).getRadians());
+        setGoal(logBasedArmAngle(pose).getRadians());
     }
 
     @Override
@@ -178,7 +244,7 @@ public class Arm extends PivotingArmBase {
     public Command chinUp() {
         return new InstantCommand(() -> {
             getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
-            armRest();
+            armStage();
         }, this);
     }
 
@@ -187,6 +253,10 @@ public class Arm extends PivotingArmBase {
         if(!manualMode) {
             armToDistanceSetpoint(poseSupplier.get());
         }
+        SmartDashboard.putNumber("Shooter Height (m)", getShooterHeightMeters());
+        // if(!limitSwitchSupplier && MathSharedStore.getTimestamp() > limitSwitchDelayTime) {
+        //     travelSetpointCommand();
+        // }
 
         super.periodic(); // This is after the manual mode check because we want the new setpoint to be set before output is calculated + used.
 
@@ -208,11 +278,12 @@ public class Arm extends PivotingArmBase {
             }
             SmartDashboard.putBoolean("Reset Constraints", false);
         }
+        SmartDashboard.putBoolean("In Restricted Zone?", isPoseWithinTriangle(poseSupplier.get()));
 
-        // if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
-        //     resetEncoders();
-        // }
-        // SmartDashboard.putBoolean("Reset Arm Encoders", false);
+        if(SmartDashboard.getBoolean("Reset Arm Encoders", false)) {
+            resetEncoders();
+        }
+        SmartDashboard.putBoolean("Reset Arm Encoders", false);
 
         // SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
         // SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
@@ -268,6 +339,41 @@ public class Arm extends PivotingArmBase {
             withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
         }
         return withinX && withinY;
+    }
+
+    public boolean inRestrictedSpace(Pose2d pose) {
+        boolean withinX;
+        boolean withinY;
+        if(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
+            withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        else {
+            withinX = pose.getX() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getX();
+            withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
+        }
+        return withinX && withinY;
+    }
+
+    // Method to check if pose is within the equilateral triangle
+    public boolean isPoseWithinTriangle(Pose2d currentPose) {
+        Translation2d t1 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[0] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[0];
+        Translation2d t2 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[1] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[1];
+        Translation2d t3 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[2] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[2];
+        Translation2d currentTranslation = currentPose.getTranslation();
+        double side1 = Math.abs(crossProduct(t2.minus(t1), currentTranslation.minus(t1)));
+        double side2 = Math.abs(crossProduct(t3.minus(t2), currentTranslation.minus(t2)));
+        double side3 = Math.abs(crossProduct(t1.minus(t3), currentTranslation.minus(t3)));
+
+        // If the sum of the areas of the three triangles formed by the current pose and the triangle's vertices equals the area of the equilateral triangle, it's inside.
+        double triangleArea = Math.abs(crossProduct(t2.minus(t1), t3.minus(t1))) / 2.0;
+        double currentArea = side1 + side2 + side3;
+        return currentArea <= triangleArea; // Tolerance for double comparison
+    }
+
+    // Helper method to calculate the cross product of two 2D vectors
+    private double crossProduct(Translation2d a, Translation2d b) {
+        return a.getX() * b.getY() - a.getY() * b.getX();
     }
     
     public void armTravel() {
