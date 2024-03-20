@@ -89,9 +89,9 @@ public class Shooter extends ProfiledPIDSubsystem {
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
 
-        // return (1.3 * distance) + 11.71;
+        // return (2.8 * distance) + 9.86;
         // https://www.desmos.com/calculator/bplceypa5r
-        return MathUtil.clamp((2.8 * distance) + 9.86, 12.5, 21.0);
+        return MathUtil.clamp((2.8 * distance) + 9.86, 12., 21.0);
     }
 
     public void backward() {

@@ -16,6 +16,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "shooterForward"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -63,13 +69,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "denyShot"
+                              "name": "armRest"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
+                              "name": "denyShot"
                             }
                           }
                         ]
@@ -103,7 +109,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.6
                       }
                     },
                     {
@@ -165,7 +171,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.6
                       }
                     },
                     {
@@ -187,13 +193,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "denyShot"
+                              "name": "armRest"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
+                              "name": "denyShot"
                             }
                           }
                         ]
@@ -203,6 +209,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "ring2 to ring1"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -227,69 +239,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armRest"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "ring1 to midring1"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "midring1 to final"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
                         "waitTime": 0.6
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
                       }
                     },
                     {
@@ -336,12 +286,6 @@
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterForward"
                 }
               }
             ]

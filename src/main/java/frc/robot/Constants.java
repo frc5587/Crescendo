@@ -127,12 +127,13 @@ public final class Constants {
          * loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
          */
-        public static final double OPEN_LOOP_RAMP = 0.25;
-        public static final double CLOSED_LOOP_RAMP = 0.25;
+        public static final double OPEN_LOOP_RAMP = 0.5;
+        public static final double CLOSED_LOOP_RAMP = 0.08;
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.02, 0.1, 0, 0);
+                //0.02, 0.1, 0, 0);
+                0.1678779, 0.0, 0.0, 0.0); // 0.83857
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -142,16 +143,16 @@ public final class Constants {
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        public static final double DRIVE_KS = (0.32 / 12);
-        public static final double DRIVE_KV = (1.51 / 12);
-        public static final double DRIVE_KA = (0.27 / 12);
+        public static final double DRIVE_KS = (0.14382);
+        public static final double DRIVE_KV = (9.7051); // 23.315008
+        public static final double DRIVE_KA = (0.85729);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 5;
+        public static final double MAX_SPEED = 3;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI;
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI / 2;
 
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -240,7 +241,7 @@ public final class Constants {
     // motor speeds
     public static final double FORWARD_THROTTLE = 0.65;
     public static final double REVERSE_THROTTLE = .5;
-    public static final double AMP_THROTTLE = 12;
+    public static final double AMP_THROTTLE = 9;
     public static final double IDLE_SPEED = FORWARD_THROTTLE / 4;
 
     public static final double MAX_MOTOR_SPEED_RPS = 71.8;
@@ -300,13 +301,13 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
         // TODO set rotation + translation PID values
-        public static final double ROTATION_KP = .5;
+        public static final double ROTATION_KP = .45;
         public static final double ROTATION_KI = 0;
-        public static final double ROTATION_KD = 0;
+        public static final double ROTATION_KD = 0.5;
 
-        public static final double TRANSLATION_KP = 5.5;
+        public static final double TRANSLATION_KP = 3.5;//5.5;
         public static final double TRANSLATION_KI = 0;
-        public static final double TRANSLATION_KD = 0;
+        public static final double TRANSLATION_KD = 0.05;
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);

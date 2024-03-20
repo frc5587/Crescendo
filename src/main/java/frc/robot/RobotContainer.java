@@ -46,7 +46,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
-            () -> xbox.getRightX(), xbox.rightBumper().negate());
+            () -> xbox.getRightX(), xbox.rightBumper().negate(), xbox.leftTrigger());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
@@ -83,6 +83,11 @@ public class RobotContainer {
         CameraServer.startAutomaticCapture(0);
     }
 
+    public void stopIntake() {
+        intake.stop();
+        shooter.idleSpeed();
+    }
+
     /**
      * Use this method to define your trigger->command mappings. Triggers can be
      * created via the
@@ -107,7 +112,7 @@ public class RobotContainer {
         //     arm.travelSetpoint();
         // }));
         
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward).alongWith(arm.disableManualMode())).onFalse(new InstantCommand(shooter::idleSpeed).alongWith(arm.enableManualMode()).andThen(arm.armTravelCommand()));
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
         // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);

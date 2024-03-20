@@ -14,12 +14,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +39,8 @@ public class Arm extends PivotingArmBase {
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
+    private TimeInterpolatableBuffer<Double> voltageBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
+    private TimeInterpolatableBuffer<Double> positionBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
     private Hashtable<Double, Rotation2d> distanceToAngleTable = new Hashtable<Double, Rotation2d>();
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
@@ -173,15 +177,15 @@ public class Arm extends PivotingArmBase {
 
     public Rotation2d logBasedArmAngle(Pose2d pose) {
         double distance = Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2));
+                Math.pow(
+                        pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                Math.pow(
+                        pose.getY() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()), 2)
+        );
         SmartDashboard.putNumber("Arm Distance", distance);
 
         // https://www.desmos.com/calculator/rqgtniidqa
@@ -238,7 +242,18 @@ public class Arm extends PivotingArmBase {
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
-        if((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.) || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.) || (getLimitSwitch() && output < 0)) {
+        if ((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.)
+                || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.)
+                || (getLimitSwitch() && output < 0)
+                // if: position 0.06 seconds ago and 0.02 seconds ago are both 0 and the applied output
+                //     voltage of the motors 0.06 seconds ago was more than 0.5V, return true!
+                || (positionBuffer.getSample(Timer.getFPGATimestamp() - 0.06).orElseGet(() -> 0.0)
+                        .doubleValue() == positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0)
+                                .doubleValue()
+                        && positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0)
+                                .doubleValue() == 0.0
+                        && Math.abs(voltageBuffer.getSample(Timer.getFPGATimestamp() - 0.06).orElseGet(() -> 0.0)
+                                .doubleValue()) < 0.5)) { // play around with the 0.5V value. may be too much or too little
             setVoltage(0);
         }
         else {
@@ -267,6 +282,9 @@ public class Arm extends PivotingArmBase {
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
+        
+        positionBuffer.addSample(Timer.getFPGATimestamp(), getMeasurement());
+        voltageBuffer.addSample(Timer.getFPGATimestamp(), leftMotor.getMotorVoltage().getValue());
 
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
