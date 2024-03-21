@@ -41,6 +41,7 @@ public class Arm extends PivotingArmBase {
     private boolean brakeModeEnabled = true;
     private TimeInterpolatableBuffer<Double> voltageBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
     private TimeInterpolatableBuffer<Double> positionBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
+    private double timeStopped = -1;
     private Hashtable<Double, Rotation2d> distanceToAngleTable = new Hashtable<Double, Rotation2d>();
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
@@ -244,21 +245,20 @@ public class Arm extends PivotingArmBase {
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
         if ((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.)
                 || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.)
-                || (getLimitSwitch() && output < 0)
-                // if: position 0.06 seconds ago and 0.02 seconds ago are both 0 and the applied output
-                //     voltage of the motors 0.06 seconds ago was more than 0.5V, return true!
-                || (positionBuffer.getSample(Timer.getFPGATimestamp() - 0.06).orElseGet(() -> 0.0)
-                        .doubleValue() == positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0)
-                                .doubleValue()
-                        && positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0)
-                                .doubleValue() == 0.0
-                        && Math.abs(voltageBuffer.getSample(Timer.getFPGATimestamp() - 0.06).orElseGet(() -> 0.0)
-                                .doubleValue()) < 0.5)) { // play around with the 0.5V value. may be too much or too little
+                || (getLimitSwitch() && output < 0)) {
             setVoltage(0);
         }
+        // else if(Math.abs(positionBuffer.getSample(Timer.getFPGATimestamp() - 0.18).orElseGet(() -> 0.0).doubleValue()
+        //         - positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0).doubleValue()) <= Units.degreesToRadians(0.3) // if the position 1 period ago and the position 9 periods ago are roughly the same,
+        //         && positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0).doubleValue() <= Units.degreesToRadians(0.3) // if the position is less than 0.3 degrees,
+        //         && (Math.abs(voltageBuffer.getSample(Timer.getFPGATimestamp() - 0.18).orElseGet(() -> 0.0).doubleValue()) > 0.5) // if the robot has tried to move the arm in the last 9 periods,
+        //         && getLimitSwitch()) { // and if the limit switch is pressed,
+        //     setVoltage(0);
+        // }
         else {
             super.useOutput(output, setpoint);
         }
+        voltageBuffer.addSample(Timer.getFPGATimestamp(), output);
     }
 
     public Command chinUp() {
@@ -283,8 +283,15 @@ public class Arm extends PivotingArmBase {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
         
-        positionBuffer.addSample(Timer.getFPGATimestamp(), getMeasurement());
-        voltageBuffer.addSample(Timer.getFPGATimestamp(), leftMotor.getMotorVoltage().getValue());
+        if(DriverStation.isEnabled()) {
+            positionBuffer.addSample(Timer.getFPGATimestamp(), getMeasurement());
+            SmartDashboard.putNumber("Left Volts", leftMotor.getMotorVoltage().getValue());
+        }
+
+        else {
+            positionBuffer.clear();
+            voltageBuffer.clear();
+        }
 
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());

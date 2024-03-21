@@ -30,7 +30,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         enable();
         this.poseSupplier = poseSupplier;
         getController().setTolerance(0.2);
-        idleSpeed();
+        // idleSpeed();
     }
 
     public void configureMotors() {
