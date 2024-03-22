@@ -133,7 +133,7 @@ public final class Constants {
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
                 //0.02, 0.1, 0, 0);
-                0.83857 / 12, 0.0, 0.0, 0.0);
+                0.00106, 0.0, 0.0, 0.0); //0.83857 / 12
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -143,9 +143,9 @@ public final class Constants {
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        public static final double DRIVE_KS = (0.14382 / 12);
-        public static final double DRIVE_KV = (9.7051 / 12);
-        public static final double DRIVE_KA = (0.85729 / 12);
+        public static final double DRIVE_KS = (0.22679);
+        public static final double DRIVE_KV = 1.9698;//(9.7051 / 12);
+        public static final double DRIVE_KA = (0.80637);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
