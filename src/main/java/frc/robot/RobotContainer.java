@@ -85,7 +85,7 @@ public class RobotContainer {
 
     public void stopIntake() {
         intake.stop();
-        // shooter.idleSpeed();
+        shooter.idleSpeed();
     }
 
     /**

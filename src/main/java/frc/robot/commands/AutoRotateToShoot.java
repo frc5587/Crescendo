@@ -42,7 +42,7 @@ public class AutoRotateToShoot extends Command {
             }
             else {
                 swerve.drive(new Translation2d(0, 0),
-                            8. * (currentAngle.getRadians() - targetAngle.getRadians()),
+                            6.5 * (currentAngle.getRadians() - targetAngle.getRadians()),
                             true, true);
             }
     }
