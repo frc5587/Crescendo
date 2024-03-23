@@ -34,8 +34,8 @@ public class Arm extends PivotingArmBase {
     private final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
     private BooleanSupplier limitSwitchSupplier;
-    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
-    private final DigitalInput magLimitSwitch = new DigitalInput(2);
+    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(3);
+    private final DigitalInput magLimitSwitch = new DigitalInput(0);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
@@ -318,6 +318,7 @@ public class Arm extends PivotingArmBase {
 
         SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
         SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        SmartDashboard.putBoolean("At Goal", getController().atGoal());
         
         if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);

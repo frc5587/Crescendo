@@ -25,7 +25,7 @@ public class AutoShootWhenLinedUp extends Command {
     @Override
     public void initialize() {
         shooter.forward();
-        arm.setManualMode(false);
+        // arm.setManualMode(false);
         SmartDashboard.putBoolean("AutoShoot Running", true);
     }
 
@@ -42,7 +42,7 @@ public class AutoShootWhenLinedUp extends Command {
         SmartDashboard.putBoolean("AutoShoot Running", false);
         shooter.idleSpeed();
         intake.stop();
-        arm.setManualMode(true);
+        // arm.setManualMode(true);
     }
 
     @Override
