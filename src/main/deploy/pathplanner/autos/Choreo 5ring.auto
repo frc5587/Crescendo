@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3409518003463743,
+      "y": 5.563505172729492
+    },
+    "rotation": -1.1958312823232819e-18
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "choreo 5ring_1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "choreo 5ring_2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "choreo 5ring_3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "choreo 5ring_4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}
