@@ -381,20 +381,25 @@ public class Arm extends PivotingArmBase {
         Translation2d t2 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[1] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[1];
         Translation2d t3 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[2] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[2];
         Translation2d currentTranslation = currentPose.getTranslation();
-        double side1 = Math.abs(crossProduct(t2.minus(t1), currentTranslation.minus(t1)));
-        double side2 = Math.abs(crossProduct(t3.minus(t2), currentTranslation.minus(t2)));
-        double side3 = Math.abs(crossProduct(t1.minus(t3), currentTranslation.minus(t3)));
-
-        // If the sum of the areas of the three triangles formed by the current pose and the triangle's vertices equals the area of the equilateral triangle, it's inside.
-        double triangleArea = Math.abs(crossProduct(t2.minus(t1), t3.minus(t1))) / 2.0;
-        double currentArea = side1 + side2 + side3;
-        return currentArea <= triangleArea; // Tolerance for double comparison
-    }
-
-    // Helper method to calculate the cross product of two 2D vectors
-    private double crossProduct(Translation2d a, Translation2d b) {
-        return a.getX() * b.getY() - a.getY() * b.getX();
-    }
+        Logger.recordOutput("T1", t1);
+        Logger.recordOutput("T2", t2);
+        Logger.recordOutput("T3", t3);
+        Logger.recordOutput("T4", currentTranslation);
+        double areaFull = triangleArea(t1, t2, t3);
+        double area1 = triangleArea(currentPose.getTranslation(), t2, t3);
+        double area2 = triangleArea(t1, currentPose.getTranslation(), t3);
+        double area3 = triangleArea(t1, t2, currentPose.getTranslation());
+    
+            // Check if the sum of areas is equal to the full area
+            return (area1 + area2 + area3) <= areaFull;
+        }
+    
+        // Method to calculate the area of a triangle given three points
+        private double triangleArea(Translation2d p1, Translation2d p2, Translation2d p3) {
+            return Math.abs((p1.getX() * (p2.getY() - p3.getY()) +
+                             p2.getX() * (p3.getY() - p1.getY()) +
+                             p3.getX() * (p1.getY() - p2.getY())) / 2.0);
+        }
     
     public void armTravel() {
         this.setGoal(Units.degreesToRadians(6));

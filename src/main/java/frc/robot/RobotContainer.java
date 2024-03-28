@@ -52,7 +52,7 @@ public class RobotContainer {
             xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
-    public final Arm arm = new Arm(swerve::getPose, intake::getLimitSwitch);
+    public final Arm arm = new Arm(simSwerve::getPose, intake::getLimitSwitch);
     private final SendableChooser<Command> autoChooser;
     
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
