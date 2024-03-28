@@ -37,6 +37,7 @@ public class Intake extends PIDSubsystem {
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
         motor.setIdleMode(IdleMode.kCoast);
         this.enable();
+        motor.burnFlash();
     }
 
     public void resetEncoders() {

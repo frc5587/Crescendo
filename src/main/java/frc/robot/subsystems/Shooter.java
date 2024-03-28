@@ -45,6 +45,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
         rightMotor.follow(leftMotor);
+        leftMotor.burnFlash();
+        rightMotor.burnFlash();
     }
 
     public void idleSpeed() {

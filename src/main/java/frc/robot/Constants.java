@@ -210,6 +210,26 @@ public final class Constants {
         public static final SwerveModuleConstants[] ALL_MODULE_CONSTANTS = {Mod0.MODULE_CONSTANTS, Mod1.MODULE_CONSTANTS, Mod2.MODULE_CONSTANTS, Mod3.MODULE_CONSTANTS};
         public static final SwerveConstants SWERVE_CONSTANTS = new SwerveConstants(ALL_MODULE_CONSTANTS, SWERVE_KINEMATICS, INVERT_GYRO, MAX_SPEED);
     }
+  
+  public static final class ClimbConstants {
+    public static final int LEFT_MOTOR_ID = 50; // placeholder
+    public static final int RIGHT_MOTOR_ID = 51; // placeholder
+    
+    public static final boolean RIGHT_MOTOR_INVERTED = false;
+    public static final boolean LEFT_MOTOR_INVERTED = true;
+    
+    public static final int STALL_LIMIT = 0; // TODO set
+    public static final int FREE_LIMIT = 0; // TODO set
+
+    public static final double GEARING = 12.5;
+    public static final int TOP_POSITION = 0;
+    public static final int BOTTOM_POSITION = 0; // TODO set
+    
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(0, 0, 0, CONSTRAINTS); // TODO set
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0, 0); // TODO set
+    
+  }
 
   public static final class IntakeConstants {
     public static final int MOTOR_ID = 40;
