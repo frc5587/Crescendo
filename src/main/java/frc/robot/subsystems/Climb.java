@@ -45,14 +45,21 @@ public class Climb extends ProfiledPIDSubsystem {
     public void down() {
         setGoal(ClimbConstants.BOTTOM_POSITION);
     }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putNumber("Climb Goal", this.getController().getGoal().position);
+        SmartDashboard.putNumber("Climb Position", leftMotor.getEncoder().getPosition());
+    }
     @Override
     protected void useOutput(double output, State setpoint) {
         SmartDashboard.putNumber("Climb Output", output);
         leftMotor.setVoltage(output + ff.calculate(setpoint.position));
+        
     }
     @Override
     protected double getMeasurement() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMeasurement'");
+        return (leftMotor.getEncoder().getPosition() / ClimbConstants.GEARING);
     }
 }

@@ -225,6 +225,7 @@ public final class Constants {
     public static final int TOP_POSITION = 0;
     public static final int BOTTOM_POSITION = 0; // TODO set
     
+    public static final int[] SOFT_LIMITS = {0,0}; // TODO set
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80); // TODO set
     public static final ProfiledPIDController PID = new ProfiledPIDController(0, 0, 0, CONSTRAINTS); // TODO set
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0, 0); // TODO set

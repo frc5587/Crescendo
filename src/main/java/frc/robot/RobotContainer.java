@@ -25,6 +25,7 @@ import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -43,6 +44,7 @@ public class RobotContainer {
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
     public final Arm arm = new Arm(swerve::getPose, intake::getLimitSwitch);
+    private final Climb climb = new Climb();
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
@@ -51,7 +53,7 @@ public class RobotContainer {
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
-    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
+    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb);
 
     public void zeroYaw() {
         swerve.zeroGyro();
