@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -212,23 +213,25 @@ public final class Constants {
     }
   
   public static final class ClimbConstants {
-    public static final int LEFT_MOTOR_ID = 50; // placeholder
-    public static final int RIGHT_MOTOR_ID = 51; // placeholder
+    public static final int LEFT_MOTOR_ID = 50;
+    public static final int RIGHT_MOTOR_ID = 51;
     
     public static final boolean RIGHT_MOTOR_INVERTED = false;
     public static final boolean LEFT_MOTOR_INVERTED = true;
     
-    public static final int STALL_LIMIT = 0; // TODO set
-    public static final int FREE_LIMIT = 0; // TODO set
+    public static final int STALL_LIMIT = 40;
+    public static final int FREE_LIMIT = 35;
 
     public static final double GEARING = 12.5;
-    public static final int TOP_POSITION = 0;
-    public static final int BOTTOM_POSITION = 0; // TODO set
+    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5);
+    public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
+    public static final double TOP_POSITION = 0;
+    public static final double BOTTOM_POSITION = Units.inchesToMeters(7.39); // TODO set
     
-    public static final int[] SOFT_LIMITS = {0,0}; // TODO set
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(0, 0, 0, CONSTRAINTS); // TODO set
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0, 0); // TODO set
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.5)}; // TODO set
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.05); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(1, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
     
   }
 
