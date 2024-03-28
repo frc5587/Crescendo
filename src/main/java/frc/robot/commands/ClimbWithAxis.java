@@ -19,21 +19,21 @@ public class ClimbWithAxis extends Command {
 
     @Override
     public void initialize() {
-        arm.disable();
-        arm.setManualMode(true);
+        // arm.disable();
+        // arm.setManualMode(true);
         climb.disable();
     }
     
     @Override
     public void execute() {
-        arm.set(-axisSupplier.getAsDouble());
-        climb.setGoal(-axisSupplier.getAsDouble());
+        // arm.set(-axisSupplier.getAsDouble());
+        climb.set(-axisSupplier.getAsDouble());
         // System.out.println(-axisSupplier.getAsDouble());
     }
 
     @Override
     public void end(boolean interrupted) {
-        arm.enable();
+        // arm.enable();
         climb.enable();
     }
 }
