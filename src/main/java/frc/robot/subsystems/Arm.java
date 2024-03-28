@@ -13,12 +13,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,11 +32,13 @@ public class Arm extends PivotingArmBase {
     public final TalonFX leftMotor;
     public final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
-    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(0);
-    private final DigitalInput magLimitSwitch = new DigitalInput(2);
+    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(3);
+    private final DigitalInput magLimitSwitch = new DigitalInput(0);
     private boolean wasManuallyDisabled = false;
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
+    private TimeInterpolatableBuffer<Double> voltageBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
+    private TimeInterpolatableBuffer<Double> positionBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -168,15 +172,15 @@ public class Arm extends PivotingArmBase {
 
     public Rotation2d logBasedArmAngle(Pose2d pose) {
         double distance = Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2));
+                Math.pow(
+                        pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                Math.pow(
+                        pose.getY() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()), 2)
+        );
         SmartDashboard.putNumber("Arm Distance", distance);
 
         // https://www.desmos.com/calculator/rqgtniidqa
@@ -233,12 +237,22 @@ public class Arm extends PivotingArmBase {
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
-        if((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.) || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.) || (getLimitSwitch() && output < 0)) {
+        if ((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.)
+                || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.)
+                || (getLimitSwitch() && output < 0)) {
             setVoltage(0);
         }
+        // else if(Math.abs(positionBuffer.getSample(Timer.getFPGATimestamp() - 0.18).orElseGet(() -> 0.0).doubleValue()
+        //         - positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0).doubleValue()) <= Units.degreesToRadians(0.3) // if the position 1 period ago and the position 9 periods ago are roughly the same,
+        //         && positionBuffer.getSample(Timer.getFPGATimestamp() - 0.02).orElseGet(() -> 0.0).doubleValue() <= Units.degreesToRadians(0.3) // if the position is less than 0.3 degrees,
+        //         && (Math.abs(voltageBuffer.getSample(Timer.getFPGATimestamp() - 0.18).orElseGet(() -> 0.0).doubleValue()) > 0.5) // if the robot has tried to move the arm in the last 9 periods,
+        //         && getLimitSwitch()) { // and if the limit switch is pressed,
+        //     setVoltage(0);
+        // }
         else {
             super.useOutput(output, setpoint);
         }
+        voltageBuffer.addSample(Timer.getFPGATimestamp(), output);
     }
 
     public Command chinUp() {
@@ -262,6 +276,16 @@ public class Arm extends PivotingArmBase {
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
+        
+        if(DriverStation.isEnabled()) {
+            positionBuffer.addSample(Timer.getFPGATimestamp(), getMeasurement());
+            SmartDashboard.putNumber("Left Volts", leftMotor.getMotorVoltage().getValue());
+        }
+
+        else {
+            positionBuffer.clear();
+            voltageBuffer.clear();
+        }
 
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
             SmartDashboard.putBoolean("ThroughBore Is Connected", throughBore.isConnected());
@@ -285,8 +309,9 @@ public class Arm extends PivotingArmBase {
         }
         SmartDashboard.putBoolean("Reset Arm Encoders", false);
 
-        // SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
-        // SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
+        SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
+        SmartDashboard.putBoolean("At Goal", getController().atGoal());
         
         // if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
         //     this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);

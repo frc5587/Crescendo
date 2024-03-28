@@ -7,6 +7,7 @@
     "-middle",
     "-source",
     "5ring",
+    "ferry",
     "pathplanning",
     "ring1",
     "ring2",
@@ -17,7 +18,7 @@
     "source side start"
   ],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 4.0,
+  "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 180.0,
   "defaultMaxAngAccel": 180.0,
   "maxModuleSpeed": 5.0

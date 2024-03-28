@@ -28,6 +28,7 @@ import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -46,17 +47,18 @@ public class RobotContainer {
         xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
     public final Arm arm = new Arm(swerve::getPose);
+    private final Climb climb = new Climb();
     private final SendableChooser<Command> autoChooser;
     private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve, shooter);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
-            () -> xbox.getRightX(), xbox.rightBumper().negate());
+            () -> xbox.getRightX(), xbox.rightBumper().negate(), xbox.leftTrigger());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
-    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm);
+    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -95,6 +97,11 @@ public class RobotContainer {
         SmartDashboard.putData("Char", charChooser);
         
         CameraServer.startAutomaticCapture(0);
+    }
+
+    public void stopIntake() {
+        intake.stop();
+        shooter.idleSpeed();
     }
 
     /**

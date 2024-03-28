@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.041953595733975,
-        "y": 7.452119563991675
+        "x": 8.0630507414861,
+        "y": 5.910298743674411
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.041953595733976,
-        "y": 7.452119563991675
+        "x": 7.063050741486101,
+        "y": 5.910298743674411
       },
       "isLocked": false,
       "linkedName": "ampside_mid_end"
@@ -90,7 +90,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 180.0
   },

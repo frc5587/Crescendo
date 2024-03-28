@@ -24,6 +24,7 @@ public class AutoRotateToShoot extends Command {
 
     @Override
     public void execute() {
+        System.out.println("-------------------------RUNNING-------------------------");
         Pose2d currentPose = swerve.getPose();
         Rotation2d currentAngle = currentPose.getRotation();//.plus(Rotation2d.fromDegrees(180.));
         Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
@@ -34,17 +35,25 @@ public class AutoRotateToShoot extends Command {
             System.out.println("Current: " + currentAngle.getRadians());
             System.out.println("Target: " + targetAngle.getRadians());
             System.out.println("Error: " + (currentAngle.getDegrees() - targetAngle.getDegrees()));
-            swerve.drive(new Translation2d(0, 0),
-                            8 * (currentAngle.getRadians() - targetAngle.getRadians()),
-                            true, true);
             if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 2.) {
                 isFinished = true;
                 System.out.println("DONEZO!!!!");
+                end(true);
+            }
+            else {
+                swerve.drive(new Translation2d(0, 0),
+                            6.5 * (currentAngle.getRadians() - targetAngle.getRadians()),
+                            true, true);
             }
     }
 
     @Override
     public boolean isFinished() {
         return isFinished;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerve.stop();
     }
 }

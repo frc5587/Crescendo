@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.34,
-      "y": 5.55
+      "x": 1.3409518003463743,
+      "y": 5.563505172729492
     },
-    "rotation": 0
+    "rotation": -1.1958312823232819e-18
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,12 @@
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterForward"
+                }
+              },
               {
                 "type": "sequential",
                 "data": {
@@ -26,13 +32,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "armAim"
+                              "name": "denyShot"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "denyShot"
+                              "name": "armAim"
                             }
                           }
                         ]
@@ -78,88 +84,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "better ring3_pickupOpt"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
+                        "pathName": "choreo 5ring_1.1"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armRest"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "ring3 to ring2"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
+                        "name": "armAim"
                       }
                     },
                     {
@@ -193,7 +124,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
+                              "name": "armTravel"
                             }
                           }
                         ]
@@ -202,7 +133,25 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring2 to ring1"
+                        "pathName": "choreo 5ring_2.1"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -212,16 +161,28 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "armAim"
+                              "name": "armTravel"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "rotateToShoot"
+                              "name": "denyShot"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "choreo 5ring_3.1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armAim"
                       }
                     },
                     {
@@ -264,32 +225,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring1 to midring1"
+                        "pathName": "choreo 5ring_4.1"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "midring1 to final"
+                        "name": "armAim"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.6
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -308,6 +256,18 @@
                       "type": "parallel",
                       "data": {
                         "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armRest"
+                            }
+                          },
                           {
                             "type": "named",
                             "data": {
@@ -317,31 +277,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
                               "name": "intakeStop"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
                             }
                           }
                         ]
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterForward"
                 }
               }
             ]
@@ -351,5 +293,5 @@
     }
   },
   "folder": null,
-  "choreoAuto": false
+  "choreoAuto": true
 }

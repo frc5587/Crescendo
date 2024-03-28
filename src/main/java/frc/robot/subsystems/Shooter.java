@@ -30,7 +30,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         enable();
         this.poseSupplier = poseSupplier;
         getController().setTolerance(0.2);
-        idleSpeed();
+        // idleSpeed();
     }
 
     public void configureMotors() {
@@ -45,6 +45,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
         rightMotor.follow(leftMotor);
+        leftMotor.burnFlash();
+        rightMotor.burnFlash();
     }
 
     public void idleSpeed() {
@@ -89,9 +91,9 @@ public class Shooter extends ProfiledPIDSubsystem {
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
 
-        // return (1.3 * distance) + 11.71;
+        // return (2.8 * distance) + 9.86;
         // https://www.desmos.com/calculator/bplceypa5r
-        return MathUtil.clamp((2.8 * distance) + 9.86, 12.5, 21.0);
+        return MathUtil.clamp((2.8 * distance) + 9.86, 12., 21.0);
     }
 
     public void backward() {

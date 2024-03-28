@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.041953595733975,
-        "y": 7.452119563991675
+        "x": 8.0630507414861,
+        "y": 5.910298743674411
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.041953595733975,
-        "y": 7.452119563991675
+        "x": 4.432015787108499,
+        "y": 8.702643559133271
       },
       "isLocked": false,
       "linkedName": "ampside_mid_end"
@@ -28,7 +28,13 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
@@ -47,28 +53,11 @@
           ]
         }
       }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "rotateToShoot"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 180.0
   },
@@ -80,7 +69,7 @@
   "reversed": false,
   "folder": "5ring",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -25.407718108948472,
     "velocity": 0
   },
   "useDefaultConstraints": true

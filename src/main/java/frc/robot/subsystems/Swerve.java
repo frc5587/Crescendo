@@ -10,13 +10,13 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -61,7 +61,7 @@ public class Swerve extends SwerveBase {
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose(),
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 1.));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 10.));
         // Auto Config
         
             AutoBuilder.configureHolonomic(
@@ -152,9 +152,8 @@ public class Swerve extends SwerveBase {
             // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         }
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5)) {
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) { // 
             poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
-            poseEstimator.updateWithTime(limelight.calculateFPGAFrameTimestamp(), getYaw(), getModulePositions());
         }
     }
     /**
@@ -163,6 +162,11 @@ public class Swerve extends SwerveBase {
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), false);
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        ChassisSpeeds speeds = kinematics.toChassisSpeeds(getModuleStates());
+        return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
     }
 
     /**
