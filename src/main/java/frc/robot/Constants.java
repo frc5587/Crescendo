@@ -225,7 +225,7 @@ public final class Constants {
     public static final int FREE_LIMIT = 35;
 
     public static final double GEARING = 12.5;
-    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5);
+    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(1.645);
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
     public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set

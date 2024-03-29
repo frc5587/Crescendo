@@ -13,8 +13,8 @@ import frc.robot.Constants.ClimbConstants;
 
 public class Climb extends ProfiledPIDSubsystem {
 
-    private static CANSparkMax leftMotor = new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-    private static CANSparkMax rightMotor = new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    public static CANSparkMax leftMotor = new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+    public static CANSparkMax rightMotor = new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private ElevatorFeedforward ff = ClimbConstants.FF;
     private boolean wasManuallyDisabled = false;
     private boolean brakeModeEnabled = true;
@@ -104,8 +104,12 @@ public class Climb extends ProfiledPIDSubsystem {
         }
     }
 
+    public double getLinearVelocity() {
+        return ((leftMotor.getEncoder().getVelocity() / 60) * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
+    }
+
     @Override
-    protected double getMeasurement() {
+    public double getMeasurement() {
         return (leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
     }
 }

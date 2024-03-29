@@ -49,7 +49,7 @@ public class RobotContainer {
     public final Arm arm = new Arm(swerve::getPose);
     private final Climb climb = new Climb();
     private final SendableChooser<Command> autoChooser;
-    private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve, shooter);
+    private final CharacterizationManager charManager = new CharacterizationManager(arm, swerve, shooter, climb);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), xbox.rightBumper().negate(), xbox.leftTrigger());
@@ -138,10 +138,14 @@ public class RobotContainer {
         xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
         xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));
         xbox2.povRight().whileTrue(charManager.getArmChar().quasistatic(Direction.kReverse));
-        xbox.povUp().whileTrue(charManager.getSwerveChar().dynamic(Direction.kForward));
-        xbox.povDown().whileTrue(charManager.getSwerveChar().dynamic(Direction.kReverse));
-        xbox.povLeft().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kForward));
-        xbox.povRight().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kReverse));
+        // xbox.povUp().whileTrue(charManager.getSwerveChar().dynamic(Direction.kForward));
+        // xbox.povDown().whileTrue(charManager.getSwerveChar().dynamic(Direction.kReverse));
+        // xbox.povLeft().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kForward));
+        // xbox.povRight().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kReverse));
+        xbox.povUp().whileTrue(charManager.getClimbChar().dynamic(Direction.kForward));
+        xbox.povDown().whileTrue(charManager.getClimbChar().dynamic(Direction.kReverse));
+        xbox.povLeft().whileTrue(charManager.getClimbChar().quasistatic(Direction.kForward));
+        xbox.povRight().whileTrue(charManager.getClimbChar().quasistatic(Direction.kReverse));
         // xbox.povDown().whileTrue(autoRotateToShoot);
         // xbox.povUp().whileTrue(lineUpToSpeaker);
         // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
