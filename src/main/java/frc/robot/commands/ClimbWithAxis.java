@@ -10,11 +10,13 @@ public class ClimbWithAxis extends Command {
     private final DoubleSupplier axisSupplier;
     private final Arm arm;
     private final Climb climb;
+    private final boolean reverse;
 
-    public ClimbWithAxis(DoubleSupplier axisSupplier, Arm arm, Climb climb) {
+    public ClimbWithAxis(DoubleSupplier axisSupplier, Arm arm, Climb climb, boolean reverse) {
         this.axisSupplier = axisSupplier;
         this.arm = arm;
         this.climb = climb;
+        this.reverse = reverse;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ClimbWithAxis extends Command {
     @Override
     public void execute() {
         // arm.set(-axisSupplier.getAsDouble());
-        climb.set(-axisSupplier.getAsDouble());
+        climb.set(axisSupplier.getAsDouble() * (reverse ? 1 : -1));
         // System.out.println(-axisSupplier.getAsDouble());
     }
 

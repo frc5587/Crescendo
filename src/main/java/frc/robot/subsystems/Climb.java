@@ -32,8 +32,8 @@ public class Climb extends ProfiledPIDSubsystem {
         rightMotor.restoreFactoryDefaults();
         leftMotor.setInverted(ClimbConstants.LEFT_MOTOR_INVERTED);
         rightMotor.setInverted(ClimbConstants.RIGHT_MOTOR_INVERTED);
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.setSmartCurrentLimit(ClimbConstants.STALL_LIMIT, ClimbConstants.FREE_LIMIT);
         rightMotor.setSmartCurrentLimit(ClimbConstants.STALL_LIMIT, ClimbConstants.FREE_LIMIT);
         leftMotor.getEncoder().setPosition(0);
