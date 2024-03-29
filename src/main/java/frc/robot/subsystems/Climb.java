@@ -61,12 +61,21 @@ public class Climb extends ProfiledPIDSubsystem {
         rightMotor.setVoltage(volts);
     }
 
+    public void resetEncoders() {
+        leftMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(0);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("Climb Goal", this.getController().getGoal().position);
         SmartDashboard.putNumber("Raw Climb Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Climb Position", getMeasurement());
+        if(SmartDashboard.getBoolean("Reset Climb Encoders", false)) {
+            resetEncoders();
+        }
+        SmartDashboard.putBoolean("Reset Climb Encoders", false);
         if(SmartDashboard.getBoolean("Climb Enabled", true) && wasManuallyDisabled) {
             this.enable();
             this.wasManuallyDisabled = false;

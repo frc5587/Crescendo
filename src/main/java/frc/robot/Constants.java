@@ -228,11 +228,11 @@ public final class Constants {
     public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5);
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
-    public static final double BOTTOM_POSITION = Units.inchesToMeters(7.39); // TODO set
+    public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set
     
-    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.5)}; // TODO set
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.05); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(1, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.)}; // TODO set
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.075); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(12, 0, 0, CONSTRAINTS); // TODO characterize
     public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
     
   }
