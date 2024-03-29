@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.time.Instant;
 import java.util.Hashtable;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -140,6 +141,17 @@ public class Arm extends PivotingArmBase {
         return new InstantCommand(() -> {
             setManualMode(true);
             armRest();
+        });
+    }
+
+    public void armFerry() {
+        setGoal(ArmConstants.FERRY_SETPOINT);
+    }
+
+    public InstantCommand armFerryCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armFerry();
         });
     }
 

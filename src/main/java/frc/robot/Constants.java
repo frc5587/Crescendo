@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -53,6 +54,7 @@ public final class Constants {
     public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
+    public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;

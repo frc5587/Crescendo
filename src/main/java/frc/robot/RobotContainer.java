@@ -122,6 +122,7 @@ public class RobotContainer {
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armRestCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.start().onTrue(arm.armFerryCommand());
         // xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.povUp().whileTrue(new InstantCommand(shooter::groundAmp)).onFalse(new InstantCommand(shooter::enable));
         xbox2.povDown().onTrue(arm.chinUp());
