@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -53,6 +54,7 @@ public final class Constants {
     public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
+    public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
@@ -226,11 +228,11 @@ public final class Constants {
     public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5);
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
-    public static final double BOTTOM_POSITION = Units.inchesToMeters(7.39); // TODO set
+    public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set
     
-    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.5)}; // TODO set
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.05); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(1, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.)}; // TODO set
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.075); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(12, 0, 0, CONSTRAINTS); // TODO characterize
     public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
     
   }

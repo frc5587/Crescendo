@@ -32,8 +32,8 @@ public class Climb extends ProfiledPIDSubsystem {
         rightMotor.restoreFactoryDefaults();
         leftMotor.setInverted(ClimbConstants.LEFT_MOTOR_INVERTED);
         rightMotor.setInverted(ClimbConstants.RIGHT_MOTOR_INVERTED);
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.setSmartCurrentLimit(ClimbConstants.STALL_LIMIT, ClimbConstants.FREE_LIMIT);
         rightMotor.setSmartCurrentLimit(ClimbConstants.STALL_LIMIT, ClimbConstants.FREE_LIMIT);
         leftMotor.getEncoder().setPosition(0);
@@ -61,12 +61,21 @@ public class Climb extends ProfiledPIDSubsystem {
         rightMotor.setVoltage(volts);
     }
 
+    public void resetEncoders() {
+        leftMotor.getEncoder().setPosition(0);
+        rightMotor.getEncoder().setPosition(0);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("Climb Goal", this.getController().getGoal().position);
         SmartDashboard.putNumber("Raw Climb Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Climb Position", getMeasurement());
+        if(SmartDashboard.getBoolean("Reset Climb Encoders", false)) {
+            resetEncoders();
+        }
+        SmartDashboard.putBoolean("Reset Climb Encoders", false);
         if(SmartDashboard.getBoolean("Climb Enabled", true) && wasManuallyDisabled) {
             this.enable();
             this.wasManuallyDisabled = false;
