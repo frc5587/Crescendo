@@ -79,6 +79,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("armRest", arm.armRestCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
+        NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
         NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
         NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
