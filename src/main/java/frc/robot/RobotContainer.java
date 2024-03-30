@@ -142,10 +142,13 @@ public class RobotContainer {
         // xbox.povDown().whileTrue(charManager.getSwerveChar().dynamic(Direction.kReverse));
         // xbox.povLeft().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kForward));
         // xbox.povRight().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kReverse));
-        xbox.povUp().whileTrue(charManager.getClimbChar().dynamic(Direction.kForward));
-        xbox.povDown().whileTrue(charManager.getClimbChar().dynamic(Direction.kReverse));
-        xbox.povLeft().whileTrue(charManager.getClimbChar().quasistatic(Direction.kForward));
-        xbox.povRight().whileTrue(charManager.getClimbChar().quasistatic(Direction.kReverse));
+
+        // xbox.povUp().whileTrue(charManager.getClimbChar().dynamic(Direction.kForward));
+        // xbox.povDown().whileTrue(charManager.getClimbChar().dynamic(Direction.kReverse));
+        // xbox.povLeft().whileTrue(charManager.getClimbChar().quasistatic(Direction.kForward));
+        // xbox.povRight().whileTrue(charManager.getClimbChar().quasistatic(Direction.kReverse));
+        xbox.povUp().onTrue(new InstantCommand(climb::up));
+        xbox.povDown().onTrue(new InstantCommand(climb::down));
         // xbox.povDown().whileTrue(autoRotateToShoot);
         // xbox.povUp().whileTrue(lineUpToSpeaker);
         // xbox.povLeft().whileTrue(swerve.subwooferLineUp());

@@ -28,7 +28,7 @@ public abstract class CharacterizationBase {
     protected Mechanism armMechanism;
     protected MutableMeasure<Velocity<Voltage>> quasistaticRamp = MutableMeasure
             .mutable(Units.Volts.per(Units.Second).of(0.5));
-    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(3.5));
+    protected MutableMeasure<Voltage> dynamicVoltage = MutableMeasure.mutable(Units.Volts.of(6.5));
 
     protected MutableMeasure<Voltage> outputVoltage = MutableMeasure.mutable(Units.Volts.of(0));
     protected MutableMeasure<Angle> mechanismAngle = MutableMeasure.mutable(Units.Radians.of(0));

@@ -232,8 +232,8 @@ public final class Constants {
     
     public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.)}; // TODO set
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.075); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(12, 0, 0, CONSTRAINTS); // TODO characterize
-    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
+    public static final ProfiledPIDController PID = new ProfiledPIDController(70, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0.4121, 1.2, 0.11, 5.7745); // TODO characterize
     
   }
 
