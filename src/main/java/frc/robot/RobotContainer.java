@@ -22,6 +22,7 @@ import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.FullClimb;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
@@ -55,6 +56,7 @@ public class RobotContainer {
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
     private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
+    private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -115,16 +117,17 @@ public class RobotContainer {
         //     arm.travelSetpoint();
         // }));
         
-        // xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        // xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
-        xbox2.rightTrigger(0.1).whileTrue(climbWithAxisReverse);
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
+        // xbox2.rightTrigger(0.1).whileTrue(climbWithAxisReverse);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armRestCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
         xbox2.start().onTrue(arm.armFerryCommand());
+        xbox2.back().whileTrue(fullClimb);
         xbox2.povDown().onTrue(new InstantCommand(climb::down));
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
 

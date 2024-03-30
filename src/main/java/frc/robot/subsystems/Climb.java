@@ -7,6 +7,8 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClimbConstants;
@@ -47,8 +49,24 @@ public class Climb extends ProfiledPIDSubsystem {
         setGoal(ClimbConstants.TOP_POSITION);
     }
 
+    public void intermediate() {
+        setGoal(ClimbConstants.MIDDLE_POSITION);
+    }
+
     public void down() {
         setGoal(ClimbConstants.BOTTOM_POSITION);
+    }
+
+    public Command upCommand() {
+        return new InstantCommand(this::up);
+    }
+
+    public Command intermediateCommand() {
+        return new InstantCommand(this::intermediate);
+    }
+
+    public Command downCommand() {
+        return new InstantCommand(this::down);
     }
 
     public void set(double percentOutput) {

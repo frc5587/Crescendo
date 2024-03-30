@@ -53,7 +53,7 @@ public final class Constants {
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
     public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
-    public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
+    public static final double CLIMB_SETPOINT = Units.degreesToRadians(60);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
@@ -225,14 +225,15 @@ public final class Constants {
     public static final int FREE_LIMIT = 35;
 
     public static final double GEARING = 12.5;
-    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5);
+    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(1.645);
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
     public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set
+    public static final double MIDDLE_POSITION = BOTTOM_POSITION / 2;
     
-    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.)}; // TODO set
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.075); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(12, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(6.)}; // TODO set
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.2, 0.1); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(57.5, 0, 0, CONSTRAINTS); // TODO characterize
     public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
     
   }

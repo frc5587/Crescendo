@@ -116,7 +116,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armStage() {
-        setGoal(ArmConstants.STAGE_SETPOINT);
+        setGoal(ArmConstants.CLIMB_SETPOINT);
     }
     
     public InstantCommand armStageCommand() {
