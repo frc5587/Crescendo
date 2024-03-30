@@ -23,7 +23,7 @@ public class ClimbCharacterization extends CharacterizationBase {
 
     @Override
     public double getMotorVoltage() {
-        return climb.leftMotor.get() * RobotController.getBatteryVoltage();
+        return climb.getVoltage();
     }
 
     @Override

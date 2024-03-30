@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ArmConstants;
@@ -57,8 +58,8 @@ public class Climb extends ProfiledPIDSubsystem {
     }
 
     public void setVoltage(double volts) {
-        leftMotor.setVoltage(volts);
-        rightMotor.setVoltage(volts);
+        leftMotor.set(volts / RobotController.getBatteryVoltage());
+        rightMotor.set(volts / RobotController.getBatteryVoltage());
     }
 
     public void resetEncoders() {
@@ -102,6 +103,10 @@ public class Climb extends ProfiledPIDSubsystem {
         else {
             leftMotor.setVoltage(output + ff.calculate(setpoint.position));
         }
+    }
+
+    public double getVoltage() {
+        return leftMotor.get() * RobotController.getBatteryVoltage();
     }
 
     public double getLinearVelocity() {
