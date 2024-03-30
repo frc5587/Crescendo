@@ -147,7 +147,7 @@ public final class Constants {
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
         public static final double DRIVE_KS = (0.22679);
-        public static final double DRIVE_KV = 1.9698; //(9.7051 / 12);
+        public static final double DRIVE_KV = 0.5448;//1.9698; //(9.7051 / 12); // SYSID GAIN: 0.22679;
         public static final double DRIVE_KA = (0.80637);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
