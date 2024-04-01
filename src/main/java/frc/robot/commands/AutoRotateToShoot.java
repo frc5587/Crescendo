@@ -32,8 +32,8 @@ public class AutoRotateToShoot extends Command {
                 currentPose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getX()
             ));//.plus(Rotation2d.fromDegrees(180.));
             
-            System.out.println("Current: " + currentAngle.getRadians());
-            System.out.println("Target: " + targetAngle.getRadians());
+            System.out.println("Current: " + currentAngle.getDegrees());
+            System.out.println("Target: " + targetAngle.getDegrees());
             System.out.println("Error: " + (currentAngle.getDegrees() - targetAngle.getDegrees()));
             if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 2.) {
                 isFinished = true;
@@ -42,7 +42,7 @@ public class AutoRotateToShoot extends Command {
             }
             else {
                 swerve.drive(new Translation2d(0, 0),
-                            6.5 * (currentAngle.getRadians() - targetAngle.getRadians()),
+                            8. * (currentAngle.getRadians() - targetAngle.getRadians()),
                             true, true);
             }
     }

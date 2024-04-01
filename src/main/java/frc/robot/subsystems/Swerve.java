@@ -11,7 +11,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -118,6 +117,8 @@ public class Swerve extends SwerveBase {
             }
         }
 
+        SmartDashboard.putNumber("Mod 0 Velocity", swerveModules[0].getState().speedMetersPerSecond);
+
         SmartDashboard.putData("Field", field);
         this.limelightField.setRobotPose(limelight.getLimelightPose());
 
@@ -139,7 +140,15 @@ public class Swerve extends SwerveBase {
      */
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
+        SmartDashboard.putNumber("set speed", kinematics.toSwerveModuleStates(speeds)[0].speedMetersPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), false);
+    }
+    
+    @Override
+    public void setChassisSpeeds(ChassisSpeeds speeds, boolean isOpenLoop) {
+        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        SmartDashboard.putNumber("set speed", kinematics.toSwerveModuleStates(speeds)[0].speedMetersPerSecond);
+        setModuleStates(kinematics.toSwerveModuleStates(speeds), isOpenLoop);
     }
 
     public ChassisSpeeds getChassisSpeeds() {

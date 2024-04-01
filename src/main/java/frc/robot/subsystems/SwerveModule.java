@@ -64,7 +64,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.setControl(new VelocityVoltage(velocityMPS / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
+        driveMotor.setControl(new VelocityDutyCycle(velocityMPS / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
     }
 
     @Override
@@ -113,5 +113,13 @@ public class SwerveModule extends SwerveModuleBase {
             Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
             getAngle()
         );
+    }
+
+    @Override
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(
+            ((getDriveMotorEncoderVelocity()) / moduleConstants.driveMotorGearRatio) * moduleConstants.wheelCircumferenceMeters,
+            getAngle()
+        ); 
     }
 }
