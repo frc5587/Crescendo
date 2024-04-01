@@ -110,7 +110,7 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public boolean isSpunUp() {
         // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
-        return getController().atGoal() && getController().getSetpoint().position > 8;
+        return (getController().atGoal() && getController().getSetpoint().position > 8) || !isEnabled();
     }
 
     public void spinUpToAmp() {
@@ -118,8 +118,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
     public void pancake() {
         this.disable();
-        leftMotor.setVoltage(5);
-        rightMotor.setVoltage(0);
+        leftMotor.setVoltage(5.75);
+        rightMotor.setVoltage(-0.85);
     }
 
     public void setVoltage(double voltage) {

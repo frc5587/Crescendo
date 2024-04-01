@@ -57,7 +57,7 @@ public class Arm extends PivotingArmBase {
         this.limitSwitchSupplier = limitSwitchSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
-        getController().setTolerance(Units.degreesToRadians(1));
+        getController().setTolerance(Units.degreesToRadians(0.2));
         enable();
         armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
