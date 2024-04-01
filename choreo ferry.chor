@@ -1,15 +1,15 @@
 {
     "version": "v0.3",
     "robotConfiguration": {
-        "mass": 74.08797700309194,
-        "rotationalInertia": 6,
-        "motorMaxTorque": 1.162295081967213,
-        "motorMaxVelocity": 4800,
-        "gearing": 6.75,
-        "wheelbase": 0.5778496879611685,
-        "trackWidth": 0.5778496879611685,
-        "bumperLength": 0.8762995267982555,
-        "bumperWidth": 0.8762995267982555,
+        "mass": 43.545,
+        "rotationalInertia": 5.46,
+        "motorMaxTorque": 0.639,
+        "motorMaxVelocity": 5104,
+        "gearing": 6.746,
+        "wheelbase": 0.686,
+        "trackWidth": 0.686,
+        "bumperLength": 0.851,
+        "bumperWidth": 0.851,
         "wheelRadius": 0.050799972568014815
     },
     "paths": {
