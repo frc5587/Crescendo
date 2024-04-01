@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "armTravel"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "source_crossline"

@@ -143,6 +143,18 @@ public class Arm extends PivotingArmBase {
         });
     }
 
+    public void armZero() {
+        setGoal(0);
+    }
+
+    public InstantCommand armZeroCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armZero();
+        });
+    }
+
+
     // public Rotation2d poseDependantArmAngle(Pose2d pose) {
     //     return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /
     //             pose.getTranslation().getDistance((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue))

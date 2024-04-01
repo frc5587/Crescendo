@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.ClimbWithAxis;
@@ -105,7 +106,7 @@ public class RobotContainer {
     private void configureBindings() {
         // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
         // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
-        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
+        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
         // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         xbox2.rightBumper().whileTrue(runIntakeWithArm);//.onFalse(new InstantCommand(() -> {
         //     intake.stop();
@@ -118,7 +119,7 @@ public class RobotContainer {
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
-        xbox2.x().onTrue(arm.armRestCommand());
+        xbox2.x().onTrue(arm.armZeroCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
         xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.povDown().onTrue(arm.chinUp());

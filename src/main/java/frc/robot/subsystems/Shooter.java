@@ -95,7 +95,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void backward() {
-        setGoal(5);
+        setGoal(-5);
     }
 
     public void stop() {

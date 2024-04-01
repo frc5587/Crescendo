@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7,
-      "y": 4.42
+      "x": 0.7041386162544403,
+      "y": 4.420390379242297
     },
     "rotation": -60.0
   },
@@ -18,62 +18,76 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "shooterForward"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "denyShot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "confirmShot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeStop"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterIdle"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "armRest"
+                  "commands": [
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armAim"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armTravel"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "shooterIdle"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "intakeStop"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             ]
