@@ -47,7 +47,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 2.3
                       }
                     },
                     {
@@ -88,6 +88,12 @@
                       }
                     },
                     {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "armAim"
@@ -97,6 +103,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "ring2_dep"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -137,6 +149,12 @@
                       }
                     },
                     {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "armAim"
@@ -146,6 +164,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "ring1_depOpt"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -182,7 +206,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring3_pickupOpt"
+                        "pathName": "ring3_pickup"
                       }
                     },
                     {
@@ -200,7 +224,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring3_depOpt"
+                        "pathName": "ring3_dep"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {

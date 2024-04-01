@@ -51,7 +51,7 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(0);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(60);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
@@ -68,7 +68,7 @@ public final class Constants {
     // public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.5, DEFAULT_CONSTRAINTS);
     // public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
-    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.69209, 0.087496, 0.11401);
+    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.39209, 0.087496, 0.11401); //0.69209 kG
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
     public static final double ARM_LENGTH_METERS = 0.525;
@@ -153,9 +153,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 3;
+        public static final double MAX_SPEED = 6;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI / 2;
+        public static final double MAX_ANGULAR_VELOCITY = (4/3) * Math.PI;
 
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -245,7 +245,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 25;
     public static final int FREE_LIMIT = 20;
 
-    public static final double FORWARD_THROTTLE = .75;
+    public static final double FORWARD_THROTTLE = .85;
     public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;

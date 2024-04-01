@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45,
-        "y": 4.5
+        "x": 0.5,
+        "y": 2.08
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3529694475712444,
-        "y": 5.522997540093748
+        "x": 1.5,
+        "y": 2.08
       },
       "isLocked": false,
-      "linkedName": "ring3_sidepickup"
+      "linkedName": "sa_startpoint"
     },
     {
       "anchor": {
-        "x": 1.34,
-        "y": 5.55
+        "x": 7.825244751773384,
+        "y": 0.9368669236625209
       },
       "prevControl": {
-        "x": 1.3679596451735372,
-        "y": 5.508548121372248
+        "x": 6.825244751773384,
+        "y": 0.9368669236625209
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "subwoofer_dep"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -20.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ring3",
+  "folder": "ferry",
   "previewStartingState": {
-    "rotation": -40.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
