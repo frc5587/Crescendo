@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AutoAmpWhenLinedUp;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
+import frc.robot.commands.CharacterizationBase;
 import frc.robot.commands.CharacterizationManager;
 import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
@@ -60,7 +60,7 @@ public class RobotContainer {
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
-    private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
+    private final SendableChooser<CharacterizationBase> charChooser = new SendableChooser<CharacterizationBase>();
     private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
     private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
@@ -92,14 +92,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        charChooser.setDefaultOption("Arm Q Fwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kForward));
-        charChooser.addOption("Arm Q Bwd", charManager.getArmChar().quasistatic(SysIdRoutine.Direction.kReverse));
-        charChooser.addOption("Arm D Fwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kForward));
-        charChooser.addOption("Arm D Bwd", charManager.getArmChar().dynamic(SysIdRoutine.Direction.kReverse));
-        charChooser.addOption("Swerve Q Fwd", charManager.getSwerveChar().quasistatic(SysIdRoutine.Direction.kForward));
-        charChooser.addOption("Swerve Q Bwd", charManager.getSwerveChar().quasistatic(SysIdRoutine.Direction.kReverse));
-        charChooser.addOption("Swerve D Fwd", charManager.getSwerveChar().dynamic(SysIdRoutine.Direction.kForward));
-        charChooser.addOption("Swerve D Bwd", charManager.getSwerveChar().dynamic(SysIdRoutine.Direction.kReverse));
+        charChooser.setDefaultOption("Arm Char", charManager.getArmChar());
+        charChooser.addOption("Climb Char", charManager.getClimbChar());
+        charChooser.addOption("Swerve Char", charManager.getSwerveChar());
+        charChooser.addOption("Shooter Char", charManager.getShooterChar());
         SmartDashboard.putData("Char", charChooser);
         
         CameraServer.startAutomaticCapture(0);
@@ -125,40 +121,10 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.rightBumper().whileTrue(runIntakeWithArm);
-        xbox2.rightTrigger().onTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
-        // xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
-        // xbox2.a().onTrue(arm.armTravelCommand());
-        // xbox2.b().onTrue(arm.disableManualMode());
-        // xbox2.x().onTrue(arm.armRestCommand());
-        // xbox2.y().onTrue(arm.armAmpCommand());
-        xbox2.a().whileTrue(charManager.getShooterChar().dynamic(Direction.kReverse));
-        xbox2.b().whileTrue(charManager.getShooterChar().quasistatic(Direction.kReverse));
-        xbox2.x().whileTrue(charManager.getShooterChar().quasistatic(Direction.kForward));
-        xbox2.y().whileTrue(charManager.getShooterChar().dynamic(Direction.kForward));
-        xbox2.povUp().whileTrue(charManager.getArmChar().dynamic(Direction.kForward));
-        xbox2.povDown().whileTrue(charManager.getArmChar().dynamic(Direction.kReverse));
-        xbox2.povLeft().whileTrue(charManager.getArmChar().quasistatic(Direction.kForward));
-        xbox2.povRight().whileTrue(charManager.getArmChar().quasistatic(Direction.kReverse));
-        // xbox.povUp().whileTrue(charManager.getSwerveChar().dynamic(Direction.kForward));
-        // xbox.povDown().whileTrue(charManager.getSwerveChar().dynamic(Direction.kReverse));
-        // xbox.povLeft().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kForward));
-        // xbox.povRight().whileTrue(charManager.getSwerveChar().quasistatic(Direction.kReverse));
-
-        // xbox.povUp().whileTrue(charManager.getClimbChar().dynamic(Direction.kForward));
-        // xbox.povDown().whileTrue(charManager.getClimbChar().dynamic(Direction.kReverse));
-        // xbox.povLeft().whileTrue(charManager.getClimbChar().quasistatic(Direction.kForward));
-        // xbox.povRight().whileTrue(charManager.getClimbChar().quasistatic(Direction.kReverse));
-        xbox.povUp().onTrue(new InstantCommand(climb::up));
-        xbox.povDown().onTrue(new InstantCommand(climb::down));
-        // xbox.povDown().whileTrue(autoRotateToShoot);
-        // xbox.povUp().whileTrue(lineUpToSpeaker);
-        // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
-        // xbox.povRight().whileTrue(swerve.ampLineUp());
-        xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
+        xbox2.y().whileTrue(charChooser.getSelected().dynamic(Direction.kForward));
+        xbox2.a().whileTrue(charChooser.getSelected().dynamic(Direction.kReverse));
+        xbox2.povUp().whileTrue(charChooser.getSelected().quasistatic(Direction.kForward));
+        xbox2.povDown().whileTrue(charChooser.getSelected().quasistatic(Direction.kReverse));
     }
 
   /**
