@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -21,15 +22,23 @@ import frc.robot.Constants.ShooterConstants;
 public class Shooter extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private static SimpleMotorFeedforward ff = ShooterConstants.FF;
+    private SimpleMotorFeedforward ff, leftFF, rightFF;
     private Supplier<Pose2d> poseSupplier;
+    private final ProfiledPIDController leftPID, rightPID;
 
     public Shooter(Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
+        this.ff = ShooterConstants.FF;
+        this.leftFF = ShooterConstants.LEFT_FF;
+        this.rightFF = ShooterConstants.RIGHT_FF;
+        this.poseSupplier = poseSupplier;
+        this.leftPID = ShooterConstants.LEFT_PID;
+        this.rightPID = ShooterConstants.RIGHT_PID;
         configureMotors();
         enable();
-        this.poseSupplier = poseSupplier;
         getController().setTolerance(0.2);
+        leftPID.setTolerance(0.2);
+        rightPID.setTolerance(0.2);
         // idleSpeed();
     }
 
@@ -64,6 +73,14 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public double getWheelSpeedsMPS() {
         return getMeasuredMotorSpeedsRPS() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
+    public double getLeftMPS() {
+        return (leftMotor.getEncoder().getVelocity() / 60.) * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
+    public double getRightMPS() {
+        return (rightMotor.getEncoder().getVelocity() / 60.) * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
     public double getPositionMeters() {
@@ -120,6 +137,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         this.disable();
         leftMotor.setVoltage(5.75);
         rightMotor.setVoltage(-0.85);
+        leftMotor.setVoltage(leftPID.calculate(getLeftMPS(), 13.96) + leftFF.calculate(13.96)); // TODO: set these!
+        rightMotor.setVoltage(rightPID.calculate(getRightMPS(), -2.06) + rightFF.calculate(-2.06)); // TODO: set these!
     }
 
     public void setVoltage(double voltage) {

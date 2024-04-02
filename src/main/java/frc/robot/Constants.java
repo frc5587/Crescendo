@@ -23,7 +23,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -276,12 +275,14 @@ public final class Constants {
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80);
     public static final ProfiledPIDController PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);//(0, 0.39739, 0.32121);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
 
-
-    public static final double RadiansPerMeter = Units.degreesToRadians(3);
-    
+    public static final double RadiansPerMeter = Units.degreesToRadians(3);    
   }
 
   public static final class FieldConstants {
