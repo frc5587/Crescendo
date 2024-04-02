@@ -23,7 +23,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 
@@ -136,7 +135,7 @@ public final class Constants {
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
                 //0.02, 0.1, 0, 0);
-                0.00106, 0.0, 0.0, 0.0); //0.83857 / 12
+                0.0038, 0.0, 0.0, 0.0); //0.83857 / 12
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -146,9 +145,9 @@ public final class Constants {
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        public static final double DRIVE_KS = (0.22679);
-        public static final double DRIVE_KV = 0.5448;//1.9698; //(9.7051 / 12); // SYSID GAIN: 0.22679;
-        public static final double DRIVE_KA = (0.80637);
+        public static final double DRIVE_KS = (0.22087);
+        public static final double DRIVE_KV = 5.599;//1.9698; //(9.7051 / 12); // SYSID GAIN: 0.22679;
+        public static final double DRIVE_KA = (0.25493);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
