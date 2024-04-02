@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoAmpWhenLinedUp;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.ClimbWithAxis;
@@ -54,7 +54,6 @@ public class RobotContainer {
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
-    private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
     private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
@@ -111,39 +110,39 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
-        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
-        // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
-        xbox2.rightBumper().whileTrue(runIntakeWithArm);//.onFalse(new InstantCommand(() -> {
-        //     intake.stop();
-        //     arm.travelSetpoint();
-        // }));
-        
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.rightBumper().whileTrue(runIntakeWithArm);
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
-        // xbox2.rightTrigger(0.1).whileTrue(climbWithAxisReverse);
-        xbox2.povRight().whileTrue(autoShootWhenLinedUp);
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armZeroCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
-        // xbox2.start().onTrue(arm.armFerryCommand());
+        xbox2.start().onTrue(arm.armFerryCommand());
         xbox2.back().whileTrue(fullClimb);
-        xbox2.povDown().onTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.povUp().onTrue(new InstantCommand(climb::up));
 
-        // xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.povLeft().whileTrue(autoAmpWhenLinedUp).onFalse(new InstantCommand(shooter::enable));
-        // xbox2.povDown().onTrue(arm.chinUp());
-        // xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
-        // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
+        xbox2.povUp().onTrue(new InstantCommand(climb::up));
+        xbox2.povDown().onTrue(new InstantCommand(climb::down));
+        xbox2.povLeft().whileTrue(new InstantCommand(shooter::pancake)).onFalse(new InstantCommand(shooter::enable));
+        xbox2.povRight().whileTrue(autoShootWhenLinedUp);
+        
         xbox.povDown().whileTrue(autoRotateToShoot);
-        xbox.povUp().whileTrue(swerve.ampLineUp());
+        xbox.povUp().whileTrue(lineUpToSpeaker);
+        xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
+        
+        /* Unused Binds */
+        // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        // xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
+        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
+        // xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
+        // xbox2.povDown().onTrue(arm.chinUp());
+        // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
+        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
+        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
         // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
         // xbox.povRight().whileTrue(swerve.ampLineUp());
-        xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
+        // xbox2.rightTrigger(0.1).whileTrue(climbWithAxisReverse);
     }
 
     /**
