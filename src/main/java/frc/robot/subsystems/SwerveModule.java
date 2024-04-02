@@ -3,9 +3,7 @@ package frc.robot.subsystems;
 import org.frc5587.lib.math.Conversions;
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -102,7 +100,15 @@ public class SwerveModule extends SwerveModuleBase {
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getVelocity().getValueAsDouble();
     }
-    
+
+    @Override
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(
+            (getDriveMotorEncoderVelocity() / moduleConstants.driveMotorGearRatio) * moduleConstants.wheelCircumferenceMeters,
+            getAngle()
+        ); 
+    }
+
     public void stop() {
         setDesiredState(new SwerveModuleState(0, getAngle()), true);
     }
@@ -113,13 +119,5 @@ public class SwerveModule extends SwerveModuleBase {
             Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
             getAngle()
         );
-    }
-
-    @Override
-    public SwerveModuleState getState(){
-        return new SwerveModuleState(
-            ((getDriveMotorEncoderVelocity()) / moduleConstants.driveMotorGearRatio) * moduleConstants.wheelCircumferenceMeters,
-            getAngle()
-        ); 
     }
 }

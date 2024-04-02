@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.time.Instant;
 import java.util.Hashtable;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -12,6 +11,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -44,6 +44,7 @@ public class Arm extends PivotingArmBase {
     private TimeInterpolatableBuffer<Double> positionBuffer = TimeInterpolatableBuffer.createDoubleBuffer(0.2);
     private double timeStopped = -1;
     private Hashtable<Double, Rotation2d> distanceToAngleTable = new Hashtable<Double, Rotation2d>();
+    private ProfiledPIDController climbPID = ArmConstants.CLIMB_PID;
 
     public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
             new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
@@ -287,8 +288,12 @@ public class Arm extends PivotingArmBase {
 
     public Command chinUp() {
         return new InstantCommand(() -> {
-            getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
-            armStage();
+            // getController().setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
+            // armStage();
+            disable();
+            climbPID.setConstraints(ArmConstants.CLIMB_CONSTRAINTS);
+            climbPID.setGoal(ArmConstants.CLIMB_SETPOINT);
+            setVoltage(climbPID.calculate(getMeasurement()) + constants.ff.calculate(ArmConstants.CLIMB_SETPOINT + constants.offsetFromHorizontal.getRadians(), 0));
         }, this);
     }
 
