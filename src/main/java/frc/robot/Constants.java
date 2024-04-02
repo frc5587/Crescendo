@@ -326,9 +326,9 @@ public final class Constants {
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        public static final double ROTATION_KP = .25;
+        public static final double ROTATION_KP = .225; // 0.25
         public static final double ROTATION_KI = 0;
-        public static final double ROTATION_KD = 0.1;
+        public static final double ROTATION_KD = 0.05; // 0.1
 
         public static final double TRANSLATION_KP = 4.5;//5.5;
         public static final double TRANSLATION_KI = 0;
