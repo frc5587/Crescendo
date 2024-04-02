@@ -5,6 +5,7 @@ import org.frc5587.lib.subsystems.SwerveModuleBase;
 
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -63,7 +64,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.setControl(new VelocityVoltage(velocityMPS));
+        driveMotor.setControl(new VelocityDutyCycle(velocityMPS / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
     }
 
     @Override
@@ -120,5 +121,13 @@ public class SwerveModule extends SwerveModuleBase {
             Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
             getAngle()
         );
+    }
+
+    @Override
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(
+            ((getDriveMotorEncoderVelocity()) / moduleConstants.driveMotorGearRatio) * moduleConstants.wheelCircumferenceMeters,
+            getAngle()
+        ); 
     }
 }

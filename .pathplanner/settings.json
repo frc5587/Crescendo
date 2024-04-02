@@ -1,6 +1,6 @@
 {
   "robotWidth": 0.8509,
-  "robotLength": 0.8509,
+  "robotLength": 0.85,
   "holonomicMode": true,
   "pathFolders": [
     "-amp",
@@ -14,6 +14,7 @@
     "ring3"
   ],
   "autoFolders": [
+    "Choreo Autos",
     "amp side start",
     "source side start"
   ],

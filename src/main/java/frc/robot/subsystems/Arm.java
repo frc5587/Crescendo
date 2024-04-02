@@ -50,7 +50,7 @@ public class Arm extends PivotingArmBase {
         this.poseSupplier = poseSupplier;
         throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         resetToAbsolute();
-        getController().setTolerance(Units.degreesToRadians(1));
+        getController().setTolerance(Units.degreesToRadians(0.2));
         enable();
         armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
@@ -108,7 +108,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armStage() {
-        setGoal(ArmConstants.STAGE_SETPOINT);
+        setGoal(ArmConstants.CLIMB_SETPOINT);
     }
     
     public InstantCommand armStageCommand() {
@@ -146,6 +146,18 @@ public class Arm extends PivotingArmBase {
             armFerry();
         });
     }
+
+    public void armZero() {
+        setGoal(0);
+    }
+
+    public InstantCommand armZeroCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armZero();
+        });
+    }
+
 
     // public Rotation2d poseDependantArmAngle(Pose2d pose) {
     //     return Rotation2d.fromRadians(-Math.atan(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() /

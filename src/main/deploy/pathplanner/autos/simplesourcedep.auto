@@ -18,64 +18,85 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "armAim"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "shooterForward"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "denyShot"
+                  "commands": [
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armAim"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "shooterStop"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "intakeStop"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armTravel"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "simplesourcedep"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "confirmShot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "simplesourcedep"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shooterStop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeStop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "armRest"
           }
         }
       ]

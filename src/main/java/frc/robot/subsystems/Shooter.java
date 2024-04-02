@@ -44,7 +44,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
-        rightMotor.follow(leftMotor);
+        // rightMotor.follow(leftMotor);
         leftMotor.burnFlash();
         rightMotor.burnFlash();
     }
@@ -97,7 +97,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void backward() {
-        setGoal(5);
+        setGoal(-5);
     }
 
     public void stop() {
@@ -110,16 +110,16 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public boolean isSpunUp() {
         // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
-        return getController().atGoal() && getController().getSetpoint().position > 8;
+        return (getController().atGoal() && getController().getSetpoint().position > 8) || !isEnabled();
     }
 
     public void spinUpToAmp() {
         setGoal(ShooterConstants.AMP_THROTTLE);
     }
-    public void groundAmp() {
+    public void pancake() {
         this.disable();
-        leftMotor.setVoltage(5);
-        rightMotor.setVoltage(0);
+        leftMotor.setVoltage(5.75);
+        rightMotor.setVoltage(-0.85);
     }
 
     public void setVoltage(double volts) {
@@ -146,6 +146,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     protected void useOutput(double output, State setpoint) {
         SmartDashboard.putNumber("Shooter Output", output);
         leftMotor.setVoltage(output + ff.calculate(setpoint.position));
+        rightMotor.setVoltage(- (output + ff.calculate(setpoint.position)));
     }
 
     @Override

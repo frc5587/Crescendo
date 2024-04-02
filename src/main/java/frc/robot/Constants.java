@@ -51,9 +51,9 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(-0.5);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
-    public static final double STAGE_SETPOINT = Units.degreesToRadians(89);
+    public static final double CLIMB_SETPOINT = Units.degreesToRadians(60);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
@@ -68,7 +68,7 @@ public final class Constants {
     // public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.5, DEFAULT_CONSTRAINTS);
     // public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
-    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.69209, 0.087496, 0.11401);
+    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.39209, 0.087496, 0.11401); //0.69209 kG
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
     public static final double ARM_LENGTH_METERS = 0.525;
@@ -147,15 +147,15 @@ public final class Constants {
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
         public static final double DRIVE_KS = (0.22679);
-        public static final double DRIVE_KV = 1.9698; //(9.7051 / 12);
+        public static final double DRIVE_KV = 0.5448;//1.9698; //(9.7051 / 12); // SYSID GAIN: 0.22679;
         public static final double DRIVE_KA = (0.80637);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 3;
+        public static final double MAX_SPEED = 4;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI / 2;
+        public static final double MAX_ANGULAR_VELOCITY = (4/3) * Math.PI;
 
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -229,11 +229,12 @@ public final class Constants {
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
     public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set
+    public static final double MIDDLE_POSITION = BOTTOM_POSITION / 2;
     
-    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(7.)}; // TODO set
-    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.1, 0.075); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(70, 0, 0, CONSTRAINTS); // TODO characterize
-    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0.4121, 1.2, 0.11, 5.7745); // TODO characterize
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(6.)}; // TODO set
+    public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.2, 0.1); // TODO set
+    public static final ProfiledPIDController PID = new ProfiledPIDController(196, 0, 0, CONSTRAINTS); // TODO characterize
+    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
     
   }
 
@@ -244,7 +245,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 20;
     public static final int FREE_LIMIT = 15;
 
-    public static final double FORWARD_THROTTLE = .75;
+    public static final double FORWARD_THROTTLE = .90;
     public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;
@@ -290,8 +291,8 @@ public final class Constants {
     public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(16.53, 5.556, 3.267);
     public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(15.20, 5.556, new Rotation2d());
 
-    public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(90));
-    public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(90));
+    public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(180));
+    public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(180));
 
     public static final Translation2d[] BLUE_AUTO_TRACK_BOUNDS = {
       new Translation2d(0., 8.2),
@@ -337,7 +338,7 @@ public final class Constants {
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
-        public static final PathConstraints PATHFIND_CONSTRAINTS = new PathConstraints(0.75, 1, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+        public static final PathConstraints PATHFIND_CONSTRAINTS = new PathConstraints(0.85, 0.75, Math.PI / 4, Math.PI / 4);
         
     }
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3409518003463743,
-      "y": 5.563505172729492
+      "x": 0.45517924427986145,
+      "y": 2.0594325065612793
     },
-    "rotation": -1.1958312823232819e-18
+    "rotation": -1.0248158938957966e-25
   },
   "command": {
     "type": "sequential",
@@ -26,163 +26,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armRest"
-                            }
-                          }
-                        ]
+                        "name": "denyShot"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "choreo 5ring_1.1"
+                        "pathName": "choreo ferry.1"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "armAim"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armTravel"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "choreo 5ring_2.1"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armTravel"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "choreo 5ring_3.1"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "armAim"
+                        "name": "armFerry"
                       }
                     },
                     {
@@ -225,13 +83,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "choreo 5ring_4.1"
+                        "pathName": "choreo ferry.2"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "armAim"
+                        "name": "armFerry"
                       }
                     },
                     {
@@ -267,20 +125,161 @@
                             "data": {
                               "name": "armRest"
                             }
-                          },
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "choreo ferry.3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armFerry"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
                           {
                             "type": "named",
                             "data": {
-                              "name": "shooterIdle"
+                              "name": "denyShot"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "intakeStop"
+                              "name": "armRest"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "choreo ferry.4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armFerry"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armRest"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "choreo ferry.5"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armFerry"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armRest"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "choreo ferry.6"
                       }
                     }
                   ]

@@ -20,11 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AutoAmpWhenLinedUp;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.CharacterizationManager;
 import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.FullClimb;
 import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
@@ -56,10 +58,12 @@ public class RobotContainer {
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
+    private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final SendableChooser<Command> charChooser = new SendableChooser<Command>();
     private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
     private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
+    private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
 
     public void zeroYaw() {
         swerve.zeroGyro();
@@ -82,6 +86,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("armRest", arm.armRestCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
+        NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
         NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
         NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));

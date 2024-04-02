@@ -222,7 +222,7 @@
                 }
             ],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "choreo 5ring_2": {
             "waypoints": [
@@ -743,7 +743,7 @@
                     }
                 }
             ],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "choreo 5ring_3": {
             "waypoints": [
@@ -1305,7 +1305,7 @@
                 }
             ],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "choreo 5ring_4": {
             "waypoints": [
@@ -1500,9 +1500,9 @@
                 }
             ],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         }
     },
-    "splitTrajectoriesAtStopPoints": false,
+    "splitTrajectoriesAtStopPoints": true,
     "usesObstacles": true
 }

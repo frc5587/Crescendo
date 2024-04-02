@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.413145667812442,
-        "y": 4.311084857613674
+        "x": 2.45,
+        "y": 4.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9131456678124419,
-        "y": 4.311084857613674
+        "x": 1.9500000000000002,
+        "y": 4.5
       },
       "isLocked": false,
       "linkedName": "ring3_sidepickup"

@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5,
+      "y": 2.08
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "armTravel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source_crossline"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "source side start",
+  "choreoAuto": false
+}
