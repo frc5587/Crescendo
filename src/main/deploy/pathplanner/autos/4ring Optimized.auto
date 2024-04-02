@@ -206,7 +206,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring3_pickup"
+                        "pathName": "ring3_pickupOpt"
                       }
                     },
                     {
@@ -224,7 +224,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring3_dep"
+                        "pathName": "ring3_depOpt"
                       }
                     },
                     {

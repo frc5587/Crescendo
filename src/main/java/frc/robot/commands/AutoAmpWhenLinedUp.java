@@ -18,12 +18,8 @@ public class AutoAmpWhenLinedUp extends Command {
     }
 
     @Override
-    public void initialize() {
-        shooter.pancake();
-    }
-
-    @Override
     public void execute() {
+        shooter.pancake();
         if(readySupplier.getAsBoolean()) {
             intake.forward();
         }

@@ -37,8 +37,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         configureMotors();
         enable();
         getController().setTolerance(0.2);
-        leftPID.setTolerance(0.2);
-        rightPID.setTolerance(0.2);
+        leftPID.setTolerance(0.05);
+        rightPID.setTolerance(0.05);
         // idleSpeed();
     }
 
@@ -135,10 +135,10 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
     public void pancake() {
         this.disable();
-        leftMotor.setVoltage(5.75);
-        rightMotor.setVoltage(-0.85);
-        leftMotor.setVoltage(leftPID.calculate(getLeftMPS(), 13.96) + leftFF.calculate(13.96)); // TODO: set these!
-        rightMotor.setVoltage(rightPID.calculate(getRightMPS(), -2.06) + rightFF.calculate(-2.06)); // TODO: set these!
+        // leftMotor.setVoltage(5.75);
+        // rightMotor.setVoltage(-0.85);
+        leftMotor.setVoltage((leftPID.calculate(getLeftMPS(), 13.96) + leftFF.calculate(13.96))); // TODO: set these! 13.96
+        rightMotor.setVoltage((rightPID.calculate(getRightMPS(), -2.06) + rightFF.calculate(-2.06))); // TODO: set these! -2.06
     }
 
     public void setVoltage(double voltage) {
@@ -158,6 +158,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Shooter Position", getPositionMeters());
         SmartDashboard.putNumber("Shooter Volts", getVoltage());
         SmartDashboard.putBoolean("Shooter IsSpunUp", isSpunUp());
+        SmartDashboard.putNumber("Left Speed", getLeftMPS());
+        SmartDashboard.putNumber("Right Speed", getRightMPS());
         // SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
         // SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
     }
