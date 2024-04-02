@@ -64,7 +64,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.setControl(new VelocityVoltage(velocityMPS / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
+        driveMotor.setControl(new VelocityVoltage((velocityMPS * DrivetrainConstants.DRIVE_GEAR_RATIO) / DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS)); // TODO: Verify
     }
 
     @Override

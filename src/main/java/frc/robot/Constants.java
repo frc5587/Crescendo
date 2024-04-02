@@ -60,7 +60,7 @@ public final class Constants {
     public static final double GEARING_THROUGHBORE_TO_MOTOR = 1. / (GEARING_MOTOR_TO_ARM * GEARING_ARM_TO_THROUGHBORE);
     public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(87)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
-    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.5); // TODO: Replace this placeholder
+    public static final Rotation2d THROUGHBORE_ZERO_OFFSET = Rotation2d.fromRotations(0.0);
     public static final int ENCODER_CPR = 1;
     public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI / 2);
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
@@ -326,7 +326,6 @@ public final class Constants {
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        // TODO set rotation + translation PID values
         public static final double ROTATION_KP = .25;
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0.1;

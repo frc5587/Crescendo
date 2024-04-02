@@ -36,6 +36,7 @@ public final class CTREConfigs {
         angleSlot0Configs.kD = Constants.DrivetrainConstants.ANGLE_FPID.kD;
         swerveAngleFXConfig.CurrentLimits = angleCurrLimit;
         swerveAngleFXConfig.Slot0 = angleSlot0Configs;
+        swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true; // TODO make sure swerve angles still work after this
 
         /* Swerve Drive Motor Configuration */
         CurrentLimitsConfigs driveCurrLimit = new CurrentLimitsConfigs();
