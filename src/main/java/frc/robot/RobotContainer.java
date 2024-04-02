@@ -129,9 +129,9 @@ public class RobotContainer {
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armZeroCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
-        xbox2.start().onTrue(arm.armFerryCommand());
+        // xbox2.start().onTrue(arm.armFerryCommand());
         xbox2.back().whileTrue(fullClimb);
-        xbox2.povDown().onTrue(new InstantCommand(climb::down));
+        xbox2.povDown().onTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
 
         // xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));

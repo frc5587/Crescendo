@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,6 +26,7 @@ public class Climb extends ProfiledPIDSubsystem {
         super(ClimbConstants.PID);
         configureMotors();
         enable();
+        getController().setTolerance(Units.inchesToMeters(0.5));
         SmartDashboard.putBoolean("Climb Enabled", isEnabled());
         SmartDashboard.putBoolean("Climb Brake Mode", brakeModeEnabled);
     }
@@ -118,7 +120,7 @@ public class Climb extends ProfiledPIDSubsystem {
             setVoltage(0);
         }
         else {
-            leftMotor.setVoltage(output + ff.calculate(setpoint.position));
+            leftMotor.setVoltage(output);// + ff.calculate(setpoint.position));
         }
     }
 
