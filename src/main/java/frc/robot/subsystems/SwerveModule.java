@@ -49,7 +49,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setAngleMotorPosition(Rotation2d position) {
-        angleMotor.setControl(new PositionDutyCycle(position.getRotations()));
+        angleMotor.setControl(new PositionVoltage(position.getRotations())); // TODO: make sure angle setting still works
     }
 
     @Override
