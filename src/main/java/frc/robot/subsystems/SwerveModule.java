@@ -49,7 +49,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setAngleMotorPosition(Rotation2d position) {
-        angleMotor.setControl(new PositionDutyCycle(position.getRotations()));
+        angleMotor.setControl(new PositionVoltage(position.getRotations())); // TODO: make sure angle setting still works
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.setControl(new VelocityDutyCycle(velocityMPS / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
+        driveMotor.setControl(new VelocityVoltage((velocityMPS) / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO))); // TODO: Verify
     }
 
     @Override
@@ -102,7 +102,7 @@ public class SwerveModule extends SwerveModuleBase {
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getVelocity().getValueAsDouble();
     }
-
+    
     public void stop() {
         setDesiredState(new SwerveModuleState(0, getAngle()), true);
     }
