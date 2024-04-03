@@ -236,8 +236,7 @@ public class Arm extends PivotingArmBase {
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
         if ((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.)
                 || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.)
-                //|| (getLimitSwitch() && output < 0)) { // TODO: VERIFY THAT REMOVING THIS DOESNT BREAK THINGS!!
-                ) {
+                || (getLimitSwitch() && output < 0)) {
             setVoltage(0);
         }
         else {

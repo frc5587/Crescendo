@@ -53,7 +53,7 @@ public class RobotContainer {
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
-    private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
+    private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp, xbox2.rightTrigger());
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
 
     public void teleopInitRoutine() {
@@ -120,8 +120,9 @@ public class RobotContainer {
 
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
         xbox2.povDown().onTrue(new InstantCommand(climb::down));
-        xbox2.povLeft().whileTrue(autoAmpWhenLinedUp);
+        // xbox2.povLeft().whileTrue(autoAmpWhenLinedUp);
         xbox2.povRight().whileTrue(autoShootWhenLinedUp);
+        xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(swerve.subwooferLineUp());

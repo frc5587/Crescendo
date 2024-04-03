@@ -113,7 +113,7 @@ public class Intake extends PIDSubsystem {
                 forward();
             }
         }
-        if(getLimitSwitch() && (!shooterSpunUpSupplier.getAsBoolean() && !spunUpOverrideSupplier.getAsBoolean()) && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
+        if(getLimitSwitch() && !(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
             stop();
         } 
         if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {

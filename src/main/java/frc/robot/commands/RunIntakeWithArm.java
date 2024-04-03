@@ -10,24 +10,25 @@ import frc.robot.subsystems.Intake;
 public class RunIntakeWithArm extends Command {
     private final Intake intake;
     private final Arm arm;
-    private final BooleanSupplier shooterSpunUpSupplier;
+    private final BooleanSupplier shooterSpunUpSupplier, spunUpOverrideSupplier;
 
-    public RunIntakeWithArm(Intake intake, Arm arm, BooleanSupplier shooterSpunUpSupplier) {
+    public RunIntakeWithArm(Intake intake, Arm arm, BooleanSupplier shooterSpunUpSupplier, BooleanSupplier spunUpOverrideSupplier) {
         this.intake = intake;
         this.arm = arm;
         this.shooterSpunUpSupplier = shooterSpunUpSupplier;
+        this.spunUpOverrideSupplier = spunUpOverrideSupplier;
     }
 
     @Override
     public void initialize() {
-        if(!shooterSpunUpSupplier.getAsBoolean() && arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {
+        if(!(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {
             arm.armRest();
         }
     }
 
     @Override
     public void execute() {
-        if(shooterSpunUpSupplier.getAsBoolean() || arm.getController().getGoal().position == ArmConstants.AMP_SETPOINT || !intake.getLimitSwitch()) {
+        if((shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) || arm.getController().getGoal().position == ArmConstants.AMP_SETPOINT || !intake.getLimitSwitch()) {
             intake.forward();
         }
         else {
