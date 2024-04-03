@@ -26,8 +26,8 @@ public class DualStickSwerve extends Command {
 
     @Override
     public void execute() {
-        Translation2d translation = new Translation2d(translationSup.getAsDouble(), -strafeSup.getAsDouble()).times(slowSupplier.getAsBoolean() ? 0.25 : DrivetrainConstants.MAX_SPEED);
-        double rotation = rotationSup.getAsDouble() * (slowSupplier.getAsBoolean() ? 0.5 : DrivetrainConstants.MAX_ANGULAR_VELOCITY);
+        Translation2d translation = new Translation2d(translationSup.getAsDouble(), -strafeSup.getAsDouble()).times(slowSupplier.getAsBoolean() ? DrivetrainConstants.CRAWL_SPEED : DrivetrainConstants.MAX_SPEED);
+        double rotation = rotationSup.getAsDouble() * (slowSupplier.getAsBoolean() ? DrivetrainConstants.CRAWL_ANGULAR_VELOCITY : DrivetrainConstants.MAX_ANGULAR_VELOCITY);
         
         swerve.drive(translation, rotation,
                 fieldRelativeSup.getAsBoolean(),

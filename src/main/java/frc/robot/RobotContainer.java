@@ -9,6 +9,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,14 +19,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.AutoAmpWhenLinedUp;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
-import frc.robot.commands.ClimbWithAxis;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.FullClimb;
-import frc.robot.commands.LineUpToSpeaker;
 import frc.robot.commands.RunIntakeWithArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climb;
@@ -42,27 +40,28 @@ public class RobotContainer {
     private final Limelight limelight = new Limelight();
     private final Swerve swerve = new Swerve(limelight);
     private final Shooter shooter = new Shooter(swerve::getPose);
-    private final Intake intake = new Intake(shooter::isSpunUp, swerve::getLinearVelocity, (rumbleMagnitude) -> {
+    private final Intake intake = new Intake(shooter::isSpunUp, xbox2.rightTrigger(), swerve::getLinearVelocity, (rumbleMagnitude) -> {
             xbox.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
             xbox2.getHID().setRumble(RumbleType.kBothRumble, rumbleMagnitude);
     });
-    public final Arm arm = new Arm(swerve::getPose, intake::getLimitSwitch);
+    public final Arm arm = new Arm(swerve::getPose);
     private final Climb climb = new Climb();
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), xbox.rightBumper().negate(), xbox.leftTrigger());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
-    private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
-    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
+    private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
-    private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
-    private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
 
-    public void zeroYaw() {
-        swerve.zeroGyro();
+    public void teleopInitRoutine() {
+        // TODO: VERIFY!!
+        swerve.gyro.setYaw(swerve.getYaw()
+                .times(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? 1 : -1));
+        intake.stop();
+        shooter.idleSpeed();
     }
 
     public RobotContainer() {
@@ -90,11 +89,6 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
         CameraServer.startAutomaticCapture(0);
-    }
-
-    public void stopIntake() {
-        intake.stop();
-        shooter.idleSpeed();
     }
 
     /**
@@ -130,7 +124,7 @@ public class RobotContainer {
         xbox2.povRight().whileTrue(autoShootWhenLinedUp);
         
         xbox.povDown().whileTrue(autoRotateToShoot);
-        xbox.povUp().whileTrue(lineUpToSpeaker);
+        xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         
         /* Unused Binds */

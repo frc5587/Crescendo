@@ -5,7 +5,6 @@ import org.frc5587.lib.subsystems.SwerveBase;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -39,8 +38,6 @@ public class Swerve extends SwerveBase {
 
    private Limelight limelight;
    private Field2d limelightField = new Field2d();
-   private PathPlannerPath ampPath = PathPlannerPath.fromPathFile("ampPath"); // used for alternate ampLineUp command
-   private PathPlannerPath subwooferPath = PathPlannerPath.fromPathFile("subwooferPath");
     private boolean brakeModeEnabled = true;
 
     public Swerve(Limelight limelight) {
@@ -75,16 +72,11 @@ public class Swerve extends SwerveBase {
 
     public Command ampLineUp() {
         return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_AMP_POSE : FieldConstants.RED_AMP_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
-        /* alternate ampLineUp command in case first one does not work
-        return AutoBuilder.pathfindThenFollowPath(ampPath, AutoConstants.CONSTRAINTS, 0);
-        */
+
     }
 
     public Command subwooferLineUp() {
         return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
-        // alternate subwooferLineUp command in case first one does not work
-        // return AutoBuilder.pathfindThenFollowPath(subwooferPath, AutoConstants.CONSTRAINTS, 0);
-        //
     }
 
     public void resetOdometryWithYaw(Pose2d pose) {
@@ -98,17 +90,18 @@ public class Swerve extends SwerveBase {
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
             
-    
             for(int i = 0; i < swerveModules.length; i++) {
-                SmartDashboard.putNumber("M"+i+" Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
+                SmartDashboard.putNumber("M" + i + " Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
             }
         }
+
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
         if(SmartDashboard.getBoolean("Zero Yaw", false)) {
             gyro.zeroYaw();
         }
+
         SmartDashboard.putBoolean("Zero Yaw", false);
         if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
@@ -116,8 +109,6 @@ public class Swerve extends SwerveBase {
                 mod.setBrakeMode(brakeModeEnabled);
             }
         }
-
-        SmartDashboard.putNumber("Mod 0 Velocity", swerveModules[0].getState().speedMetersPerSecond);
 
         SmartDashboard.putData("Field", field);
         this.limelightField.setRobotPose(limelight.getLimelightPose());
@@ -140,14 +131,12 @@ public class Swerve extends SwerveBase {
      */
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
-        SmartDashboard.putNumber("set speed", kinematics.toSwerveModuleStates(speeds)[0].speedMetersPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), false);
     }
     
     @Override
     public void setChassisSpeeds(ChassisSpeeds speeds, boolean isOpenLoop) {
         speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        SmartDashboard.putNumber("set speed", kinematics.toSwerveModuleStates(speeds)[0].speedMetersPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds), isOpenLoop);
     }
 
@@ -168,6 +157,5 @@ public class Swerve extends SwerveBase {
         for(int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].setAngle(i == 2 || i == 1 ? Rotation2d.fromDegrees(135) : Rotation2d.fromDegrees(45));
         }
-        System.out.println("Rotating to X");
     }
 }

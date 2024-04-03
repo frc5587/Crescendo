@@ -24,20 +24,14 @@ public class AutoRotateToShoot extends Command {
 
     @Override
     public void execute() {
-        System.out.println("-------------------------RUNNING-------------------------");
         Pose2d currentPose = swerve.getPose();
         Rotation2d currentAngle = currentPose.getRotation();//.plus(Rotation2d.fromDegrees(180.));
         Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
-                currentPose.getY() - (DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getY(),
-                currentPose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getX()
+                currentPose.getY() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getY(),
+                currentPose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION).getX()
             ));//.plus(Rotation2d.fromDegrees(180.));
-            
-            System.out.println("Current: " + currentAngle.getDegrees());
-            System.out.println("Target: " + targetAngle.getDegrees());
-            System.out.println("Error: " + (currentAngle.getDegrees() - targetAngle.getDegrees()));
             if(Math.abs(currentAngle.getDegrees() - targetAngle.getDegrees()) < 2.) {
                 isFinished = true;
-                System.out.println("DONEZO!!!!");
                 end(true);
             }
             else {

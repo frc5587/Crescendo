@@ -26,7 +26,7 @@ public class LineUpToAmp extends Command {
     @Override
     public void execute() {
         Pose2d currentPose = swerve.getPose();
-        if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+        if (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)) {
             Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
                     currentPose.getY() - FieldConstants.BLUE_AMP_POSE.getY(),
                     currentPose.getX() - FieldConstants.BLUE_AMP_POSE.getX()));
@@ -71,12 +71,10 @@ public class LineUpToAmp extends Command {
                 }
             }
 
-        else if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+        else if (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
             Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(
                     currentPose.getY() - FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY(),
                     currentPose.getX() - FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()));
-                    System.out.println("TARGET " + targetAngle.getDegrees());
-                    System.out.println("CURRENT " + currentPose.getRotation().getDegrees());
             if (Math.abs(currentPose.getRotation().getDegrees() - targetAngle.getDegrees()) < 2) {
                 rotatingDone = true;
             }
