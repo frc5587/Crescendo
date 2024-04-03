@@ -35,6 +35,7 @@ public class AutoShootWhenLinedUp extends Command {
             intake.forward();
         }
         SmartDashboard.putBoolean("AutoShoot Running", true);
+        shooter.forward();
     }
     
     @Override

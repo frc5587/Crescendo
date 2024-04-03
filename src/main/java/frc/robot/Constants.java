@@ -279,9 +279,9 @@ public final class Constants {
     public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
-    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
-    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
 
 
     public static final double RadiansPerMeter = Units.degreesToRadians(3);
@@ -326,18 +326,18 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double MAX_SPEED_MPS = 1.5;  // 5. // in m/s  
-        public static final double MAX_ACCEL_MPS_2 = 0.5; // 3. // in m/s^2 
-        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI / 4; // Math.PI / 4.; // in radians/s 
-        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI / 4; // Math.PI / 4.; // in radians/s^2 
+        public static final double MAX_SPEED_MPS = 5;  // 5. // in m/s  
+        public static final double MAX_ACCEL_MPS_2 = 3.5; // 3. // in m/s^2 
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
         public static final double ROTATION_KP = .225; // 0.25
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0.05; // 0.1
 
-        public static final double TRANSLATION_KP = 3; // 4.5;
+        public static final double TRANSLATION_KP = 4.5; // 4.5;
         public static final double TRANSLATION_KI = 0;
-        public static final double TRANSLATION_KD = 0.075;
+        public static final double TRANSLATION_KD = 0.05;
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);

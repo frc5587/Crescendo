@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.AutoAmpWhenLinedUp;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
 import frc.robot.commands.ClimbWithAxis;
@@ -54,6 +55,7 @@ public class RobotContainer {
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final LineUpToSpeaker lineUpToSpeaker = new LineUpToSpeaker(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, arm, xbox.leftBumper());
+    private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp);
     private final ClimbWithAxis climbWithAxis = new ClimbWithAxis(xbox2::getLeftTriggerAxis, arm, climb, false);
     private final ClimbWithAxis climbWithAxisReverse = new ClimbWithAxis(xbox2::getRightTriggerAxis, arm, climb, true);
@@ -124,7 +126,7 @@ public class RobotContainer {
 
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
         xbox2.povDown().onTrue(new InstantCommand(climb::down));
-        xbox2.povLeft().whileTrue(new InstantCommand(shooter::pancake)).onFalse(new InstantCommand(shooter::enable));
+        xbox2.povLeft().whileTrue(autoAmpWhenLinedUp);
         xbox2.povRight().whileTrue(autoShootWhenLinedUp);
         
         xbox.povDown().whileTrue(autoRotateToShoot);
