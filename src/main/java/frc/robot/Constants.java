@@ -247,7 +247,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 20;
     public static final int FREE_LIMIT = 15;
 
-    public static final double FORWARD_THROTTLE = .90;
+    public static final double FORWARD_THROTTLE = .85;
     public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 1;
     public static final double GEARING = 12;
@@ -281,9 +281,9 @@ public final class Constants {
     public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
-    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
-    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.395, 0.32121);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
 
 
     public static final double RadiansPerMeter = Units.degreesToRadians(3);
