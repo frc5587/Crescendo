@@ -98,11 +98,12 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
+        
         if(SmartDashboard.getBoolean("Zero Yaw", false)) {
             gyro.zeroYaw();
         }
-
         SmartDashboard.putBoolean("Zero Yaw", false);
+
         if(SmartDashboard.getBoolean("Swerve Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Swerve Break Mode", true);
             for(SwerveModule mod : swerveModules) {
@@ -111,9 +112,9 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putData("Field", field);
-        this.limelightField.setRobotPose(limelight.getLimelightPose());
+        // this.limelightField.setRobotPose(limelight.getLimelightPose());
 
-        SmartDashboard.putData("LimelightField", limelightField);
+        // SmartDashboard.putData("LimelightField", limelightField);
         
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             // resetOdometry(limelight.getLimelightPose());

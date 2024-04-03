@@ -15,7 +15,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClimbConstants;
 
 public class Climb extends ProfiledPIDSubsystem {
-
     private static CANSparkMax leftMotor = new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private ElevatorFeedforward ff = ClimbConstants.FF;

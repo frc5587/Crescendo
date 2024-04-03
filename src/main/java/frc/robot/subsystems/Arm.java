@@ -17,7 +17,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,7 +28,7 @@ public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
-    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(3);
+    // private final DutyCycleEncoder throughBore = new DutyCycleEncoder(3);
     private final DigitalInput magLimitSwitch = new DigitalInput(0);
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
@@ -43,7 +42,7 @@ public class Arm extends PivotingArmBase {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.poseSupplier = poseSupplier;
-        throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
+        // throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         configureMotors();
         resetToAbsolute(); // TODO: try removing
         getController().setTolerance(Units.degreesToRadians(0.2));
@@ -365,19 +364,21 @@ public class Arm extends PivotingArmBase {
     }
 
     public Rotation2d getRawAbsolutePosition() {
-        double abs = throughBore.getAbsolutePosition();
-        return Rotation2d.fromRotations(abs);
+        // double abs = throughBore.getAbsolutePosition();
+        // return Rotation2d.fromRotations(abs);
+        return new Rotation2d();
     }
 
     public Rotation2d getZeroedArmAbsolutePosition() {
-        Rotation2d abs = getRawAbsolutePosition().minus(Rotation2d.fromRotations(throughBore.getPositionOffset()));
+        // Rotation2d abs = getRawAbsolutePosition().minus(Rotation2d.fromRotations(throughBore.getPositionOffset()));
+        Rotation2d abs = new Rotation2d();
         SmartDashboard.putNumber("Abs in Rotations", abs.getRotations());
     
         return abs;//abs.plus(Rotation2d.fromRotations(abs.getRotations() < 0 ? abs.getRotations() + 0.25 : abs.getRotations()));
     }
 
     public void zeroThroughBore() {
-        throughBore.setPositionOffset(getRawAbsolutePosition().getRotations());
+        // throughBore.setPositionOffset(getRawAbsolutePosition().getRotations());
     }
 
     public Rotation2d getArmAbsolutePosition() {
