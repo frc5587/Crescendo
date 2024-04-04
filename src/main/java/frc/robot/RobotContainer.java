@@ -58,8 +58,8 @@ public class RobotContainer {
 
     public void teleopInitRoutine() {
         // TODO: VERIFY!!
-        swerve.gyro.setYaw(swerve.getYaw()
-                .times(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? 1 : -1));
+        // swerve.gyro.setYaw(swerve.getYaw()
+        //         .times(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? 1 : -1));
         intake.stop();
         shooter.idleSpeed();
     }
@@ -120,8 +120,7 @@ public class RobotContainer {
 
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
         xbox2.povDown().onTrue(new InstantCommand(climb::down));
-        // xbox2.povLeft().whileTrue(autoAmpWhenLinedUp);
-        xbox2.povRight().whileTrue(autoShootWhenLinedUp);
+        xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         
         xbox.povDown().whileTrue(autoRotateToShoot);
