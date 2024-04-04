@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -58,8 +59,8 @@ public class RobotContainer {
 
     public void teleopInitRoutine() {
         // TODO: VERIFY!!
-        // swerve.gyro.setYaw(swerve.getYaw()
-        //         .times(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? 1 : -1));
+        swerve.gyro.setYaw(swerve.getYaw()
+                .plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : (swerve.getYaw().getDegrees() < 0 ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(-180))));
         intake.stop();
         shooter.idleSpeed();
     }
@@ -78,7 +79,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
-        NamedCommands.registerCommand("armRest", arm.armRestCommand());
+        NamedCommands.registerCommand("armRest", arm.armAutoCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());

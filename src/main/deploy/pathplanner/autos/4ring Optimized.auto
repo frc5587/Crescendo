@@ -82,15 +82,15 @@
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "wait",
                       "data": {
-                        "pathName": "ring2_pickup"
+                        "waitTime": 0.0
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 0.25
+                        "pathName": "ring2_pickup"
                       }
                     },
                     {

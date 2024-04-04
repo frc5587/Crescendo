@@ -128,5 +128,8 @@ public class Intake extends PIDSubsystem {
         else {
             rumbleConsumer.accept(0.);
         }
+        if(!getLimitSwitch()) {
+            switchTimeHasBeenSet = false;
+        }
     }
 }

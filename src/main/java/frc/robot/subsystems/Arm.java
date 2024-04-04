@@ -112,6 +112,17 @@ public class Arm extends PivotingArmBase {
         });
     }
 
+    public void armAuto() {
+        setGoal(ArmConstants.AUTO_SETPOINT);
+    }
+
+    public InstantCommand armAutoCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armAuto();
+        });
+    }
+
     public void armRest() {
         setGoal(ArmConstants.RESTING_SETPOINT);
     }
@@ -135,7 +146,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armZero() {
-        setGoal(0);
+        setGoal(0.1); // TODO change back??
     }
 
     public InstantCommand armZeroCommand() {

@@ -50,7 +50,8 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(1); // 0.1
+    public static final double AUTO_SETPOINT = Units.degreesToRadians(1);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
@@ -68,7 +69,7 @@ public final class Constants {
     // public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
     public static final ProfiledPIDController CLIMB_PID = new ProfiledPIDController(23.529, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
-    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.39209, 0.087496, 0.11401); //0.69209 kG
+    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.19209, 0.087496, 0.11401); //0.39209 kG
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
     public static final double ARM_LENGTH_METERS = 0.525;
