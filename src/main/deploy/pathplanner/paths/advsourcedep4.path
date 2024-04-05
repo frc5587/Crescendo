@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.96240792481585,
+        "y": 2.1842592256613096
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.96240792481585,
+        "y": 1.1842592256613105
+      },
+      "isLocked": false,
+      "linkedName": "midring4"
+    },
+    {
+      "anchor": {
+        "x": 2.5237490474980953,
+        "y": 2.697340251823362
+      },
+      "prevControl": {
+        "x": 2.5237490474980953,
+        "y": 1.6973402518233618
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "advsourcedep_shootpoint"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "armAim"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -50.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "-source",
+  "previewStartingState": {
+    "rotation": 40.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
