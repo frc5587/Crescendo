@@ -45,10 +45,14 @@ public class Swerve extends SwerveBase {
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
-        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose(),
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 10.));
+        this.poseEstimator = new SwerveDrivePoseEstimator(
+                kinematics, 
+                getYaw(), 
+                getModulePositions(), 
+                DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
+                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 10.)); // Vision standard deviations.
         // Auto Config
-        
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
                 this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -117,13 +121,12 @@ public class Swerve extends SwerveBase {
         // SmartDashboard.putData("LimelightField", limelightField);
         
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
-            // resetOdometry(limelight.getLimelightPose());
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            // gyro.setYaw(limelight.getLimelightPose().getRotation().plus(DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Rotation2d() : Rotation2d.fromDegrees(180.)));
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         }
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) { // 
+
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
             poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
         }
     }
