@@ -50,8 +50,9 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(1); // 0.1
-    public static final double AUTO_SETPOINT = Units.degreesToRadians(1);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(0); // 0.1
+    public static final double AUTO_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double FIRST_NOTE_SETPOINT = Units.degreesToRadians(-0.5);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
@@ -154,7 +155,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4;
+        public static final double MAX_SPEED = 5;
         public static final double CRAWL_SPEED = 0.75;
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = (4/3) * Math.PI;
@@ -329,18 +330,18 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double MAX_SPEED_MPS = 5;  // 5. // in m/s  
+        public static final double MAX_SPEED_MPS = 4.;  // 5. // in m/s  
         public static final double MAX_ACCEL_MPS_2 = 3.5; // 3. // in m/s^2 
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        public static final double ROTATION_KP = .225; // 0.25
+        public static final double ROTATION_KP = 0.25; // 0.225
         public static final double ROTATION_KI = 0;
-        public static final double ROTATION_KD = 0.05; // 0.1
+        public static final double ROTATION_KD = 0.0; // 0.1
 
         public static final double TRANSLATION_KP = 4.5; // 4.5;
         public static final double TRANSLATION_KI = 0;
-        public static final double TRANSLATION_KD = 0.05;
+        public static final double TRANSLATION_KD = 0.0;
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);

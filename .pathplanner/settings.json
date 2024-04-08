@@ -18,7 +18,7 @@
     "amp side start",
     "source side start"
   ],
-  "defaultMaxVel": 5.0,
+  "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 180.0,
   "defaultMaxAngAccel": 180.0,
