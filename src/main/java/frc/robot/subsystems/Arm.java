@@ -112,6 +112,17 @@ public class Arm extends PivotingArmBase {
         });
     }
 
+    public void armFirstNote() {
+        setGoal(ArmConstants.FIRST_NOTE_SETPOINT);
+    }
+
+    public InstantCommand armFirstNoteCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            armFirstNote();
+        });
+    }
+
     public void armAuto() {
         setGoal(ArmConstants.AUTO_SETPOINT);
     }
