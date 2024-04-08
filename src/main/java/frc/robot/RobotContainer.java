@@ -18,8 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AimToNote;
 import frc.robot.commands.AutoAmpWhenLinedUp;
 import frc.robot.commands.AutoRotateToShoot;
 import frc.robot.commands.AutoShootWhenLinedUp;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.NoteDetector;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.DeadbandedCommandXboxController;
@@ -39,6 +42,7 @@ public class RobotContainer {
     public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
 
     private final Limelight limelight = new Limelight();
+    private final NoteDetector noteDetector = new NoteDetector();
     private final Swerve swerve = new Swerve(limelight);
     private final Shooter shooter = new Shooter(swerve::getPose);
     private final Intake intake = new Intake(shooter::isSpunUp, xbox2.rightTrigger(), swerve::getLinearVelocity, (rumbleMagnitude) -> {
@@ -56,6 +60,7 @@ public class RobotContainer {
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp, xbox2.rightTrigger());
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
+    private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch).raceWith(new WaitCommand(2.));
 
     public void teleopInitRoutine() {
         // TODO: VERIFY!!
@@ -86,6 +91,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
         NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
+        NamedCommands.registerCommand("noteAim", fullAimToNote);
         NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -129,6 +135,7 @@ public class RobotContainer {
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
+        xbox.y().whileTrue(fullAimToNote);
         
         /* Unused Binds */
         // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));

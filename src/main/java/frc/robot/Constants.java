@@ -249,7 +249,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 25;
 
-    public static final double FORWARD_THROTTLE = .80;
+    public static final double FORWARD_THROTTLE = .70;
     public static final double REVERSE_THROTTLE = 0.25;
     public static final double WHEEL_RADIUS = 2.25/2;
     public static final double GEARING = 5.;
