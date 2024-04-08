@@ -245,13 +245,13 @@ public final class Constants {
     public static final int MOTOR_ID = 40;
     public static final boolean MOTOR_INVERTED = true;
 
-    public static final int STALL_LIMIT = 20;
-    public static final int FREE_LIMIT = 15;
+    public static final int STALL_LIMIT = 35;
+    public static final int FREE_LIMIT = 25;
 
-    public static final double FORWARD_THROTTLE = .85;
+    public static final double FORWARD_THROTTLE = .80;
     public static final double REVERSE_THROTTLE = 0.25;
-    public static final double WHEEL_RADIUS = 1;
-    public static final double GEARING = 12;
+    public static final double WHEEL_RADIUS = 2.25/2;
+    public static final double GEARING = 5.;
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
     public static final PIDController PID = new PIDController(0.15, 0, 0.0);
     public static final double MINIMUM_VELOCITY = 30;
