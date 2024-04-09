@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.316319415046238,
-        "y": 4.566242979708182
+        "x": 0.9744053724911999,
+        "y": 4.321298685393376
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.219288862617482,
-        "y": 5.58924051980193
+        "x": 0.9744053724911999,
+        "y": 2.3212986853933764
       },
       "isLocked": false,
-      "linkedName": "ring3_sidepickup"
+      "linkedName": "advsourcedep_shootpoint"
     },
     {
       "anchor": {
-        "x": 1.34,
-        "y": 5.55
+        "x": 7.099172885934929,
+        "y": 1.8268905011419148
       },
       "prevControl": {
-        "x": 1.3679596451735374,
-        "y": 5.508548121372248
+        "x": 6.443366039371164,
+        "y": 0.4450117887396976
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "subwoofer_dep"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": 0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": false
+    "rotation": 31.504266719204004,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "ring3",
+  "folder": "-source",
   "previewStartingState": {
-    "rotation": -40.0,
+    "rotation": -50.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -250,9 +250,9 @@ public final class Constants {
     public static final int FREE_LIMIT = 25;
 
     public static final double FORWARD_THROTTLE = .70;
-    public static final double REVERSE_THROTTLE = 0.25;
+    public static final double REVERSE_THROTTLE = 0.4;
     public static final double WHEEL_RADIUS = 2.25/2;
-    public static final double GEARING = 5.;
+    public static final double GEARING = 12.;
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
     public static final PIDController PID = new PIDController(0.15, 0, 0.0);
     public static final double MINIMUM_VELOCITY = 30;
@@ -331,14 +331,14 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double MAX_SPEED_MPS = 4.;  // 5. // in m/s  
+        public static final double MAX_SPEED_MPS = 4.5;  // 5. // in m/s  
         public static final double MAX_ACCEL_MPS_2 = 3.5; // 3. // in m/s^2 
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        public static final double ROTATION_KP = 0.25; // 0.225
+        public static final double ROTATION_KP = 0.75; // 0.225
         public static final double ROTATION_KI = 0;
-        public static final double ROTATION_KD = 0.0; // 0.1
+        public static final double ROTATION_KD = 0.05; // 0.1
 
         public static final double TRANSLATION_KP = 4.5; // 4.5;
         public static final double TRANSLATION_KI = 0;
