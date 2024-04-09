@@ -279,11 +279,11 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(0.10737, 0, 0, CONSTRAINTS); // 0.41177
     public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
     
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.14804, 0.39004, 0.16621);//(0, 0.40, 0.32121);
     public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
     public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0, 0.40, 0.32121);
 

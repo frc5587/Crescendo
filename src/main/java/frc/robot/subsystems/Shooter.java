@@ -153,6 +153,16 @@ public class Shooter extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         super.periodic();
+        double distance = Math.sqrt(
+                        Math.pow(
+                                poseSupplier.get().getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((poseSupplier.get().getY()
+                                - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
         // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
         SmartDashboard.putData(getController());
         SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
@@ -160,6 +170,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putBoolean("Shooter IsSpunUp", isSpunUp());
         SmartDashboard.putNumber("Left Speed", getLeftMPS());
         SmartDashboard.putNumber("Right Speed", getRightMPS());
+        SmartDashboard.putNumber("Distance", distance);
     }
 
     @Override
