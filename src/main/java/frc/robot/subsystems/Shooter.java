@@ -123,7 +123,7 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void setVoltage(double volts) {
-        leftMotor.setVoltage(volts);
+        leftMotor.set(volts / RobotController.getBatteryVoltage());
     }
 
     public double getVoltage() {

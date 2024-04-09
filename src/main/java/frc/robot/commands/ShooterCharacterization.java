@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterCharacterization extends CharacterizationBase {
@@ -35,6 +36,14 @@ public class ShooterCharacterization extends CharacterizationBase {
     @Override
     public double getMechanismAcceleration() {
         return 0.0;
+    }
+
+    @Override
+    public Command preRoutine() {
+        return new InstantCommand(() -> {
+            shooter.disable();
+            shooter.stopVoltage();
+        }).andThen(new WaitCommand(1));
     }
 
     @Override

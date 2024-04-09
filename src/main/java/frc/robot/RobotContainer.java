@@ -71,7 +71,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         swerve.setDefaultCommand(driveCommand);
-        configureBindings();
         DriverStation.silenceJoystickConnectionWarning(true);
         PowerDistribution pd = new PowerDistribution();
         pd.clearStickyFaults();
@@ -92,13 +91,15 @@ public class RobotContainer {
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        charChooser.setDefaultOption("Arm Char", charManager.getArmChar());
+        charChooser.setDefaultOption("Arm Char", charManager.getShooterChar());
         charChooser.addOption("Climb Char", charManager.getClimbChar());
         charChooser.addOption("Swerve Char", charManager.getSwerveChar());
         charChooser.addOption("Shooter Char", charManager.getShooterChar());
+        charChooser.onChange((base) -> configureBindings());
         SmartDashboard.putData("Char", charChooser);
         
         CameraServer.startAutomaticCapture(0);
+        configureBindings();
     }
 
     public void stopIntake() {
