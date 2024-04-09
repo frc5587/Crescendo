@@ -1,9 +1,10 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.NoteDetector;
@@ -13,12 +14,14 @@ public class AimToNote extends Command {
     private final NoteDetector noteDetector;
     private final Swerve swerve;
     private final BooleanSupplier hasNoteSupplier;
+    private final DoubleSupplier armAngleSupplier;
     private double endTime = 0.;
 
-    public AimToNote(NoteDetector noteDetector, Swerve swerve, BooleanSupplier hasNoteSupplier) {
+    public AimToNote(NoteDetector noteDetector, Swerve swerve, BooleanSupplier hasNoteSupplier, DoubleSupplier armAngleSupplier) {
         this.noteDetector = noteDetector;
         this.swerve = swerve;
         this.hasNoteSupplier = hasNoteSupplier;
+        this.armAngleSupplier = armAngleSupplier;
     }
 
     @Override
@@ -29,8 +32,10 @@ public class AimToNote extends Command {
     @Override
     public void execute() {
         if(noteDetector.hasTarget()) {
-            double strafeMPS = noteDetector.getRotationToNote().getRadians() * 3.5;
-            double fwdMPS = 15 / noteDetector.getDistanceToNoteMeters();
+            // double strafeMPS = noteDetector.getRotationToNote().getRadians() * 3.5;
+            // double fwdMPS = 15 / noteDetector.getDistanceToNoteMeters();
+            double strafeMPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * 3.5;
+            double fwdMPS = 1 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
             swerve.drive(new Translation2d(fwdMPS, strafeMPS), 0, false, false);
         }
         else if(!noteDetector.hasTarget() && endTime == 0.) {

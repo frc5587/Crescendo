@@ -60,7 +60,7 @@ public class RobotContainer {
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp, xbox2.rightTrigger());
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
-    private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch).raceWith(new WaitCommand(2.));
+    private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians).raceWith(new WaitCommand(2.));
 
     public void teleopInitRoutine() {
         // TODO: VERIFY!!

@@ -5,10 +5,11 @@ import org.frc5587.lib.subsystems.LimelightBase;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Constants.LimelightConstants;
 
 public class NoteDetector extends LimelightBase {
     public NoteDetector() {
-        super(-10., 0.2, 0., 0);
+        super(LimelightConstants.NOTE_DETECTOR_MOUNT_ANGLE.getDegrees(), LimelightConstants.INITIAL_LENS_HEIGHT, LimelightConstants.GOAL_HEIGHT, LimelightConstants.DISTANCE_OFFSET);
         this.limelightTable = NetworkTableInstance.getDefault().getTable("limelight-notes");
         this.ty = limelightTable.getEntry("ty");
         this.tx = limelightTable.getEntry("tx");
@@ -30,5 +31,19 @@ public class NoteDetector extends LimelightBase {
 
     public double getDistanceToNoteMeters() {
         return ty.getDouble(0.0);
+    }
+
+    public Rotation2d getRotationToNote(Rotation2d armAngle) {
+        return Rotation2d.fromRadians(
+                Math.toRadians(tx.getDouble(0.0))
+                / Math.cos(Math.toRadians(ty.getDouble(0.0)) + LimelightConstants.NOTE_DETECTOR_MOUNT_ANGLE.plus(armAngle).getRadians()));
+    }
+
+    public double getLensHeight(Rotation2d armAngle) {
+        return (LimelightConstants.DISTANCE_TO_ARM_PIVOT * Math.sin(armAngle.getRadians())) + LimelightConstants.INITIAL_LENS_HEIGHT;
+    }
+
+    public double getDistanceToNoteMeters(Rotation2d armAngle) {
+        return (goalHeight - getLensHeight(armAngle)) / Math.tan(ty.getDouble(0.0) + mountAngle);// * Math.cos(Math.toRadians(tx.getDouble(0.0)))) + distanceOffset;
     }
 }

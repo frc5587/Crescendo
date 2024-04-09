@@ -323,10 +323,11 @@ public final class Constants {
   }
 
     public static final class LimelightConstants {
-        public static final double MOUNT_ANGLE = 30;
-        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
-        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
-        public static final double DISTANCE_OFFSET = 0; // not needed
+        public static final Rotation2d NOTE_DETECTOR_MOUNT_ANGLE = Rotation2d.fromDegrees(-22); // Relative to arm angle
+        public static final double DISTANCE_TO_ARM_PIVOT = Units.inchesToMeters(29.407);
+        public static final double INITIAL_LENS_HEIGHT = Units.inchesToMeters(9); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0);
+        public static final double DISTANCE_OFFSET = 0;
     }
 
     public static final class AutoConstants {
