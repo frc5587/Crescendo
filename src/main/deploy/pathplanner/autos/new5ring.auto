@@ -16,6 +16,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "shooterForward"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -41,75 +47,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.4
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "confirmShot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "denyShot"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armRest"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "ring3_pickup noteAim"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "noteAim"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
+                        "waitTime": 2.3
                       }
                     },
                     {
@@ -146,38 +84,25 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring3 to ring2"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "noteAim"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
+                        "pathName": "ring1_pickupOpt"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -199,13 +124,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "denyShot"
+                              "name": "armFirstNote"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
+                              "name": "denyShot"
                             }
                           }
                         ]
@@ -214,38 +139,37 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ring2 to ring1"
+                        "pathName": "ring1 to midring1"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "noteAim"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "armAim"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
+                        "pathName": "midring1 to shootbyring1"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "shootbyring1 to ring2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -267,13 +191,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "denyShot"
+                              "name": "armRest"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "armRest"
+                              "name": "denyShot"
                             }
                           }
                         ]
@@ -282,38 +206,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "noteAim ring1 to midring1"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "noteAim"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "midring1 to final"
+                        "pathName": "ring2 to ring3"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.6
+                        "waitTime": 0.25
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateToShoot"
-                            }
-                          }
-                        ]
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "ring3_depOpt"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -360,12 +277,6 @@
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterForward"
                 }
               }
             ]

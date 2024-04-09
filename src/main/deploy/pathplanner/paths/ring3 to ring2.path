@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.55,
-        "y": 4.4
+        "x": 2.316319415046238,
+        "y": 4.566242979708182
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.05,
-        "y": 4.4
+        "x": 1.5615409128966413,
+        "y": 4.618764875492714
       },
       "isLocked": false,
       "linkedName": "ring3_sidepickup"
     },
     {
       "anchor": {
-        "x": 2.6841875081753006,
-        "y": 5.5040931765173085
+        "x": 2.0687459430474417,
+        "y": 5.372623448950601
       },
       "prevControl": {
-        "x": 1.325730468864645,
-        "y": 5.2230330994185525
+        "x": 1.4552459336400156,
+        "y": 5.007943983480558
       },
       "nextControl": null,
       "isLocked": false,
@@ -75,7 +75,7 @@
   "reversed": false,
   "folder": "5ring",
   "previewStartingState": {
-    "rotation": -42.0,
+    "rotation": -33.75637790744629,
     "velocity": 0
   },
   "useDefaultConstraints": true

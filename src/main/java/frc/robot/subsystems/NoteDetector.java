@@ -44,6 +44,6 @@ public class NoteDetector extends LimelightBase {
     }
 
     public double getDistanceToNoteMeters(Rotation2d armAngle) {
-        return (goalHeight - getLensHeight(armAngle)) / Math.tan(ty.getDouble(0.0) + mountAngle);// * Math.cos(Math.toRadians(tx.getDouble(0.0)))) + distanceOffset;
+        return (goalHeight - getLensHeight(armAngle)) / -Math.tan(ty.getDouble(0.0) + mountAngle + armAngle.getRadians());// * Math.cos(Math.toRadians(tx.getDouble(0.0)))) + distanceOffset;
     }
 }

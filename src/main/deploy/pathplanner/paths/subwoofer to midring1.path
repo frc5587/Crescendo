@@ -8,33 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7477716916874397,
-        "y": 5.127740052151994
+        "x": 2.5286185664963927,
+        "y": 7.863798107225845
       },
       "isLocked": false,
       "linkedName": "subwoofer_dep"
     },
     {
       "anchor": {
-        "x": 2.316319415046238,
-        "y": 4.566242979708182
+        "x": 7.405501227669122,
+        "y": 6.165939355026858
       },
       "prevControl": {
-        "x": 2.266319415046238,
-        "y": 4.566242979708182
+        "x": 5.0419435977760845,
+        "y": 7.575011876875606
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3_sidepickup"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": -40.0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,11 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -41.911189571893786,
+    "rotation": -16.87444069579045,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ring3",
-  "previewStartingState": null,
+  "folder": "5ring",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }
