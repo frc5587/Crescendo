@@ -33,10 +33,11 @@ public class AimToNote extends Command {
     public void execute() {
         if(noteDetector.hasTarget()) {
             // double strafeMPS = noteDetector.getRotationToNote().getRadians() * 3.5;
-            // double fwdMPS = 15 / noteDetector.getDistanceToNoteMeters();
+            double fwdMPS = 15 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
             double strafeMPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * 3.5;
-            double fwdMPS = 1 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
-            swerve.drive(new Translation2d(fwdMPS, strafeMPS), 0, false, false);
+            double rotateRPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * -1.5;
+            // double fwdMPS = 1 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
+            swerve.drive(new Translation2d(fwdMPS, strafeMPS), rotateRPS, false, false);
         }
         else if(!noteDetector.hasTarget() && endTime == 0.) {
             endTime = Timer.getFPGATimestamp() + 0.5;

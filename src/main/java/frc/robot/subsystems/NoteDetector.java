@@ -5,6 +5,7 @@ import org.frc5587.lib.subsystems.LimelightBase;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
 
 public class NoteDetector extends LimelightBase {
@@ -30,8 +31,12 @@ public class NoteDetector extends LimelightBase {
     }
 
     public double getDistanceToNoteMeters() {
-        return ty.getDouble(0.0);
+        return ty.getDouble(0.0) + mountAngle;
     }
+
+    // public double getDistanceToNoteMeters(Rotation2d armAngle) {
+    //     return ty.getDouble(0.0) + mountAngle + armAngle.getDegrees();
+    // }
 
     public Rotation2d getRotationToNote(Rotation2d armAngle) {
         return Rotation2d.fromRadians(
@@ -45,5 +50,15 @@ public class NoteDetector extends LimelightBase {
 
     public double getDistanceToNoteMeters(Rotation2d armAngle) {
         return (goalHeight - getLensHeight(armAngle)) / -Math.tan(ty.getDouble(0.0) + mountAngle + armAngle.getRadians());// * Math.cos(Math.toRadians(tx.getDouble(0.0)))) + distanceOffset;
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        if(hasTarget()) {
+            SmartDashboard.putNumber("Calc Height", getLensHeight(new Rotation2d()));
+            SmartDashboard.putNumber("Calc Distance", getDistanceToNoteMeters(new Rotation2d()));
+            SmartDashboard.putNumber("Calc Angle", getRotationToNote(new Rotation2d()).getDegrees());
+        }
     }
 }
