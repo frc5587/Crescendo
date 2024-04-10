@@ -45,7 +45,7 @@ public class Arm extends PivotingArmBase {
         // throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         configureMotors();
         resetToAbsolute(); // TODO: try removing
-        getController().setTolerance(Units.degreesToRadians(0.2));
+        getController().setTolerance(Units.degreesToRadians(0.1));
         enable();
         armTravel();
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());

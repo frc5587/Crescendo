@@ -68,9 +68,11 @@ public final class Constants {
     public static final Constraints CLIMB_CONSTRAINTS = new Constraints(Math.PI / 2, Math.PI / 4);
     // public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.5, DEFAULT_CONSTRAINTS);
     // public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
+    // public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(20, 0.0, 0.01, DEFAULT_CONSTRAINTS);//.032279
     public static final ProfiledPIDController CLIMB_PID = new ProfiledPIDController(23.529, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
-    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.19209, 0.087496, 0.11401); //0.39209 kG
+    // public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.19209, 0.087496, 0.11401); //0.39209 kG
+    public static final ArmFeedforward FF = new ArmFeedforward(0.12522, 0.305, 0.10237, 0.006812); //0.41629 kG
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
     public static final double ARM_LENGTH_METERS = 0.525;
@@ -284,8 +286,8 @@ public final class Constants {
     public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.075384, 0, 0, CONSTRAINTS);
     
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.14804, 0.39004, 0.16621);//(0, 0.40, 0.32121);
-    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0.16486, 0.39292, 0.12948);
-    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0.10973, 0.39728, 0.12044);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0.16486 - 0.15, 0.39292, 0.12948);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0.10973 - 0.15, 0.39728, 0.12044);
 
 
     public static final double RadiansPerMeter = Units.degreesToRadians(3);

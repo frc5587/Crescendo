@@ -38,8 +38,9 @@ public class Shooter extends ProfiledPIDSubsystem {
         // enable();
         disable();
         getController().setTolerance(0.2);
-        leftPID.setTolerance(0.2);
-        rightPID.setTolerance(0.2);
+        leftPID.setTolerance(0.3);
+        rightPID.setTolerance(0.3);
+        SmartDashboard.putNumber("Desired Speed", 0.0);
         // idleSpeed();
     }
 
@@ -123,7 +124,8 @@ public class Shooter extends ProfiledPIDSubsystem {
 
         // return (2.8 * distance) + 9.86;
         // https://www.desmos.com/calculator/bplceypa5r
-        return MathUtil.clamp((2.8 * distance) + 9.86, 12., 21.0);
+        // return MathUtil.clamp((2.8 * distance) + 9.86, 12., 21.0);
+        return MathUtil.clamp((2 * distance) + 13.32, 12., 23.0);
     }
 
     public void backward() {
@@ -181,7 +183,6 @@ public class Shooter extends ProfiledPIDSubsystem {
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
-        // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
         SmartDashboard.putData(getController());
         SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
         SmartDashboard.putNumber("Shooter Volts", getVoltage());
@@ -189,6 +190,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Left Speed", getLeftMPS());
         SmartDashboard.putNumber("Right Speed", getRightMPS());
         SmartDashboard.putNumber("Distance", distance);
+        setLeftSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
+        setRightSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
     }
 
     @Override
