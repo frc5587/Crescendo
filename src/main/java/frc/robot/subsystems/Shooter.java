@@ -35,7 +35,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         this.leftPID = ShooterConstants.LEFT_PID;
         this.rightPID = ShooterConstants.RIGHT_PID;
         configureMotors();
-        enable();
+        // enable();
+        disable();
         getController().setTolerance(0.2);
         leftPID.setTolerance(0.05);
         rightPID.setTolerance(0.05);
@@ -60,7 +61,9 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public void idleSpeed() {
         // leftMotor.set(ShooterConstants.IDLE_SPEED);
-        setGoal(5);
+        // setGoal(5);
+        setLeftSpeed(5);
+        setRightSpeed(5);
     }
 
     public double getMotorSpeeds() {
@@ -83,6 +86,14 @@ public class Shooter extends ProfiledPIDSubsystem {
         return (rightMotor.getEncoder().getVelocity() / 60.) * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
+    public void setLeftSpeed(double speedMPS) {
+        leftMotor.setVoltage(leftPID.calculate(getLeftMPS(), speedMPS) + leftFF.calculate(speedMPS));
+    }
+
+    public void setRightSpeed(double speedMPS) {
+        rightMotor.setVoltage(rightPID.calculate(getRightMPS(), -speedMPS) + rightFF.calculate(-speedMPS));
+    }
+
     public double getPositionMeters() {
         return leftMotor.getEncoder().getPosition() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
@@ -93,7 +104,9 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public void forward() {
         // setGoal(20);
-        setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+        // setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+        setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
+        setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
     }
 
     public double poseDepenantShooterSpeed(Pose2d pose) {
@@ -114,15 +127,20 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void backward() {
-        setGoal(-5);
+        // setGoal(-5);
+        setLeftSpeed(-5);
+        setRightSpeed(-5);
     }
 
     public void stop() {
-        setGoal(0.);
+        // setGoal(0.);
+        setLeftSpeed(0.);
+        setRightSpeed(0.);
     }
 
     public void stopVoltage() {
         leftMotor.set(0);
+        rightMotor.set(0);
     }
 
     public boolean isSpunUp() {
