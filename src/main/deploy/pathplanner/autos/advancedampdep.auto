@@ -88,6 +88,12 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "noteAim"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "advampdep_2"
@@ -128,6 +134,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "advampdep_3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "noteAim"
                       }
                     },
                     {

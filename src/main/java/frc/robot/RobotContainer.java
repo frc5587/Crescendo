@@ -86,7 +86,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
         NamedCommands.registerCommand("armFirstNote", arm.armFirstNoteCommand());
         NamedCommands.registerCommand("armAuto", arm.armAutoCommand());
-        NamedCommands.registerCommand("armRest", arm.armRestCommand());
+        NamedCommands.registerCommand("armRest", arm.armAutoCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
@@ -96,8 +96,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        
-        CameraServer.startAutomaticCapture(0);
     }
 
     /**

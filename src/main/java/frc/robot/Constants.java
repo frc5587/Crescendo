@@ -51,7 +51,7 @@ public final class Constants {
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
     public static final double RESTING_SETPOINT = Units.degreesToRadians(0); // 0.1
-    public static final double AUTO_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double AUTO_SETPOINT = Units.degreesToRadians(-1.5);
     public static final double FIRST_NOTE_SETPOINT = Units.degreesToRadians(-0.5);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
@@ -86,8 +86,8 @@ public final class Constants {
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L2);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(27); // distance from left wheel to right wheel
-        public static final double WHEEL_BASE = Units.inchesToMeters(27); // distance from front wheel to back wheel
+        public static final double TRACK_WIDTH = 0.553;//Units.inchesToMeters(27); // distance from left wheel to right wheel
+        public static final double WHEEL_BASE = 0.553;//Units.inchesToMeters(27); // distance from front wheel to back wheel
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /*
@@ -160,7 +160,7 @@ public final class Constants {
         public static final double MAX_SPEED = 5;
         public static final double CRAWL_SPEED = 0.75;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = (4/3) * Math.PI;
+        public static final double MAX_ANGULAR_VELOCITY = 2 * Math.PI;
         public static final double CRAWL_ANGULAR_VELOCITY = Math.PI / 3;
 
         /* Neutral Modes */
@@ -251,7 +251,7 @@ public final class Constants {
     public static final int STALL_LIMIT = 35;
     public static final int FREE_LIMIT = 25;
 
-    public static final double FORWARD_THROTTLE = .70;
+    public static final double FORWARD_THROTTLE = .75;
     public static final double REVERSE_THROTTLE = 0.4;
     public static final double WHEEL_RADIUS = 2.25/2;
     public static final double GEARING = 12.;
@@ -338,7 +338,7 @@ public final class Constants {
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        public static final double ROTATION_KP = 0.75; // 0.225
+        public static final double ROTATION_KP = 1.25; // 0.225
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0.05; // 0.1
 

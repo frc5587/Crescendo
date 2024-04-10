@@ -8,27 +8,33 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.96240792481585,
-        "y": 1.1842592256613105
+        "x": 5.389109239756944,
+        "y": 0.0986694281080869
       },
       "isLocked": false,
       "linkedName": "midring4"
     },
     {
       "anchor": {
-        "x": 0.9744053724911999,
-        "y": 4.321298685393376
+        "x": 0.9193841464606024,
+        "y": 4.647330063890897
       },
       "prevControl": {
-        "x": 0.9744053724911999,
-        "y": 3.3212986853933764
+        "x": 0.9193841464606024,
+        "y": 3.647330063890897
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "advsourcedep_shootpoint"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
@@ -57,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -50.0,
+    "rotation": -59.82647997035571,
     "rotateFast": true
   },
   "reversed": false,

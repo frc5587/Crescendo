@@ -8,27 +8,33 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2069765369776455,
-        "y": 2.8290721281422653
+        "x": 6.573142377053986,
+        "y": 0.43414548367558325
       },
       "isLocked": false,
       "linkedName": "midring5"
     },
     {
       "anchor": {
-        "x": 0.9744053724911999,
-        "y": 4.321298685393376
+        "x": 0.9193841464606024,
+        "y": 4.647330063890897
       },
       "prevControl": {
-        "x": 2.5202357965343594,
-        "y": 1.7683363184130076
+        "x": 2.465214570503761,
+        "y": 2.0943676969105285
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "advsourcedep_shootpoint"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {

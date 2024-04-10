@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.05979171958344,
-        "y": 4.104648209296419
+        "x": 5.981125808405465,
+        "y": 4.134249037728845
       },
       "isLocked": false,
       "linkedName": "midring3"
     },
     {
       "anchor": {
-        "x": 2.904894952647049,
-        "y": 5.55593454044051
+        "x": 2.3500908540278633,
+        "y": 5.574822688106915
       },
       "prevControl": {
-        "x": 3.547682562333588,
-        "y": 4.789890097321532
+        "x": 2.9928784637144026,
+        "y": 4.808778244987937
       },
       "nextControl": null,
       "isLocked": false,
@@ -56,8 +56,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 180.0,
     "maxAngularAcceleration": 180.0
   },
@@ -72,5 +72,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

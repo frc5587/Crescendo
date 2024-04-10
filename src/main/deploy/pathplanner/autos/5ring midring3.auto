@@ -47,7 +47,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.85
                       }
                     },
                     {
@@ -59,7 +59,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -90,13 +90,19 @@
                     {
                       "type": "named",
                       "data": {
+                        "name": "noteAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
                         "name": "armAim"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.7
                       }
                     },
                     {
@@ -108,7 +114,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -139,13 +145,19 @@
                     {
                       "type": "named",
                       "data": {
+                        "name": "noteAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
                         "name": "armAim"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.7
                       }
                     },
                     {
@@ -157,7 +169,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -188,13 +200,19 @@
                     {
                       "type": "named",
                       "data": {
+                        "name": "noteAim"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
                         "name": "armAim"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.7
                       }
                     },
                     {
@@ -206,7 +224,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -235,6 +253,12 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "noteAim"
+                      }
+                    },
+                    {
                       "type": "path",
                       "data": {
                         "pathName": "mmr5ring_5"
@@ -243,7 +267,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.65
                       }
                     },
                     {
@@ -255,7 +279,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.25
                       }
                     },
                     {

@@ -295,7 +295,7 @@ public class Arm extends PivotingArmBase {
 
         SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
         SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
-        SmartDashboard.putBoolean("Arm At Goal", getController().atGoal());
+        // SmartDashboard.putBoolean("Arm At Goal", getController().atGoal());
         
         if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
@@ -307,12 +307,12 @@ public class Arm extends PivotingArmBase {
             setEncoderPosition(new Rotation2d());
         }
 
-        if(SmartDashboard.getBoolean("Arm Enabled", true) && !isEnabled()) {
-            this.enable();
-        }
-        else if(!SmartDashboard.getBoolean("Arm Enabled", true) && isEnabled()) {
-            this.disable();
-        }
+        // if(SmartDashboard.getBoolean("Arm Enabled", true) && !isEnabled()) {
+        //     this.enable();
+        // }
+        // else if(!SmartDashboard.getBoolean("Arm Enabled", true) && isEnabled()) {
+        //     this.disable();
+        // }
     }
 
     public void setManualMode(boolean manualMode) {
