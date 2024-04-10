@@ -101,6 +101,8 @@ public class Swerve extends SwerveBase {
             }
         }
 
+        
+
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
         
         if(SmartDashboard.getBoolean("Zero Yaw", false)) {
@@ -127,7 +129,7 @@ public class Swerve extends SwerveBase {
         }
 
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
-            poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
+            poseEstimator.addVisionMeasurement(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()), limelight.calculateFPGAFrameTimestamp());
         }
     }
     /**
