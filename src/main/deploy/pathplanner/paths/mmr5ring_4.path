@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.333176094923619,
+        "y": 4.4271562828839945
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.5936483614240164,
+        "y": 5.904367912402306
+      },
+      "isLocked": false,
+      "linkedName": "mmr_ring3"
+    },
+    {
+      "anchor": {
+        "x": 5.089154178308357,
+        "y": 4.258572517145034
+      },
+      "prevControl": {
+        "x": 4.413483056166986,
+        "y": 4.825527906530996
+      },
+      "nextControl": {
+        "x": 5.855198621427335,
+        "y": 3.615784907458495
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.8597917195834395,
+        "y": 4.104648209296419
+      },
+      "prevControl": {
+        "x": 6.8597917195834395,
+        "y": 4.104648209296419
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "midring3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "5ring",
+  "previewStartingState": {
+    "rotation": -30.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

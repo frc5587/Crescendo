@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6924444618120005,
-      "y": 6.677362186633205
+      "x": 1.34,
+      "y": 5.55
     },
-    "rotation": 60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -47,7 +47,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -84,13 +84,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "advampdep_1"
+                        "pathName": "mmr5ring_1"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "advampdep_2"
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -127,13 +133,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "advampdep_3"
+                        "pathName": "mmr5ring_2"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "advampdep_4"
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -163,11 +175,103 @@
                             "data": {
                               "name": "denyShot"
                             }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "mmr5ring_3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "armAim"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armRest"
+                            }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "intakeStop"
+                              "name": "denyShot"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "mmr5ring_4"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "mmr5ring_5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "confirmShot"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "denyShot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "armRest"
                             }
                           }
                         ]
@@ -182,6 +286,6 @@
       ]
     }
   },
-  "folder": "amp side start",
+  "folder": null,
   "choreoAuto": false
 }
