@@ -63,8 +63,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     public void idleSpeed() {
         // leftMotor.set(ShooterConstants.IDLE_SPEED);
         // setGoal(5);
-        setLeftSpeed(5);
-        setRightSpeed(5);
+        setLeftSpeed(6);
+        setRightSpeed(6);
     }
 
     public double getMotorSpeeds() {
@@ -190,8 +190,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Left Speed", getLeftMPS());
         SmartDashboard.putNumber("Right Speed", getRightMPS());
         SmartDashboard.putNumber("Distance", distance);
-        setLeftSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
-        setRightSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
+        // setLeftSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
+        // setRightSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
     }
 
     @Override

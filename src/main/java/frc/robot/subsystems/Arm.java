@@ -157,7 +157,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armZero() {
-        setGoal(0.1); // TODO change back??
+        setGoal(Units.degreesToRadians(0.1)); // TODO change back??
     }
 
     public InstantCommand armZeroCommand() {
