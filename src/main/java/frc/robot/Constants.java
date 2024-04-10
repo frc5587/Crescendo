@@ -50,9 +50,11 @@ public final class Constants {
    //Values TBD, placeholders for now
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double RESTING_SETPOINT = Units.degreesToRadians(0); // 0.1
+    public static final double AUTO_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double FIRST_NOTE_SETPOINT = Units.degreesToRadians(-0.5);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
-    public static final double CLIMB_SETPOINT = Units.degreesToRadians(60);
+    public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
@@ -67,7 +69,8 @@ public final class Constants {
     // public static final ProfiledPIDController PID = new ProfiledPIDController(7., 0.0, 0.5, DEFAULT_CONSTRAINTS);
     // public static final ArmFeedforward FF = new ArmFeedforward(0.35, 0.25, 1.5, 0.);
     public static final ProfiledPIDController PID = new ProfiledPIDController(12.807, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
-    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.39209, 0.087496, 0.11401); //0.69209 kG
+    public static final ProfiledPIDController CLIMB_PID = new ProfiledPIDController(23.529, 0.0, 0.31304, DEFAULT_CONSTRAINTS);
+    public static final ArmFeedforward FF = new ArmFeedforward(0.055017, 0.19209, 0.087496, 0.11401); //0.39209 kG
     public static final int STALL_LIMIT = 40;
     public static final int FREE_LIMIT = 40;
     public static final double ARM_LENGTH_METERS = 0.525;
@@ -152,9 +155,11 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4;
+        public static final double MAX_SPEED = 5;
+        public static final double CRAWL_SPEED = 0.75;
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = (4/3) * Math.PI;
+        public static final double CRAWL_ANGULAR_VELOCITY = Math.PI / 3;
 
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -224,30 +229,30 @@ public final class Constants {
     public static final int FREE_LIMIT = 35;
 
     public static final double GEARING = 12.5;
-    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(1.645);
+    public static final double SPOOL_DIAMETER_METERS = Units.inchesToMeters(0.5); // spool is 1.645 in, hex is 0.5 in
     public static final double SPOOL_CIRCUMFERENCE_METERS = Math.PI * SPOOL_DIAMETER_METERS;
     public static final double TOP_POSITION = 0;
-    public static final double BOTTOM_POSITION = Units.inchesToMeters(5.5); // TODO set
+    public static final double BOTTOM_POSITION = Units.inchesToMeters(7.5); // TODO set
     public static final double MIDDLE_POSITION = BOTTOM_POSITION / 2;
+    // public static final double MATCH_POSITION = 0.03;
     
-    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(6.)}; // TODO set
+    public static final double[] SOFT_LIMITS = {0, Units.inchesToMeters(8.)}; // TODO set
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(0.2, 0.1); // TODO set
-    public static final ProfiledPIDController PID = new ProfiledPIDController(196, 0, 0, CONSTRAINTS); // TODO characterize
-    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0, 0); // TODO characterize
-    
+    public static final ProfiledPIDController PID = new ProfiledPIDController(196.28, 0, 0, CONSTRAINTS); // TODO characterize // 165.289
+    public static final ElevatorFeedforward FF = new ElevatorFeedforward(0., 0., 0., 0.); // TODO characterize
   }
 
   public static final class IntakeConstants {
     public static final int MOTOR_ID = 40;
     public static final boolean MOTOR_INVERTED = true;
 
-    public static final int STALL_LIMIT = 20;
-    public static final int FREE_LIMIT = 15;
+    public static final int STALL_LIMIT = 35;
+    public static final int FREE_LIMIT = 25;
 
-    public static final double FORWARD_THROTTLE = .90;
-    public static final double REVERSE_THROTTLE = 0.25;
-    public static final double WHEEL_RADIUS = 1;
-    public static final double GEARING = 12;
+    public static final double FORWARD_THROTTLE = .70;
+    public static final double REVERSE_THROTTLE = 0.4;
+    public static final double WHEEL_RADIUS = 2.25/2;
+    public static final double GEARING = 12.;
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0., 0.1, 0.);
     public static final PIDController PID = new PIDController(0.15, 0, 0.0);
     public static final double MINIMUM_VELOCITY = 30;
@@ -274,9 +279,13 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80);
-    public static final ProfiledPIDController PID = new ProfiledPIDController(0.41177, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController PID = new ProfiledPIDController(0.10737, 0, 0, CONSTRAINTS); // 0.41177
+    public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.086865, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.075384, 0, 0, CONSTRAINTS);
     
-    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0, 0.41, 0.32121);//(0, 0.39739, 0.32121);
+    public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.14804, 0.39004, 0.16621);//(0, 0.40, 0.32121);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0.16486, 0.39292, 0.12948);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0.10973, 0.39728, 0.12044);
 
 
     public static final double RadiansPerMeter = Units.degreesToRadians(3);
@@ -314,25 +323,26 @@ public final class Constants {
   }
 
     public static final class LimelightConstants {
-        public static final double MOUNT_ANGLE = 30;
-        public static final double LENS_HEIGHT = Units.inchesToMeters(10); 
-        public static final double GOAL_HEIGHT = Units.inchesToMeters(0); // not needed
-        public static final double DISTANCE_OFFSET = 0; // not needed
+        public static final Rotation2d NOTE_DETECTOR_MOUNT_ANGLE = Rotation2d.fromDegrees(-22); // Relative to arm angle
+        public static final double DISTANCE_TO_ARM_PIVOT = Units.inchesToMeters(29.407);
+        public static final double INITIAL_LENS_HEIGHT = Units.inchesToMeters(9); 
+        public static final double GOAL_HEIGHT = Units.inchesToMeters(0);
+        public static final double DISTANCE_OFFSET = 0;
     }
 
     public static final class AutoConstants {
-        public static final double MAX_SPEED_MPS = 5.;  // 5. // in m/s  
+        public static final double MAX_SPEED_MPS = 4.5;  // 5. // in m/s  
         public static final double MAX_ACCEL_MPS_2 = 3.5; // 3. // in m/s^2 
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
 
-        public static final double ROTATION_KP = .225; // 0.25
+        public static final double ROTATION_KP = 0.75; // 0.225
         public static final double ROTATION_KI = 0;
         public static final double ROTATION_KD = 0.05; // 0.1
 
-        public static final double TRANSLATION_KP = 4.5;//5.5;
+        public static final double TRANSLATION_KP = 4.5; // 4.5;
         public static final double TRANSLATION_KI = 0;
-        public static final double TRANSLATION_KD = 0.05;
+        public static final double TRANSLATION_KD = 0.0;
 
         public static final double DRIVE_BASE_RADIUS = 0.6095; // in m, middle to corner
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2, MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);

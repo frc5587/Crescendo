@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -21,15 +22,24 @@ import frc.robot.Constants.ShooterConstants;
 public class Shooter extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private static SimpleMotorFeedforward ff = ShooterConstants.FF;
+    private SimpleMotorFeedforward ff, leftFF, rightFF;
     private Supplier<Pose2d> poseSupplier;
+    private final ProfiledPIDController leftPID, rightPID;
 
     public Shooter(Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
-        configureMotors();
-        enable();
+        this.ff = ShooterConstants.FF;
+        this.leftFF = ShooterConstants.LEFT_FF;
+        this.rightFF = ShooterConstants.RIGHT_FF;
         this.poseSupplier = poseSupplier;
+        this.leftPID = ShooterConstants.LEFT_PID;
+        this.rightPID = ShooterConstants.RIGHT_PID;
+        configureMotors();
+        // enable();
+        disable();
         getController().setTolerance(0.2);
+        leftPID.setTolerance(0.05);
+        rightPID.setTolerance(0.05);
         // idleSpeed();
     }
 
@@ -51,7 +61,9 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public void idleSpeed() {
         // leftMotor.set(ShooterConstants.IDLE_SPEED);
-        setGoal(5);
+        // setGoal(5);
+        setLeftSpeed(5);
+        setRightSpeed(5);
     }
 
     public double getMotorSpeeds() {
@@ -66,6 +78,22 @@ public class Shooter extends ProfiledPIDSubsystem {
         return getMeasuredMotorSpeedsRPS() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
+    public double getLeftMPS() {
+        return (leftMotor.getEncoder().getVelocity() / 60.) * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
+    public double getRightMPS() {
+        return (rightMotor.getEncoder().getVelocity() / 60.) * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
+    }
+
+    public void setLeftSpeed(double speedMPS) {
+        leftMotor.setVoltage(leftPID.calculate(getLeftMPS(), speedMPS) + leftFF.calculate(speedMPS));
+    }
+
+    public void setRightSpeed(double speedMPS) {
+        rightMotor.setVoltage(rightPID.calculate(getRightMPS(), -speedMPS) + rightFF.calculate(-speedMPS));
+    }
+
     public double getPositionMeters() {
         return leftMotor.getEncoder().getPosition() * ShooterConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
@@ -76,17 +104,19 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public void forward() {
         // setGoal(20);
-        setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+        // setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+        setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
+        setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
     }
 
     public double poseDepenantShooterSpeed(Pose2d pose) {
         double distance = Math.sqrt(
                         Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
                         Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().get().equals(Alliance.Blue)
+                                - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
                                         ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
@@ -97,15 +127,20 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void backward() {
-        setGoal(-5);
+        // setGoal(-5);
+        setLeftSpeed(-5);
+        setRightSpeed(-5);
     }
 
     public void stop() {
-        setGoal(0.);
+        // setGoal(0.);
+        setLeftSpeed(0.);
+        setRightSpeed(0.);
     }
 
     public void stopVoltage() {
         leftMotor.set(0);
+        rightMotor.set(0);
     }
 
     public boolean isSpunUp() {
@@ -120,26 +155,54 @@ public class Shooter extends ProfiledPIDSubsystem {
         this.disable();
         leftMotor.setVoltage(5.75);
         rightMotor.setVoltage(-0.85);
+        // leftMotor.setVoltage((leftPID.calculate(getLeftMPS(), 13.96) + leftFF.calculate(13.96))); // TODO: set these! 13.96
+        // rightMotor.setVoltage((rightPID.calculate(getRightMPS(), -2.06) + rightFF.calculate(-2.06))); // TODO: set these! -2.06
     }
 
-    public void setVoltage(double volts) {
-        leftMotor.set(volts / RobotController.getBatteryVoltage());
+    public void setVoltage(double voltage) {
+        leftMotor.set(voltage / RobotController.getBatteryVoltage());
+        rightMotor.set(-(voltage / RobotController.getBatteryVoltage()));
+    }
+
+    public void setLeftVoltage(double voltage) {
+        leftMotor.set(voltage / RobotController.getBatteryVoltage());
+    }
+    public void setRightVoltage(double voltage) {
+        rightMotor.set(voltage / RobotController.getBatteryVoltage());
     }
 
     public double getVoltage() {
         return leftMotor.get() * RobotController.getBatteryVoltage();
     }
 
+    public double getLeftVoltage() {
+        return leftMotor.get() * RobotController.getBatteryVoltage();
+    }
+    public double getRightVoltage() {
+        return rightMotor.get() * RobotController.getBatteryVoltage();
+    }
+
     @Override
     public void periodic() {
         super.periodic();
+        double distance = Math.sqrt(
+                        Math.pow(
+                                poseSupplier.get().getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
+                        Math.pow((poseSupplier.get().getY()
+                                - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
+                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
+                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
+                                2));
         // SmartDashboard.putNumber("Shooter Set Speed", getMotorSpeeds());
         SmartDashboard.putData(getController());
         SmartDashboard.putNumber("Shooter Measured Speed", getWheelSpeedsMPS());
-        SmartDashboard.putNumber("Shooter Position", getPositionMeters());
+        SmartDashboard.putNumber("Shooter Volts", getVoltage());
         SmartDashboard.putBoolean("Shooter IsSpunUp", isSpunUp());
-        // SmartDashboard.putNumber("Shooter Measured Percentage", getMeasuredMotorSpeedsAsPercentage());
-        // SmartDashboard.putBoolean("Shooter Spun Up", isSpunUp());
+        SmartDashboard.putNumber("Left Speed", getLeftMPS());
+        SmartDashboard.putNumber("Right Speed", getRightMPS());
+        SmartDashboard.putNumber("Distance", distance);
     }
 
     @Override

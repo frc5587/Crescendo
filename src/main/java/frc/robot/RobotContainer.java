@@ -91,7 +91,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        charChooser.setDefaultOption("Arm Char", charManager.getShooterChar());
+        charChooser.setDefaultOption("Left Char", charManager.getLeftShooterChar());
+        // charChooser.setDefaultOption("Right Char", charManager.getRightShooterChar());
         charChooser.addOption("Climb Char", charManager.getClimbChar());
         charChooser.addOption("Swerve Char", charManager.getSwerveChar());
         charChooser.addOption("Shooter Char", charManager.getShooterChar());
