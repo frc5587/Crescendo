@@ -51,7 +51,7 @@ public class Swerve extends SwerveBase {
                 getModulePositions(), 
                 DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
-                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 10.)); // Vision standard deviations.
+                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, Double.POSITIVE_INFINITY)); // Vision standard deviations.
         // Auto Config
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
@@ -118,9 +118,9 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putData("Field", field);
-        // this.limelightField.setRobotPose(limelight.getLimelightPose());
+        this.limelightField.setRobotPose(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()));
 
-        // SmartDashboard.putData("LimelightField", limelightField);
+        SmartDashboard.putData("LimelightField", limelightField);
         
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
@@ -129,7 +129,7 @@ public class Swerve extends SwerveBase {
         }
 
         if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
-            poseEstimator.addVisionMeasurement(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()), limelight.calculateFPGAFrameTimestamp());
+            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), limelight.calculateFPGAFrameTimestamp());
         }
     }
     /**

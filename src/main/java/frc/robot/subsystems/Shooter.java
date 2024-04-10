@@ -38,8 +38,8 @@ public class Shooter extends ProfiledPIDSubsystem {
         // enable();
         disable();
         getController().setTolerance(0.2);
-        leftPID.setTolerance(0.05);
-        rightPID.setTolerance(0.05);
+        leftPID.setTolerance(0.2);
+        rightPID.setTolerance(0.2);
         // idleSpeed();
     }
 
@@ -145,7 +145,7 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     public boolean isSpunUp() {
         // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
-        return (getController().atGoal() && getController().getSetpoint().position > 8) || !isEnabled();
+        return (getController().atGoal() && getController().getSetpoint().position > 8) || (!isEnabled() && leftPID.atGoal() && rightPID.atGoal());
     }
 
     public void spinUpToAmp() {
@@ -170,7 +170,7 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     @Override
     public void periodic() {
-        super.periodic();
+        // super.periodic();
         double distance = Math.sqrt(
                         Math.pow(
                                 poseSupplier.get().getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
