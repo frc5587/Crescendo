@@ -116,15 +116,14 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
         xbox2.rightBumper().whileTrue(runIntakeWithArm);
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        xbox2.rightTrigger().whileTrue(new RunCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
 
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
         xbox2.x().onTrue(arm.armZeroCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
-        xbox.x().onTrue(arm.armFerryCommand());
         xbox2.back().whileTrue(fullClimb);
-
+        
         xbox2.povUp().onTrue(new InstantCommand(climb::up));
         xbox2.povDown().onTrue(new InstantCommand(climb::down));
         xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
@@ -133,6 +132,8 @@ public class RobotContainer {
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
+        xbox.x().onTrue(arm.shuffleBoardArmCommand());
+        // xbox.x().onTrue(arm.armFerryCommand());
         xbox.y().whileTrue(fullAimToNote);
         
         /* Unused Binds */

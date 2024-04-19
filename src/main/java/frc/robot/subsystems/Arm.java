@@ -5,10 +5,12 @@ import java.util.function.Supplier;
 import org.frc5587.lib.subsystems.PivotingArmBase;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -51,10 +53,19 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Enabled", isEnabled());
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
+        SmartDashboard.putNumber("Manual Arm Angle Degrees", 15.0);
+        // if(DriverStation.isAutonomous()) {
+            setGoal(Units.degreesToRadians(75.));
+        // }
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
         this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), poseSupplier); 
+    }
+
+    public double getShuffleboardArmAngleRadians() {
+        double clampedArmAngle = MathUtil.clamp(SmartDashboard.getNumber("Manual Arm Angle Degrees", 0.0), 0.0, 83.0);
+        return Units.degreesToRadians(clampedArmAngle);
     }
 
     @Override
@@ -167,6 +178,13 @@ public class Arm extends PivotingArmBase {
         });
     }
 
+    public InstantCommand shuffleBoardArmCommand() {
+        return new InstantCommand(() -> {
+            setManualMode(true);
+            this.setGoal(getShuffleboardArmAngleRadians());
+        });
+    }
+
     public double getShooterHeightMeters() {
         return (ArmConstants.ARM_LENGTH_METERS * Math.sin(getAngleRadians())) + ArmConstants.SHOOTER_HEIGHT_METERS;
     }
@@ -276,7 +294,7 @@ public class Arm extends PivotingArmBase {
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(),
                 ArmConstants.LEFT_MOTOR_INVERTED != ArmConstants.RIGHT_MOTOR_INVERTED));
-
+        
         if(SmartDashboard.getBoolean("Arm Debug On?", false)) {
             SmartDashboard.putData("Arm PID", this.getController());
             

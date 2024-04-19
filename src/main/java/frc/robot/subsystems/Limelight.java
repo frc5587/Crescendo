@@ -25,11 +25,11 @@ public class Limelight extends LimelightBase {
 
     }
 
-    public Pose2d getMegatag2Pose(Pose2d pose) {
-        LimelightHelpers.SetRobotOrientation("limelight", pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-        return mt2.pose;
-    }
+    // public Pose2d getMegatag2Pose(Pose2d pose) {
+    //     LimelightHelpers.SetRobotOrientation("limelight", pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    //     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    //     return mt2.pose;
+    // }
     
     public Pose2d getLimelightPose() {
         double[] limelightBotPose = limelightTable.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);

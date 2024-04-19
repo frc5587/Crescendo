@@ -51,7 +51,7 @@ public class Swerve extends SwerveBase {
                 getModulePositions(), 
                 DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
-                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, Double.POSITIVE_INFINITY)); // Vision standard deviations.
+                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.)); // Vision standard deviations.
         // Auto Config
             AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
@@ -71,7 +71,7 @@ public class Swerve extends SwerveBase {
             SmartDashboard.putBoolean("Swerve Debug On?", false);
             SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
-            resetOdometry(FieldConstants.BLUE_SUBWOOFER_FRONT_POSE);
+            resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
     }
 
     public Command ampLineUp() {
@@ -91,6 +91,8 @@ public class Swerve extends SwerveBase {
     @Override
     public void periodic() {
         super.periodic();
+                this.limelightField.setRobotPose(limelight.getLimelightPose());
+
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
             
@@ -118,7 +120,7 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putData("Field", field);
-        this.limelightField.setRobotPose(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()));
+        // this.limelightField.setRobotPose(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()));
 
         SmartDashboard.putData("LimelightField", limelightField);
         

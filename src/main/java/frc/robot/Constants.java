@@ -51,11 +51,11 @@ public final class Constants {
     public static final double SPEAKER_SETPOINT = Units.degreesToRadians(40);
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
     public static final double RESTING_SETPOINT = Units.degreesToRadians(0); // 0.1
-    public static final double AUTO_SETPOINT = Units.degreesToRadians(-1.5);
-    public static final double FIRST_NOTE_SETPOINT = Units.degreesToRadians(-0.5);
+    public static final double AUTO_SETPOINT = Units.degreesToRadians(1);
+    public static final double FIRST_NOTE_SETPOINT = Units.degreesToRadians(1);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
-    public static final double FERRY_SETPOINT = Units.degreesToRadians(30);
+    public static final double FERRY_SETPOINT = Units.degreesToRadians(25);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double GEARING_ARM_TO_THROUGHBORE = 16./64.;
@@ -160,7 +160,7 @@ public final class Constants {
         public static final double MAX_SPEED = 5;
         public static final double CRAWL_SPEED = 0.75;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 2 * Math.PI;
+        public static final double MAX_ANGULAR_VELOCITY = 3 * Math.PI;
         public static final double CRAWL_ANGULAR_VELOCITY = Math.PI / 3;
 
         /* Neutral Modes */
@@ -209,7 +209,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(53.287);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(53.287 - 127.792);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     3, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
@@ -282,12 +282,12 @@ public final class Constants {
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     public static final TrapezoidProfile.Constraints CONSTRAINTS = new Constraints(80, 80);
     public static final ProfiledPIDController PID = new ProfiledPIDController(0.10737, 0, 0, CONSTRAINTS); // 0.41177
-    public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.086865, 0, 0, CONSTRAINTS);
-    public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.060734, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController LEFT_PID = new ProfiledPIDController(0.086865, 0, 0.0, CONSTRAINTS);//(0.086865, 0, 0, CONSTRAINTS);
+    public static final ProfiledPIDController RIGHT_PID = new ProfiledPIDController(0.060734, 0, 0.0, CONSTRAINTS);//(0.060734, 0, 0, CONSTRAINTS);
     
     public static final SimpleMotorFeedforward FF = new SimpleMotorFeedforward(0.14804, 0.39004, 0.16621);//(0, 0.40, 0.32121);
-    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0.16486 - 0.15, 0.39292, 0.12948);
-    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0.06883, 0.39896, 0.15285);
+    public static final SimpleMotorFeedforward LEFT_FF = new SimpleMotorFeedforward(0.16486, 0.39292, 0.12948);
+    public static final SimpleMotorFeedforward RIGHT_FF = new SimpleMotorFeedforward(0.16883, 0.39896, 0.15285);//(0.06883, 0.39896, 0.15285);
 
 
     public static final double RadiansPerMeter = Units.degreesToRadians(3);
@@ -299,7 +299,7 @@ public final class Constants {
     public static final Pose2d BLUE_SUBWOOFER_FRONT_POSE = new Pose2d(1.35, 5.556, new Rotation2d());
     
     public static final Translation3d RED_SPEAKER_OPENING_TRANSLATION = new Translation3d(16.53, 5.556, 3.267);
-    public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(15.20, 5.556, new Rotation2d());
+    public static final Pose2d RED_SUBWOOFER_FRONT_POSE = new Pose2d(15.20, 5.556, Rotation2d.fromDegrees(180.));
 
     public static final Pose2d BLUE_AMP_POSE = new Pose2d(1.82, 7.66, Rotation2d.fromDegrees(180));
     public static final Pose2d RED_AMP_POSE = new Pose2d(14.70, 7.66, Rotation2d.fromDegrees(180));

@@ -110,6 +110,13 @@ public class Shooter extends ProfiledPIDSubsystem {
         setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
     }
 
+    public void fullForward() {
+        // setGoal(20);
+        // setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
+        setLeftSpeed(15.); // 23 did not work
+        setRightSpeed(15.); // 23 did not work
+    }
+
     public double poseDepenantShooterSpeed(Pose2d pose) {
         double distance = Math.sqrt(
                         Math.pow(
@@ -190,6 +197,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Left Speed", getLeftMPS());
         SmartDashboard.putNumber("Right Speed", getRightMPS());
         SmartDashboard.putNumber("Distance", distance);
+        SmartDashboard.putNumber("Shooter Goal", poseDepenantShooterSpeed(poseSupplier.get()));
         // setLeftSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
         // setRightSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
     }
