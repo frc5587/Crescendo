@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +16,6 @@ import frc.robot.Constants.ClimbConstants;
 public class Climb extends ProfiledPIDSubsystem {
     private static CANSparkMax leftMotor = new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private ElevatorFeedforward ff = ClimbConstants.FF;
     private boolean wasManuallyDisabled = false;
     private boolean brakeModeEnabled = true;
 
@@ -119,7 +117,7 @@ public class Climb extends ProfiledPIDSubsystem {
             setVoltage(0);
         }
         else {
-            leftMotor.setVoltage(output);// + ff.calculate(setpoint.position));
+            leftMotor.setVoltage(output);
         }
     }
 

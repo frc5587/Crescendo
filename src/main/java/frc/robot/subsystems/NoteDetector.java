@@ -48,10 +48,6 @@ public class NoteDetector extends LimelightBase {
         return (LimelightConstants.DISTANCE_TO_ARM_PIVOT * Math.sin(armAngle.getRadians())) + LimelightConstants.INITIAL_LENS_HEIGHT;
     }
 
-    // public double getDistanceToNoteMeters(Rotation2d armAngle) {
-    //     return (goalHeight - getLensHeight(armAngle)) / -Math.tan(ty.getDouble(0.0) + mountAngle + armAngle.getRadians());// * Math.cos(Math.toRadians(tx.getDouble(0.0)))) + distanceOffset;
-    // }
-
     @Override
     public void periodic() {
         super.periodic();

@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import org.frc5587.lib.subsystems.PivotingArmBase;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -13,7 +12,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,7 +28,6 @@ public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
-    // private final DutyCycleEncoder throughBore = new DutyCycleEncoder(3);
     private final DigitalInput magLimitSwitch = new DigitalInput(0);
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
@@ -44,9 +41,8 @@ public class Arm extends PivotingArmBase {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.poseSupplier = poseSupplier;
-        // throughBore.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
         configureMotors();
-        resetToAbsolute(); // TODO: try removing
+        resetToAbsolute();
         getController().setTolerance(Units.degreesToRadians(0.1));
         enable();
         armTravel();
@@ -54,9 +50,9 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         SmartDashboard.putNumber("Manual Arm Angle Degrees", 15.0);
-        // if(DriverStation.isAutonomous()) {
-            setGoal(Units.degreesToRadians(75.));
-        // }
+        if(DriverStation.isAutonomous()) {
+            setGoal(Units.degreesToRadians(75.)); // TODO if using w/FMS, comment out conditional
+        }
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
@@ -168,7 +164,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armZero() {
-        setGoal(Units.degreesToRadians(0.1)); // TODO change back??
+        setGoal(Units.degreesToRadians(0.1));
     }
 
     public InstantCommand armZeroCommand() {
@@ -203,8 +199,6 @@ public class Arm extends PivotingArmBase {
 
         return Rotation2d.fromRadians(
                 -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
-                // .times(1.04)[]\
-                
                 .minus(new Rotation2d((distance-1.3) * ShooterConstants.RadiansPerMeter));
     }
 
@@ -255,13 +249,11 @@ public class Arm extends PivotingArmBase {
     }
 
     public void armToDistanceSetpoint(Pose2d pose) {
-        // setGoal(poseDependantArmAngle(pose).getRadians());
         setGoal(logBasedArmAngle(pose).getRadians());
     }
 
     @Override
     public void resetEncoders() {
-        zeroThroughBore();
         resetToAbsolute();
     }
 
@@ -313,7 +305,7 @@ public class Arm extends PivotingArmBase {
 
         SmartDashboard.putNumber("Arm Relative Pos", getAngleDegrees());
         SmartDashboard.putNumber("Arm Goal Degrees", Units.radiansToDegrees(this.getController().getGoal().position));
-        // SmartDashboard.putBoolean("Arm At Goal", getController().atGoal());
+        SmartDashboard.putBoolean("Arm At Goal", getController().atGoal());
         
         if(SmartDashboard.getBoolean("Arm Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Arm Brake Mode", true);
@@ -325,12 +317,12 @@ public class Arm extends PivotingArmBase {
             setEncoderPosition(new Rotation2d());
         }
 
-        // if(SmartDashboard.getBoolean("Arm Enabled", true) && !isEnabled()) {
-        //     this.enable();
-        // }
-        // else if(!SmartDashboard.getBoolean("Arm Enabled", true) && isEnabled()) {
-        //     this.disable();
-        // }
+        if(SmartDashboard.getBoolean("Arm Enabled", true) && !isEnabled()) {
+            this.enable();
+        }
+        else if(!SmartDashboard.getBoolean("Arm Enabled", true) && isEnabled()) {
+            this.disable();
+        }
     }
 
     public void setManualMode(boolean manualMode) {
@@ -344,55 +336,6 @@ public class Arm extends PivotingArmBase {
     public InstantCommand disableManualMode() {
         return new InstantCommand(() -> this.setManualMode(false));
     }
-
-    public boolean inAutoAimSpace(Pose2d pose) {
-        boolean withinX;
-        boolean withinY;
-        if(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
-            withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
-            withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
-        }
-        else {
-            withinX = pose.getX() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getX();
-            withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
-        }
-        return withinX && withinY;
-    }
-
-    public boolean inRestrictedSpace(Pose2d pose) {
-        boolean withinX;
-        boolean withinY;
-        if(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red)) {
-            withinX = pose.getX() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getX();
-            withinY = pose.getY() > FieldConstants.RED_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.RED_AUTO_TRACK_BOUNDS[1].getY();
-        }
-        else {
-            withinX = pose.getX() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getX() && pose.getX() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getX();
-            withinY = pose.getY() > FieldConstants.BLUE_AUTO_TRACK_BOUNDS[0].getY() && pose.getY() < FieldConstants.BLUE_AUTO_TRACK_BOUNDS[1].getY();
-        }
-        return withinX && withinY;
-    }
-
-    // Method to check if pose is within the equilateral triangle
-    public boolean isPoseWithinTriangle(Pose2d currentPose) {
-        Translation2d t1 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[0] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[0];
-        Translation2d t2 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[1] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[1];
-        Translation2d t3 = DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_RESTRICTED_SPACE_BOUNDS[2] : FieldConstants.RED_RESTRICTED_SPACE_BOUNDS[2];
-        Translation2d currentTranslation = currentPose.getTranslation();
-        double side1 = Math.abs(crossProduct(t2.minus(t1), currentTranslation.minus(t1)));
-        double side2 = Math.abs(crossProduct(t3.minus(t2), currentTranslation.minus(t2)));
-        double side3 = Math.abs(crossProduct(t1.minus(t3), currentTranslation.minus(t3)));
-
-        // If the sum of the areas of the three triangles formed by the current pose and the triangle's vertices equals the area of the equilateral triangle, it's inside.
-        double triangleArea = Math.abs(crossProduct(t2.minus(t1), t3.minus(t1))) / 2.0;
-        double currentArea = side1 + side2 + side3;
-        return currentArea <= triangleArea; // Tolerance for double comparison
-    }
-
-    // Helper method to calculate the cross product of two 2D vectors
-    private double crossProduct(Translation2d a, Translation2d b) {
-        return a.getX() * b.getY() - a.getY() * b.getX();
-    }
     
     public void armTravel() {
         this.setGoal(Units.degreesToRadians(6));
@@ -402,33 +345,7 @@ public class Arm extends PivotingArmBase {
         return enableManualMode().andThen(new InstantCommand(() -> armTravel()));
     }
 
-    public Rotation2d getRawAbsolutePosition() {
-        // double abs = throughBore.getAbsolutePosition();
-        // return Rotation2d.fromRotations(abs);
-        return new Rotation2d();
-    }
-
-    public Rotation2d getZeroedArmAbsolutePosition() {
-        // Rotation2d abs = getRawAbsolutePosition().minus(Rotation2d.fromRotations(throughBore.getPositionOffset()));
-        Rotation2d abs = new Rotation2d();
-        SmartDashboard.putNumber("Abs in Rotations", abs.getRotations());
-    
-        return abs;//abs.plus(Rotation2d.fromRotations(abs.getRotations() < 0 ? abs.getRotations() + 0.25 : abs.getRotations()));
-    }
-
-    public void zeroThroughBore() {
-        // throughBore.setPositionOffset(getRawAbsolutePosition().getRotations());
-    }
-
-    public Rotation2d getArmAbsolutePosition() {
-        return getZeroedArmAbsolutePosition().times(ArmConstants.GEARING_ARM_TO_THROUGHBORE);
-    }
-
-    public Rotation2d throughBoreToMotor(Rotation2d throughBoreRotations) {
-        return throughBoreRotations.times(ArmConstants.GEARING_THROUGHBORE_TO_MOTOR);
-    }
-
     public void resetToAbsolute() {
-        setEncoderPosition(throughBoreToMotor(getRawAbsolutePosition()));
+        setEncoderPosition(new Rotation2d());
     }
 }

@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.util.LimelightHelpers;
 
 public class Limelight extends LimelightBase {
     SendableChooser<LedValues> ledChooser = new SendableChooser<LedValues>();
@@ -24,12 +23,6 @@ public class Limelight extends LimelightBase {
         SmartDashboard.putData("Limelight LEDs", ledChooser);
 
     }
-
-    // public Pose2d getMegatag2Pose(Pose2d pose) {
-    //     LimelightHelpers.SetRobotOrientation("limelight", pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    //     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    //     return mt2.pose;
-    // }
     
     public Pose2d getLimelightPose() {
         double[] limelightBotPose = limelightTable.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
@@ -43,7 +36,6 @@ public class Limelight extends LimelightBase {
 
     public void periodic() {
         setLEDs(ledChooser.getSelected());
-        boolean doRejectUpdate = false;
     }
 
 }

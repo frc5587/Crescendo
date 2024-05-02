@@ -55,17 +55,13 @@ public class Intake extends PIDSubsystem {
 
     public void forward() {
         motor.set(IntakeConstants.FORWARD_THROTTLE);
-        // double swerveSpeed = Math.abs(swerveSpeedSupplier.getAsDouble());
-        // setVelocity(swerveSpeed * 15. < IntakeConstants.MINIMUM_VELOCITY ? IntakeConstants.MINIMUM_VELOCITY : swerveSpeed * IntakeConstants.MINIMUM_VELOCITY);
     }
 
     public void backward() {
-        // setVelocity(-IntakeConstants.REVERSE_THROTTLE);
         motor.set(-IntakeConstants.REVERSE_THROTTLE);
     }
 
     public void stop() {
-        // setVelocity(0);
         motor.set(0.);
     }
     
@@ -97,8 +93,6 @@ public class Intake extends PIDSubsystem {
 
     @Override
     public void periodic() {
-        // super.periodic();
-        // motor.setVoltage(IntakeConstants.FF.calculate(setpoint) - IntakeConstants.PID.calculate(setpoint - getMeasurement()));
         SmartDashboard.putNumber("Intake Setpoint", motor.get());
         SmartDashboard.putNumber("Intake Measurement", getMeasurement());
         SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());

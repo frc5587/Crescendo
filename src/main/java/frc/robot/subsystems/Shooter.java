@@ -35,13 +35,11 @@ public class Shooter extends ProfiledPIDSubsystem {
         this.leftPID = ShooterConstants.LEFT_PID;
         this.rightPID = ShooterConstants.RIGHT_PID;
         configureMotors();
-        // enable();
         disable();
         getController().setTolerance(0.2);
         leftPID.setTolerance(0.3);
         rightPID.setTolerance(0.3);
         SmartDashboard.putNumber("Desired Speed", 0.0);
-        // idleSpeed();
     }
 
     public void configureMotors() {
@@ -55,14 +53,11 @@ public class Shooter extends ProfiledPIDSubsystem {
         rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
         leftMotor.getEncoder().setPosition(0);
         rightMotor.getEncoder().setPosition(0);
-        // rightMotor.follow(leftMotor);
         leftMotor.burnFlash();
         rightMotor.burnFlash();
     }
 
     public void idleSpeed() {
-        // leftMotor.set(ShooterConstants.IDLE_SPEED);
-        // setGoal(5);
         setLeftSpeed(6);
         setRightSpeed(6);
     }
@@ -104,17 +99,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void forward() {
-        // setGoal(20);
-        // setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
         setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
         setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
-    }
-
-    public void fullForward() {
-        // setGoal(20);
-        // setGoal(poseDepenantShooterSpeed(poseSupplier.get()));
-        setLeftSpeed(15.); // 23 did not work
-        setRightSpeed(15.); // 23 did not work
     }
 
     public double poseDepenantShooterSpeed(Pose2d pose) {
@@ -129,20 +115,16 @@ public class Shooter extends ProfiledPIDSubsystem {
                                         : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
                                 2));
 
-        // return (2.8 * distance) + 9.86;
         // https://www.desmos.com/calculator/bplceypa5r
-        // return MathUtil.clamp((2.8 * distance) + 9.86, 12., 21.0);
         return MathUtil.clamp((2 * distance) + 13.32, 12., 23.0);
     }
 
     public void backward() {
-        // setGoal(-5);
         setLeftSpeed(-5);
         setRightSpeed(-5);
     }
 
     public void stop() {
-        // setGoal(0.);
         setLeftSpeed(0.);
         setRightSpeed(0.);
     }
@@ -153,7 +135,6 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public boolean isSpunUp() {
-        // return ShooterConstants.FORWARD_THROTTLE - getMeasuredMotorSpeedsAsPercentage() <= 0.075;
         return (getController().atGoal() && getController().getSetpoint().position > 8) || (!isEnabled() && leftPID.atGoal() && rightPID.atGoal());
     }
 
@@ -164,8 +145,6 @@ public class Shooter extends ProfiledPIDSubsystem {
         this.disable();
         leftMotor.setVoltage(5.75);
         rightMotor.setVoltage(-0.85);
-        // leftMotor.setVoltage((leftPID.calculate(getLeftMPS(), 13.96) + leftFF.calculate(13.96))); // TODO: set these! 13.96
-        // rightMotor.setVoltage((rightPID.calculate(getRightMPS(), -2.06) + rightFF.calculate(-2.06))); // TODO: set these! -2.06
     }
 
     public void setVoltage(double voltage) {
@@ -179,7 +158,6 @@ public class Shooter extends ProfiledPIDSubsystem {
 
     @Override
     public void periodic() {
-        // super.periodic();
         double distance = Math.sqrt(
                         Math.pow(
                                 poseSupplier.get().getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
@@ -198,8 +176,6 @@ public class Shooter extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("Right Speed", getRightMPS());
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("Shooter Goal", poseDepenantShooterSpeed(poseSupplier.get()));
-        // setLeftSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
-        // setRightSpeed(SmartDashboard.getNumber("Desired Speed", 0.0));
     }
 
     @Override

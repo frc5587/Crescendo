@@ -7,7 +7,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -63,7 +62,6 @@ public class RobotContainer {
     private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians).raceWith(new WaitCommand(2.));
 
     public void teleopInitRoutine() {
-        // TODO: VERIFY!!
         swerve.gyro.setYaw(swerve.getYaw()
                 .plus(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? new Rotation2d() : (swerve.getYaw().getDegrees() < 0 ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(-180))));
         intake.stop();
@@ -77,7 +75,6 @@ public class RobotContainer {
         PowerDistribution pd = new PowerDistribution();
         pd.clearStickyFaults();
         pd.close();
-        // arm.setDefaultCommand(armDistancePose);
         NamedCommands.registerCommand("intakeForward", new InstantCommand(intake::forward));
         NamedCommands.registerCommand("intakeStop", new InstantCommand(intake::stop));
         NamedCommands.registerCommand("shooterForward", new RunCommand(shooter::forward));
@@ -133,21 +130,7 @@ public class RobotContainer {
         xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         xbox.x().onTrue(arm.shuffleBoardArmCommand());
-        // xbox.x().onTrue(arm.armFerryCommand());
         xbox.y().whileTrue(fullAimToNote);
-        
-        /* Unused Binds */
-        // xbox2.rightBumper().whileTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
-        // xbox2.povRight().onTrue(new InstantCommand(shooter::stop));
-        // xbox2.leftTrigger(0.1).whileTrue(climbWithAxis);
-        // xbox2.povUp().whileTrue(new InstantCommand(shooter::spinUpToAmp)).onFalse(new InstantCommand(shooter::idleSpeed));
-        // xbox2.povDown().onTrue(arm.chinUp());
-        // intakeLimitSwitch.onTrue(arm.travelSetpointCommand());
-        // rB.whileTrue(new RunCommand(() -> intake.setVelocity(((Math.sqrt(Math.pow(swerve.getChassisSpeeds().vxMetersPerSecond, 2) + Math.pow(swerve.getChassisSpeeds().vyMetersPerSecond, 2))) * IntakeConstants.SWERVE_VELOCITY_OFFSET) + IntakeConstants.MINIMUM_VELOCITY)));
-        // lB.whileTrue(new RunCommand(() -> intake.setVelocity(IntakeConstants.MINIMUM_VELOCITY)));/* .onFalse(new InstantCommand(intake::stop));*/
-        // xbox.povLeft().whileTrue(swerve.subwooferLineUp());
-        // xbox.povRight().whileTrue(swerve.ampLineUp());
-        // xbox2.rightTrigger(0.1).whileTrue(climbWithAxisReverse);
     }
 
     /**

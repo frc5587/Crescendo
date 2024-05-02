@@ -32,11 +32,8 @@ public class AimToNote extends Command {
     @Override
     public void execute() {
         if(noteDetector.hasTarget()) {
-            // double strafeMPS = noteDetector.getRotationToNote().getRadians() * 3.5;
             double fwdMPS = 50 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
-            double strafeMPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * 1.5; // 3.5
-            double rotateRPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * -0.75; // -1.5
-            // double fwdMPS = 1 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
+            double strafeMPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * 1.5;
             swerve.drive(new Translation2d(fwdMPS, strafeMPS), 0, false, false);
         }
 

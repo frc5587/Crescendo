@@ -46,32 +46,33 @@ public class Swerve extends SwerveBase {
         this.limelightField.setRobotPose(limelight.getLimelightPose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         this.poseEstimator = new SwerveDrivePoseEstimator(
-                kinematics, 
-                getYaw(), 
-                getModulePositions(), 
-                DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
-                MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.)); // Vision standard deviations.
-        // Auto Config
-            AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
-                this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants TODO set
-                        new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants TODO set
-                        AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
-                        AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
-                        replanningConfig // Default path replanning config. See the API for the options here
-                ),
-                () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
-                this // Reference to this subsystem to set requirements
+            kinematics, 
+            getYaw(), 
+            getModulePositions(), 
+            DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
+            MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
+            MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.) // Vision standard deviations.
             );
-            SmartDashboard.putBoolean("Swerve Debug On?", false);
-            SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
-            SmartDashboard.putBoolean("Reset to Limelight Pose", false);
-            resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+        // Auto Config
+        AutoBuilder.configureHolonomic(
+            this::getPose, // Robot pose supplier
+            this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants
+                new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants
+                AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
+                AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
+                replanningConfig // Default path replanning config. See the API for the options here
+            ),
+            () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
+            this // Reference to this subsystem to set requirements
+            );
+        SmartDashboard.putBoolean("Swerve Debug On?", false);
+        SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
+        SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+        resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
     }
 
     public Command ampLineUp() {
@@ -94,17 +95,13 @@ public class Swerve extends SwerveBase {
                 this.limelightField.setRobotPose(limelight.getLimelightPose());
 
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
-            SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees());
-            
+            SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees()); 
             for(int i = 0; i < swerveModules.length; i++) {
                 SmartDashboard.putNumber("M" + i + " Raw CANCoder", swerveModules[i].getNonZeroedAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
             }
         }
-
-        
-
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw().getDegrees());
         
         if(SmartDashboard.getBoolean("Zero Yaw", false)) {
@@ -120,11 +117,9 @@ public class Swerve extends SwerveBase {
         }
 
         SmartDashboard.putData("Field", field);
-        // this.limelightField.setRobotPose(limelight.getMegatag2Pose(poseEstimator.getEstimatedPosition()));
-
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// && limelight.getTargetSpacePose().getZ() >= -1.)) { // if the target is super close, we can set the pose to the limelight pose
+        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// if the target is super close, we can set the pose to the limelight pose
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
