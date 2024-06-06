@@ -93,10 +93,6 @@ public class Arm extends PivotingArmBase {
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
     }
 
-    public void armSpeaker() {
-        setGoal(ArmConstants.SPEAKER_SETPOINT);
-    }
-
     public void armAmp() {
         setGoal(ArmConstants.AMP_SETPOINT);
     }
@@ -116,28 +112,6 @@ public class Arm extends PivotingArmBase {
         return new InstantCommand(() -> {
             setManualMode(true);
             armAmp();
-        });
-    }
-
-    public void armFirstNote() {
-        setGoal(ArmConstants.FIRST_NOTE_SETPOINT);
-    }
-
-    public InstantCommand armFirstNoteCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armFirstNote();
-        });
-    }
-
-    public void armAuto() {
-        setGoal(ArmConstants.AUTO_SETPOINT);
-    }
-
-    public InstantCommand armAutoCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armAuto();
         });
     }
 

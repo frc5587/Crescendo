@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.frc5587.lib.control.DeadbandCommandXboxController;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -34,11 +36,10 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NoteDetector;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.util.DeadbandedCommandXboxController;
 
 public class RobotContainer {
-    public final DeadbandedCommandXboxController xbox = new DeadbandedCommandXboxController(0, 0.2);
-    public final DeadbandedCommandXboxController xbox2 = new DeadbandedCommandXboxController(1);
+    public final DeadbandCommandXboxController xbox = new DeadbandCommandXboxController(0, 0.2);
+    public final DeadbandCommandXboxController xbox2 = new DeadbandCommandXboxController(1);
 
     private final Limelight limelight = new Limelight();
     private final NoteDetector noteDetector = new NoteDetector();
@@ -81,9 +82,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
-        NamedCommands.registerCommand("armFirstNote", arm.armFirstNoteCommand());
-        NamedCommands.registerCommand("armAuto", arm.armAutoCommand());
-        NamedCommands.registerCommand("armRest", arm.armAutoCommand());
+        NamedCommands.registerCommand("armRest", arm.armRestCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
