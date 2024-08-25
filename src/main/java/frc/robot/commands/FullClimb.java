@@ -20,14 +20,14 @@ public class FullClimb extends Command {
     @Override
     public void initialize() {
         shooter.stop();
-        climb.intermediate();
+        climb.hookMiddle();
     }
 
     @Override
     public void execute() {
         if(climb.getController().atGoal() && climb.getController().getGoal().position == ClimbConstants.MIDDLE_POSITION) {
             arm.armStage();
-            climb.down();
+            climb.hookBottom();
         }
     }
 }

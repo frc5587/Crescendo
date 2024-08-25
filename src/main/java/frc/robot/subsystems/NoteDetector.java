@@ -26,12 +26,12 @@ public class NoteDetector extends LimelightBase {
         PortForwarder.add(5805, "limelight-note.local", 5805);
     }
 
-    public Rotation2d getRotationToNote() {
+    public Rotation2d getHorizontalRotationToNote() {
         return Rotation2d.fromDegrees(tx.getDouble(0.0));
     }
 
-    public double getDistanceToNoteMeters() {
-        return ty.getDouble(0.0) + mountAngle;
+    public Rotation2d getVerticalRotationToNote() {
+        return Rotation2d.fromDegrees(ty.getDouble((0.0) + mountAngle));
     }
 
     public double getDistanceToNoteMeters(Rotation2d armAngle) {

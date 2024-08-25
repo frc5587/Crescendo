@@ -44,28 +44,28 @@ public class Climb extends ProfiledPIDSubsystem {
         rightMotor.burnFlash();
     }
 
-    public void up() {
+    public void hookTop() {
         setGoal(ClimbConstants.TOP_POSITION);
     }
 
-    public void intermediate() {
+    public void hookMiddle() {
         setGoal(ClimbConstants.MIDDLE_POSITION);
     }
 
-    public void down() {
+    public void hookBottom() {
         setGoal(ClimbConstants.BOTTOM_POSITION);
     }
 
-    public Command upCommand() {
-        return new InstantCommand(this::up);
+    public Command hookTopCommand() {
+        return new InstantCommand(this::hookTop);
     }
 
-    public Command intermediateCommand() {
-        return new InstantCommand(this::intermediate);
+    public Command hookMiddleCommand() {
+        return new InstantCommand(this::hookMiddle);
     }
 
-    public Command downCommand() {
-        return new InstantCommand(this::down);
+    public Command hookBottomCommand() {
+        return new InstantCommand(this::hookBottom);
     }
 
     public void set(double percentOutput) {
@@ -121,8 +121,11 @@ public class Climb extends ProfiledPIDSubsystem {
         }
     }
 
+    protected double getHookHeightMeters() {
+        return (leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
+    }
     @Override
     protected double getMeasurement() {
-        return (leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
+        return getHookHeightMeters();
     }
 }

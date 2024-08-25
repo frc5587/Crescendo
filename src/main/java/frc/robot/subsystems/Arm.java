@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.ShooterConstants;
 
 public class Arm extends PivotingArmBase {
     private final TalonFX leftMotor;
@@ -42,7 +41,7 @@ public class Arm extends PivotingArmBase {
         this.rightMotor = rightMotor;
         this.poseSupplier = poseSupplier;
         configureMotors();
-        resetToAbsolute();
+        resetEncoders();
         getController().setTolerance(Units.degreesToRadians(0.1));
         enable();
         armTravel();
@@ -60,7 +59,7 @@ public class Arm extends PivotingArmBase {
     }
 
     public double getShuffleboardArmAngleRadians() {
-        double clampedArmAngle = MathUtil.clamp(SmartDashboard.getNumber("Manual Arm Angle Degrees", 0.0), 0.0, 83.0);
+        double clampedArmAngle = MathUtil.clamp(SmartDashboard.getNumber("Manual Arm Angle Degrees", ArmConstants.BOTTOM_LIMIT), ArmConstants.BOTTOM_LIMIT, ArmConstants.TOP_LIMIT);
         return Units.degreesToRadians(clampedArmAngle);
     }
 
@@ -93,87 +92,63 @@ public class Arm extends PivotingArmBase {
                 .withSupplyCurrentLimit(ArmConstants.FREE_LIMIT));
     }
 
-    public void armAmp() {
-        setGoal(ArmConstants.AMP_SETPOINT);
+    public void setManualMode(boolean manualMode) {
+        this.manualMode = manualMode;
+    }
+
+    public InstantCommand enableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(true));
+    }
+
+    public InstantCommand disableManualMode() {
+        return new InstantCommand(() -> this.setManualMode(false));
+    }
+    
+    public void armTravel() {
+        setGoal(ArmConstants.TRAVEL_SETPOINT);
+    }
+
+    public Command armTravelCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armTravel()));
     }
 
     public void armStage() {
         setGoal(ArmConstants.CLIMB_SETPOINT);
     }
     
-    public InstantCommand armStageCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armStage();
-        });
+    public Command armStageCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armStage()));
     }
 
-    public InstantCommand armAmpCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armAmp();
-        });
+    public void armAmp() {
+        setGoal(ArmConstants.AMP_SETPOINT);
+    }
+    
+    public Command armAmpCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armAmp()));
     }
 
-    public void armRest() {
-        setGoal(ArmConstants.RESTING_SETPOINT);
+    public void armBottom() {
+        setGoal(ArmConstants.BOTTOM_SETPOINT);
     }
 
-    public InstantCommand armRestCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armRest();
-        });
+    public Command armBottomCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armBottom()));
     }
 
     public void armFerry() {
         setGoal(ArmConstants.FERRY_SETPOINT);
     }
 
-    public InstantCommand armFerryCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armFerry();
-        });
-    }
-
-    public void armZero() {
-        setGoal(Units.degreesToRadians(0.1));
-    }
-
-    public InstantCommand armZeroCommand() {
-        return new InstantCommand(() -> {
-            setManualMode(true);
-            armZero();
-        });
+    public Command armFerryCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armFerry()));
     }
 
     public InstantCommand shuffleBoardArmCommand() {
         return new InstantCommand(() -> {
             setManualMode(true);
-            this.setGoal(getShuffleboardArmAngleRadians());
+            setGoal(getShuffleboardArmAngleRadians());
         });
-    }
-
-    public double getShooterHeightMeters() {
-        return (ArmConstants.ARM_LENGTH_METERS * Math.sin(getAngleRadians())) + ArmConstants.SHOOTER_HEIGHT_METERS;
-    }
-
-    public Rotation2d poseDependantArmAngle(Pose2d pose) {
-        double distance = Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow(
-                                pose.getY() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY()),
-                                2));
-
-        return Rotation2d.fromRadians(
-                -Math.atan2(FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getZ() - getShooterHeightMeters(), distance) + Math.toRadians(72))
-                .minus(new Rotation2d((distance-1.3) * ShooterConstants.RadiansPerMeter));
     }
 
     public Rotation2d logBasedArmAngle(Pose2d pose) {
@@ -192,43 +167,13 @@ public class Arm extends PivotingArmBase {
         return Rotation2d.fromRadians(1.03433 * Math.log10(distance) - Units.degreesToRadians(2.5));
     }
 
-    public Rotation2d lineBasedArmAngle(Pose2d pose) {
-        double distance = Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2));
-
-        return Rotation2d.fromRadians((0.205949 * distance) - 0.122348);
-    }
-
-    public Rotation2d interpolationArmAngle(Pose2d pose) {
-        double distance = Math.sqrt(
-                        Math.pow(
-                                pose.getX() - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getX()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getX()), 2) +
-                        Math.pow((pose.getY()
-                                - (DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue)
-                                        ? FieldConstants.BLUE_SPEAKER_OPENING_TRANSLATION.getY()
-                                        : FieldConstants.RED_SPEAKER_OPENING_TRANSLATION.getY())),
-                                2));
-        
-        return Rotation2d.fromRadians(1.03433 * Math.log10(distance));
-    }
-
     public void armToDistanceSetpoint(Pose2d pose) {
         setGoal(logBasedArmAngle(pose).getRadians());
     }
 
     @Override
     public void resetEncoders() {
-        resetToAbsolute();
+        setEncoderPosition(new Rotation2d());
     }
 
     public boolean getLimitSwitch() {
@@ -240,6 +185,7 @@ public class Arm extends PivotingArmBase {
         /** SOFT LIMITS */
         /** output should be feedforward + calculated PID. */
         /** if the arm is below the limit and is powered to move downward, set the voltage to 0 */
+        /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
         if ((getMeasurement() < ArmConstants.SOFT_LIMITS[0].getRadians() && output < 0.)
                 || (getMeasurement() > ArmConstants.SOFT_LIMITS[1].getRadians() && output > 0.)
                 || (getLimitSwitch() && output < 0)) {
@@ -297,29 +243,5 @@ public class Arm extends PivotingArmBase {
         else if(!SmartDashboard.getBoolean("Arm Enabled", true) && isEnabled()) {
             this.disable();
         }
-    }
-
-    public void setManualMode(boolean manualMode) {
-        this.manualMode = manualMode;
-    }
-
-    public InstantCommand enableManualMode() {
-        return new InstantCommand(() -> this.setManualMode(true));
-    }
-
-    public InstantCommand disableManualMode() {
-        return new InstantCommand(() -> this.setManualMode(false));
-    }
-    
-    public void armTravel() {
-        this.setGoal(Units.degreesToRadians(6));
-    }
-
-    public Command armTravelCommand() {
-        return enableManualMode().andThen(new InstantCommand(() -> armTravel()));
-    }
-
-    public void resetToAbsolute() {
-        setEncoderPosition(new Rotation2d());
     }
 }

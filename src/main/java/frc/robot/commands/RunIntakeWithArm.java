@@ -22,7 +22,7 @@ public class RunIntakeWithArm extends Command {
     @Override
     public void initialize() {
         if(!(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {
-            arm.armRest();
+            arm.armBottom();
         }
     }
 

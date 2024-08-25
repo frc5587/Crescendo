@@ -8,9 +8,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.IntakeConstants;
@@ -20,8 +20,8 @@ public class Intake extends PIDSubsystem {
     private final DigitalInput limitSwitch = new DigitalInput(1);
     private final BooleanSupplier shooterSpunUpSupplier, spunUpOverrideSupplier;
     private final DoubleConsumer rumbleConsumer;
-    private double rumbleTimerEndTime = MathSharedStore.getTimestamp() + 1;
-    private boolean switchTimeHasBeenSet, virtualLimitSwitchValue, shotIsConfirmed = false;
+    private double rumbleTimerEndTime = Timer.getFPGATimestamp() + 1;
+    private boolean switchTimeHasBeenSet, shotIsConfirmed = false;
     
     public Intake(BooleanSupplier shooterSpunUpSupplier, BooleanSupplier spunUpOverrideSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
@@ -29,15 +29,15 @@ public class Intake extends PIDSubsystem {
         this.spunUpOverrideSupplier = spunUpOverrideSupplier;
         this.rumbleConsumer = rumbleConsumer;
         configureMotors();
+        this.enable();
     }
 
     public void configureMotors() {
-        resetEncoders();
         motor.restoreFactoryDefaults();
+        resetEncoders();
         motor.setInverted(IntakeConstants.MOTOR_INVERTED);
         motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
         motor.setIdleMode(IdleMode.kCoast);
-        this.enable();
         motor.burnFlash();
     }
 
@@ -67,10 +67,6 @@ public class Intake extends PIDSubsystem {
     
     public boolean getLimitSwitch() {
         return !limitSwitch.get();
-    }
-
-    public boolean getVirtualLimitSwitch() {
-        return virtualLimitSwitchValue;
     }
 
     @Override
@@ -110,11 +106,11 @@ public class Intake extends PIDSubsystem {
         if(getLimitSwitch() && !(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
             stop();
         } 
-        if(getLimitSwitch() && switchTimeHasBeenSet && MathSharedStore.getTimestamp() < rumbleTimerEndTime) {
+        if(getLimitSwitch() && switchTimeHasBeenSet && Timer.getFPGATimestamp() < rumbleTimerEndTime) {
             rumbleConsumer.accept(1.);
         }
         else if(getLimitSwitch() && !switchTimeHasBeenSet) {
-            rumbleTimerEndTime = MathSharedStore.getTimestamp() + .6;
+            rumbleTimerEndTime = Timer.getFPGATimestamp() + .6;
 
             switchTimeHasBeenSet = true;
             rumbleConsumer.accept(1.);

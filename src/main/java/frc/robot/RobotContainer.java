@@ -82,7 +82,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
-        NamedCommands.registerCommand("armRest", arm.armRestCommand());
+        NamedCommands.registerCommand("armRest", arm.armBottomCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
@@ -116,12 +116,12 @@ public class RobotContainer {
 
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
-        xbox2.x().onTrue(arm.armZeroCommand());
+        xbox2.x().onTrue(arm.armBottomCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
         xbox2.back().whileTrue(fullClimb);
         
-        xbox2.povUp().onTrue(new InstantCommand(climb::up));
-        xbox2.povDown().onTrue(new InstantCommand(climb::down));
+        xbox2.povUp().onTrue(new InstantCommand(climb::hookTop));
+        xbox2.povDown().onTrue(new InstantCommand(climb::hookBottom));
         xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         

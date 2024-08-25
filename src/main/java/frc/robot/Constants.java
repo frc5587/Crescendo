@@ -47,13 +47,15 @@ public final class Constants {
    public static final boolean RIGHT_MOTOR_INVERTED = true;
     
     public static final double AMP_SETPOINT = Units.degreesToRadians(83);
-    public static final double RESTING_SETPOINT = Units.degreesToRadians(0);
+    public static final double BOTTOM_SETPOINT = Units.degreesToRadians(0);
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(25);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
-    public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(87)};
+    public static final double BOTTOM_LIMIT = 0;
+    public static final double TOP_LIMIT = 87;
+    public static final Rotation2d[] SOFT_LIMITS = {Rotation2d.fromDegrees(BOTTOM_LIMIT), Rotation2d.fromDegrees(TOP_LIMIT)};
     public static final Rotation2d ZERO_OFFSET = new Rotation2d();
     public static final int ENCODER_CPR = 1;
     public static final Constraints DEFAULT_CONSTRAINTS = new Constraints(Math.PI, Math.PI / 2);

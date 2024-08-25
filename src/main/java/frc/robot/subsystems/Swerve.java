@@ -43,7 +43,7 @@ public class Swerve extends SwerveBase {
     public Swerve(Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.limelight = limelight;
-        this.limelightField.setRobotPose(limelight.getLimelightPose());
+        this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
         this.poseEstimator = new SwerveDrivePoseEstimator(
             kinematics, 
@@ -92,7 +92,7 @@ public class Swerve extends SwerveBase {
     @Override
     public void periodic() {
         super.periodic();
-                this.limelightField.setRobotPose(limelight.getLimelightPose());
+                this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
 
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees()); 
@@ -119,14 +119,14 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putData("Field", field);
         SmartDashboard.putData("LimelightField", limelightField);
         
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// if the target is super close, we can set the pose to the limelight pose
-            odometry.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
-            poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getLimelightPose());
+        if(limelight.hasTarget() && (limelight.get3DTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// if the target is super close, we can set the pose to the limelight pose
+            odometry.resetPosition(getYaw(), getModulePositions(), limelight.getWPIBlueBotpose());
+            poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getWPIBlueBotpose());
             SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         }
 
-        if(limelight.hasTarget() && (limelight.getTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
-            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), limelight.calculateFPGAFrameTimestamp());
+        if(limelight.hasTarget() && (limelight.get3DTargetSpacePose().getZ() <= 2.5) && !DriverStation.isAutonomousEnabled()) {
+            poseEstimator.addVisionMeasurement(limelight.getWPIBlueBotpose(), limelight.calculateFPGAFrameTimestamp());
         }
     }
     /**
