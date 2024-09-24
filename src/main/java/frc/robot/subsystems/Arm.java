@@ -49,9 +49,9 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Arm Debug On?", false);
         SmartDashboard.putNumber("Manual Arm Angle Degrees", 15.0);
-        if(DriverStation.isAutonomous()) {
-            setGoal(Units.degreesToRadians(75.)); // TODO if using w/FMS, comment out conditional
-        }
+        // if(DriverStation.isAutonomous()) {
+        //     setGoal(Units.degreesToRadians(75.)); // TODO if using w/FMS, comment out conditional
+        // }
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
