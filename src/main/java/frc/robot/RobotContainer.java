@@ -125,12 +125,13 @@ public class RobotContainer {
         xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         
-        // Right Bumper - Toggle: Field Oriented Driving / Robot Oriented Driving
-        // Left Bumper - Crawl Drive Speeds
+        // Right Bumper - Robot Oriented Driving
+        // Left Bumper - Confirm Shot (TogetherShoot)
+        // Left Trigger - Swerve Crawl Speeds
         xbox.povDown().whileTrue(autoRotateToShoot);
         xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
-        xbox.x().onTrue(arm.shuffleBoardArmCommand());
+        // xbox.x().onTrue(arm.shuffleBoardArmCommand());
         xbox.y().whileTrue(fullAimToNote);
     }
 
