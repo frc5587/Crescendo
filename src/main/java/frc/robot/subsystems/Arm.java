@@ -103,7 +103,26 @@ public class Arm extends PivotingArmBase {
     public InstantCommand disableManualMode() {
         return new InstantCommand(() -> this.setManualMode(false));
     }
+
+    // public void armUpSlow() {
+    //     setVoltage(1);
+    //     setGoal(getMeasurement());
+    // }
+
     
+    // public void armDownSlow() {
+    //     setVoltage(-1);
+    //     setGoal(getMeasurement());
+    // }
+    
+    // public Command armUpSlowCommand() {
+    //     return enableManualMode().andThen(new InstantCommand(() -> armUpSlow()));
+    // }
+
+    // public Command armDownSlowCommand() {
+    //     return enableManualMode().andThen(new InstantCommand(() -> armDownSlow()));
+    // }
+
     public void armTravel() {
         setGoal(ArmConstants.TRAVEL_SETPOINT);
     }

@@ -99,8 +99,10 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void forward() {
-        setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
-        setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
+        // setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
+        // setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
+        setLeftSpeed(12);
+        setRightSpeed(12);
     }
 
     public double poseDepenantShooterSpeed(Pose2d pose) {
