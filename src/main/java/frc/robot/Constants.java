@@ -51,6 +51,7 @@ public final class Constants {
     public static final double TRAVEL_SETPOINT = Units.degreesToRadians(6);
     public static final double CLIMB_SETPOINT = Units.degreesToRadians(40);
     public static final double FERRY_SETPOINT = Units.degreesToRadians(25);
+    public static final double MANUAL_ANGLE_RATE = Units.degreesToRadians(1);
     
     public static final double GEARING_MOTOR_TO_ARM = 180.;
     public static final double BOTTOM_LIMIT = 0;

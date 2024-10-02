@@ -104,24 +104,22 @@ public class Arm extends PivotingArmBase {
         return new InstantCommand(() -> this.setManualMode(false));
     }
 
-    // public void armUpSlow() {
-    //     setVoltage(1);
-    //     setGoal(getMeasurement());
-    // }
+    public void armUpSlow() {
+        setGoal(this.getController().getGoal().position + ArmConstants.MANUAL_ANGLE_RATE);
+    }
 
     
-    // public void armDownSlow() {
-    //     setVoltage(-1);
-    //     setGoal(getMeasurement());
-    // }
+    public void armDownSlow() {
+        setGoal(this.getController().getGoal().position - ArmConstants.MANUAL_ANGLE_RATE);
+    }
     
-    // public Command armUpSlowCommand() {
-    //     return enableManualMode().andThen(new InstantCommand(() -> armUpSlow()));
-    // }
+    public Command armUpSlowCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armUpSlow()));
+    }
 
-    // public Command armDownSlowCommand() {
-    //     return enableManualMode().andThen(new InstantCommand(() -> armDownSlow()));
-    // }
+    public Command armDownSlowCommand() {
+        return enableManualMode().andThen(new InstantCommand(() -> armDownSlow()));
+    }
 
     public void armTravel() {
         setGoal(ArmConstants.TRAVEL_SETPOINT);
