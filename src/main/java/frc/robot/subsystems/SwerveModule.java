@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import org.frc5587.lib.math.Conversions;
 import org.frc5587.lib.subsystems.SwerveModuleBase;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -10,8 +9,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.util.swervelib.util.CTREConfigs;
 
@@ -37,12 +34,8 @@ public class SwerveModule extends SwerveModuleBase {
     }
 
     @Override
-    public Rotation2d getRawAbsoluteEncoderValue() {
+    public Rotation2d getAbsoluteEncoderValue() {
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
-    }
-
-    public Rotation2d getNonZeroedAbsoluteEncoderValue() {
-        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class SwerveModule extends SwerveModuleBase {
 
     @Override
     protected void setDriveMotorVelocity(double velocityMPS) {
-        driveMotor.setControl(new VelocityVoltage((velocityMPS) / (DrivetrainConstants.WHEEL_CIRCUMFERENCE_METERS * DrivetrainConstants.DRIVE_GEAR_RATIO)));
+        driveMotor.setControl(new VelocityVoltage(mpsToRotationsPerSecond(velocityMPS)));
     }
 
     @Override
@@ -99,25 +92,5 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected double getDriveMotorEncoderVelocity() {
         return driveMotor.getVelocity().getValueAsDouble();
-    }
-
-    @Override
-    public SwerveModuleState getState(){
-        return new SwerveModuleState(
-            (getDriveMotorEncoderVelocity() / moduleConstants.driveMotorGearRatio) * moduleConstants.wheelCircumferenceMeters,
-            getAngle()
-        ); 
-    }
-
-    public void stop() {
-        setDesiredState(new SwerveModuleState(0, getAngle()), true);
-    }
-
-    @Override
-    public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(
-            Conversions.motorOutputToMeters(getDriveMotorEncoderPosition().times(1.), moduleConstants.driveMotorEncoderCPR, moduleConstants.driveMotorGearRatio, moduleConstants.wheelCircumferenceMeters),
-            getAngle()
-        );
     }
 }
