@@ -20,14 +20,18 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends ProfiledPIDSubsystem {
-    private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-    private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    // private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+    // private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    private CANSparkMax leftMotor;
+    private CANSparkMax rightMotor;
     private SimpleMotorFeedforward ff, leftFF, rightFF;
     private Supplier<Pose2d> poseSupplier;
     private final ProfiledPIDController leftPID, rightPID;
 
-    public Shooter(Supplier<Pose2d> poseSupplier) {
+    public Shooter(CANSparkMax leftMotor, CANSparkMax rightMotor, Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
+        this.leftMotor = leftMotor;
+        this.rightMotor = rightMotor;
         this.ff = ShooterConstants.FF;
         this.leftFF = ShooterConstants.LEFT_FF;
         this.rightFF = ShooterConstants.RIGHT_FF;
@@ -40,6 +44,13 @@ public class Shooter extends ProfiledPIDSubsystem {
         leftPID.setTolerance(0.3);
         rightPID.setTolerance(0.3);
         SmartDashboard.putNumber("Desired Speed", 0.0);
+    }
+
+    public Shooter(Supplier<Pose2d> poseSupplier) {
+        this(new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless),
+        new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless),
+        poseSupplier
+        );
     }
 
     public void configureMotors() {

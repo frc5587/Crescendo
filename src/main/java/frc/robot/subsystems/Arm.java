@@ -30,13 +30,15 @@ public class Arm extends PivotingArmBase {
     private final DigitalInput magLimitSwitch = new DigitalInput(0);
     private boolean manualMode = true;
     private boolean brakeModeEnabled = true;
+    public PivotingArmConstants constants;
 
-    public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
-            new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
+    // public static PivotingArmConstants constants = new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM,
+    //         new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF);
         
 
-    public Arm(TalonFX leftMotor, TalonFX rightMotor, Supplier<Pose2d> poseSupplier) {
+    public Arm(TalonFX leftMotor, TalonFX rightMotor, PivotingArmConstants constants, Supplier<Pose2d> poseSupplier) {
         super(constants, leftMotor);
+        this.constants = constants;
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.poseSupplier = poseSupplier;
@@ -55,7 +57,11 @@ public class Arm extends PivotingArmBase {
     }
 
     public Arm(Supplier<Pose2d> poseSupplier) {
-        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), poseSupplier); 
+        this(new TalonFX(ArmConstants.LEFT_MOTOR_ID, "canivore"), 
+        new TalonFX(ArmConstants.RIGHT_MOTOR_ID, "canivore"), 
+        new PivotingArmConstants(ArmConstants.GEARING_MOTOR_TO_ARM, new Rotation2d(), ArmConstants.SOFT_LIMITS, ArmConstants.ZERO_OFFSET, ArmConstants.PID, ArmConstants.FF), 
+        poseSupplier
+        ); 
     }
 
     public double getShuffleboardArmAngleRadians() {

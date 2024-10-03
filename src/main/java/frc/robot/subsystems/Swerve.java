@@ -25,23 +25,14 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.FieldConstants;
 
 public class Swerve extends SwerveBase {
-     private static SwerveModule[] swerveModules = {
-            new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, "canivore"),
-                    new TalonFX(15, "canivore"), new CANcoder(50, "canivore"), DrivetrainConstants.Mod0.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, "canivore"),
-                    new TalonFX(16, "canivore"), new CANcoder(51, "canivore"), DrivetrainConstants.Mod1.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, "canivore"),
-                    new TalonFX(17, "canivore"), new CANcoder(52, "canivore"), DrivetrainConstants.Mod2.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, "canivore"),
-                    new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
-    };
-
-   private Limelight limelight;
-   private Field2d limelightField = new Field2d();
+    private SwerveModule[] swerveModules;
+    private Limelight limelight;
+    private Field2d limelightField = new Field2d();
     private boolean brakeModeEnabled = true;
 
-    public Swerve(Limelight limelight) {
+    public Swerve(SwerveModule[] swerveModules, Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
+        this.swerveModules = swerveModules;
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
@@ -73,6 +64,19 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+    }
+
+    public Swerve(Limelight limelight) {
+        this(new SwerveModule[]{
+            new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, "canivore"),
+                    new TalonFX(15, "canivore"), new CANcoder(50, "canivore"), DrivetrainConstants.Mod0.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, "canivore"),
+                    new TalonFX(16, "canivore"), new CANcoder(51, "canivore"), DrivetrainConstants.Mod1.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, "canivore"),
+                    new TalonFX(17, "canivore"), new CANcoder(52, "canivore"), DrivetrainConstants.Mod2.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, "canivore"),
+                    new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
+        }, limelight);
     }
 
     public Command ampLineUp() {
