@@ -16,7 +16,6 @@ import frc.robot.Constants.ClimbConstants;
 public class Climb extends ProfiledPIDSubsystem {
     private CANSparkMax leftMotor;
     private CANSparkMax rightMotor;
-    private boolean wasManuallyDisabled = false;
     private boolean brakeModeEnabled = true;
 
     public Climb(CANSparkMax leftMotor, CANSparkMax rightMotor) {
@@ -101,12 +100,10 @@ public class Climb extends ProfiledPIDSubsystem {
             resetEncoders();
         }
         SmartDashboard.putBoolean("Reset Climb Encoders", false);
-        if(SmartDashboard.getBoolean("Climb Enabled", true) && wasManuallyDisabled) {
+        if(SmartDashboard.getBoolean("Climb Enabled", true) && !isEnabled()) {
             this.enable();
-            this.wasManuallyDisabled = false;
         }
-        else if(!SmartDashboard.getBoolean("Climb Enabled", true) && !wasManuallyDisabled) {
-            wasManuallyDisabled = true;
+        else if(!SmartDashboard.getBoolean("Climb Enabled", true) && isEnabled()) {
             this.disable();
         }
 
@@ -130,7 +127,7 @@ public class Climb extends ProfiledPIDSubsystem {
     }
 
     protected double getHookHeightMeters() {
-        return (leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
+        return ((leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING);
     }
     @Override
     protected double getMeasurement() {

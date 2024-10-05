@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AimToNote;
@@ -60,7 +59,7 @@ public class RobotContainer {
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp, xbox2.rightTrigger());
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
-    private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians).raceWith(new WaitCommand(2.));
+    private final Command aimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians);
 
     public void teleopInitRoutine() {
         swerve.gyro.setYaw(swerve.getYaw()
@@ -87,7 +86,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
         NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
-        NamedCommands.registerCommand("noteAim", fullAimToNote);
+        NamedCommands.registerCommand("noteAim", aimToNote);
         NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -129,7 +128,7 @@ public class RobotContainer {
         xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         xbox.x().onTrue(arm.shuffleBoardArmCommand());
-        xbox.y().whileTrue(fullAimToNote);
+        xbox.y().whileTrue(aimToNote);
     }
 
     /**
