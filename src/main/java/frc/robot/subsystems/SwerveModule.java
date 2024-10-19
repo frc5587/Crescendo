@@ -37,12 +37,8 @@ public class SwerveModule extends SwerveModuleBase {
     }
 
     @Override
-    public Rotation2d getRawAbsoluteEncoderValue() {
+    public Rotation2d getAbsoluteEncoderValue() {
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
-    }
-
-    public Rotation2d getNonZeroedAbsoluteEncoderValue() {
-        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble()).minus(angleOffset);
     }
 
     @Override

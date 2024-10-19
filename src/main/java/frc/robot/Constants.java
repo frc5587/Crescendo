@@ -145,10 +145,10 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 2; // reg 5
+        public static final double MAX_SPEED = 0.5; // reg 5
         public static final double CRAWL_SPEED = 0.5; // reg 0.75
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI; // reg 3 * Math.PI
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI / 3; // reg 3 * Math.PI
         public static final double CRAWL_ANGULAR_VELOCITY = Math.PI / 3;
 
         /* Neutral Modes */
