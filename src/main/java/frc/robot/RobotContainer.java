@@ -54,7 +54,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
-            () -> xbox.getRightX(), xbox.rightBumper().negate(), xbox.leftTrigger());
+            () -> xbox.getRightX(), xbox.rightBumper(), xbox.leftTrigger());
     private final AutoRotateToShoot autoRotateToShoot = new AutoRotateToShoot(swerve);
     private final AutoShootWhenLinedUp autoShootWhenLinedUp = new AutoShootWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
@@ -115,9 +115,9 @@ public class RobotContainer {
         xbox2.rightTrigger().whileTrue(new RunCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
 
         xbox2.a().onTrue(arm.armTravelCommand());
-        xbox2.b().onTrue(arm.disableManualMode());
-        xbox2.x().onTrue(arm.armBottomCommand());
-        xbox2.y().onTrue(arm.armAmpCommand());
+        // xbox2.b().onTrue(arm.disableManualMode());
+        // xbox2.x().onTrue(arm.armBottomCommand());
+        // xbox2.y().onTrue(arm.armAmpCommand());
         // xbox2.back().whileTrue(fullClimb);
         
         // xbox2.povUp().onTrue(new InstantCommand(climb::hookTop));
