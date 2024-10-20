@@ -81,7 +81,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
-        NamedCommands.registerCommand("armRest", arm.armBottomCommand());
+        NamedCommands.registerCommand("armRest", arm.armTravelCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
@@ -115,7 +115,7 @@ public class RobotContainer {
 
         xbox2.a().onTrue(arm.armTravelCommand());
         xbox2.b().onTrue(arm.disableManualMode());
-        xbox2.x().onTrue(arm.armBottomCommand());
+        xbox2.x().onTrue(arm.armTravelCommand());
         xbox2.y().onTrue(arm.armAmpCommand());
         xbox2.back().whileTrue(fullClimb);
         
