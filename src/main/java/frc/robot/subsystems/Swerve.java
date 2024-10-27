@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.sql.Driver;
+
 import org.frc5587.lib.subsystems.SwerveBase;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.FieldConstants;
@@ -28,7 +31,7 @@ public class Swerve extends SwerveBase {
     private SwerveModule[] swerveModules;
     private Limelight limelight;
     private Field2d limelightField = new Field2d();
-    private boolean brakeModeEnabled = true;
+    private boolean brakeModeEnabled, odometrySet = true;
 
     public Swerve(SwerveModule[] swerveModules, Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
@@ -63,7 +66,9 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Debug On?", false);
         SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+        if (DriverStation.getAlliance().isPresent()) {
         resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+        } else {odometrySet = false;}
     }
 
     public Swerve(Limelight limelight) {
@@ -98,6 +103,11 @@ public class Swerve extends SwerveBase {
         super.periodic();
                 this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
 
+        if (!odometrySet) {
+            resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+            odometrySet = true;
+        }
+        
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees()); 
             for(int i = 0; i < swerveModules.length; i++) {
