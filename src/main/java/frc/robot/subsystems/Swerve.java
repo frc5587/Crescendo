@@ -25,23 +25,14 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.FieldConstants;
 
 public class Swerve extends SwerveBase {
-     private static SwerveModule[] swerveModules = {
-            new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, "canivore"),
-                    new TalonFX(15, "canivore"), new CANcoder(50, "canivore"), DrivetrainConstants.Mod0.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, "canivore"),
-                    new TalonFX(16, "canivore"), new CANcoder(51, "canivore"), DrivetrainConstants.Mod1.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, "canivore"),
-                    new TalonFX(17, "canivore"), new CANcoder(52, "canivore"), DrivetrainConstants.Mod2.ANGLE_OFFSET),
-            new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, "canivore"),
-                    new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
-    };
+    private SwerveModule[] swerveModules;
+    private Limelight limelight;
+    private Field2d limelightField = new Field2d();
+    private boolean brakeModeEnabled, odometrySet = true;
 
-   private Limelight limelight;
-   private Field2d limelightField = new Field2d();
-    private boolean brakeModeEnabled = true;
-
-    public Swerve(Limelight limelight) {
+    public Swerve(SwerveModule[] swerveModules, Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
+        this.swerveModules = swerveModules;
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
@@ -49,7 +40,7 @@ public class Swerve extends SwerveBase {
             kinematics, 
             getYaw(), 
             getModulePositions(), 
-            DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
+            getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE),
             MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
             MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.) // Vision standard deviations.
             );
@@ -72,16 +63,31 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Debug On?", false);
         SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Reset to Limelight Pose", false);
-        resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+        if (DriverStation.getAlliance().isPresent()) {
+        resetOdometry(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE));
+        } else {odometrySet = false;}
+    }
+
+    public Swerve(Limelight limelight) {
+        this(new SwerveModule[]{
+            new SwerveModule(DrivetrainConstants.Mod0.MODULE_CONSTANTS, new TalonFX(10, "canivore"),
+                    new TalonFX(15, "canivore"), new CANcoder(50, "canivore"), DrivetrainConstants.Mod0.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod1.MODULE_CONSTANTS, new TalonFX(11, "canivore"),
+                    new TalonFX(16, "canivore"), new CANcoder(51, "canivore"), DrivetrainConstants.Mod1.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod2.MODULE_CONSTANTS, new TalonFX(12, "canivore"),
+                    new TalonFX(17, "canivore"), new CANcoder(52, "canivore"), DrivetrainConstants.Mod2.ANGLE_OFFSET),
+            new SwerveModule(DrivetrainConstants.Mod3.MODULE_CONSTANTS, new TalonFX(13, "canivore"),
+                    new TalonFX(18, "canivore"), new CANcoder(53, "canivore"), DrivetrainConstants.Mod3.ANGLE_OFFSET)
+        }, limelight);
     }
 
     public Command ampLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_AMP_POSE : FieldConstants.RED_AMP_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_AMP_POSE, FieldConstants.BLUE_AMP_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
 
     }
 
     public Command subwooferLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
     }
 
     public void resetOdometryWithYaw(Pose2d pose) {
@@ -94,10 +100,14 @@ public class Swerve extends SwerveBase {
         super.periodic();
                 this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
 
+        if (!odometrySet) {
+            resetOdometry(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE));
+            odometrySet = true;
+        }
+        
         if(SmartDashboard.getBoolean("Swerve Debug On?", false)) {
             SmartDashboard.putNumber("Yaw Offset", gyro.getYawZeroOffset().getDegrees()); 
             for(int i = 0; i < swerveModules.length; i++) {
-                SmartDashboard.putNumber("M" + i + " Raw CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Adjusted CANCoder", swerveModules[i].getAbsoluteEncoderValue().getDegrees());
                 SmartDashboard.putNumber("M" + i + " Relative", swerveModules[i].getAngle().getDegrees());
             }

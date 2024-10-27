@@ -13,6 +13,7 @@ import frc.robot.subsystems.Swerve;
 public class AimToNote extends Command {
     private final NoteDetector noteDetector;
     private final Swerve swerve;
+    private final Timer timer;
     private final BooleanSupplier hasNoteSupplier;
     private final DoubleSupplier armAngleSupplier;
     private double endTime = 0.;
@@ -22,11 +23,13 @@ public class AimToNote extends Command {
         this.swerve = swerve;
         this.hasNoteSupplier = hasNoteSupplier;
         this.armAngleSupplier = armAngleSupplier;
+        this.timer = new Timer();
     }
 
     @Override
     public void initialize() {
         endTime = 0;
+        timer.restart();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class AimToNote extends Command {
 
     @Override
     public boolean isFinished() {
-        return hasNoteSupplier.getAsBoolean();
+        return hasNoteSupplier.getAsBoolean() || timer.hasElapsed(2.);
     }
 
     @Override

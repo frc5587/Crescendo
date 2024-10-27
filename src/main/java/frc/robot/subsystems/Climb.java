@@ -14,18 +14,25 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClimbConstants;
 
 public class Climb extends ProfiledPIDSubsystem {
-    private static CANSparkMax leftMotor = new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-    private static CANSparkMax rightMotor = new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private boolean wasManuallyDisabled = false;
+    private CANSparkMax leftMotor;
+    private CANSparkMax rightMotor;
     private boolean brakeModeEnabled = true;
 
-    public Climb() {
+    public Climb(CANSparkMax leftMotor, CANSparkMax rightMotor) {
         super(ClimbConstants.PID);
+        this.leftMotor = leftMotor;
+        this.rightMotor = rightMotor;
         configureMotors();
         enable();
         getController().setTolerance(Units.inchesToMeters(0.5));
         SmartDashboard.putBoolean("Climb Enabled", isEnabled());
         SmartDashboard.putBoolean("Climb Brake Mode", brakeModeEnabled);
+    }
+    
+    public Climb() {
+        this(new CANSparkMax(ClimbConstants.LEFT_MOTOR_ID, MotorType.kBrushless),
+        new CANSparkMax(ClimbConstants.RIGHT_MOTOR_ID, MotorType.kBrushless)
+        );
     }
 
     public void configureMotors() {
@@ -93,12 +100,10 @@ public class Climb extends ProfiledPIDSubsystem {
             resetEncoders();
         }
         SmartDashboard.putBoolean("Reset Climb Encoders", false);
-        if(SmartDashboard.getBoolean("Climb Enabled", true) && wasManuallyDisabled) {
+        if(SmartDashboard.getBoolean("Climb Enabled", true) && !isEnabled()) {
             this.enable();
-            this.wasManuallyDisabled = false;
         }
-        else if(!SmartDashboard.getBoolean("Climb Enabled", true) && !wasManuallyDisabled) {
-            wasManuallyDisabled = true;
+        else if(!SmartDashboard.getBoolean("Climb Enabled", true) && isEnabled()) {
             this.disable();
         }
 
@@ -122,7 +127,7 @@ public class Climb extends ProfiledPIDSubsystem {
     }
 
     protected double getHookHeightMeters() {
-        return (leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING;
+        return ((leftMotor.getEncoder().getPosition() * ClimbConstants.SPOOL_CIRCUMFERENCE_METERS) / ClimbConstants.GEARING);
     }
     @Override
     protected double getMeasurement() {

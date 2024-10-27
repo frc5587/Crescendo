@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AimToNote;
@@ -60,7 +59,7 @@ public class RobotContainer {
     private final AutoAmpWhenLinedUp autoAmpWhenLinedUp = new AutoAmpWhenLinedUp(shooter, intake, xbox.leftBumper());
     private final RunIntakeWithArm runIntakeWithArm = new RunIntakeWithArm(intake, arm, shooter::isSpunUp, xbox2.rightTrigger());
     private final FullClimb fullClimb = new FullClimb(climb, arm, shooter);
-    private final Command fullAimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians).raceWith(new WaitCommand(2.));
+    private final Command aimToNote = new AimToNote(noteDetector, swerve, intake::getLimitSwitch, arm::getAngleRadians);
 
     public void teleopInitRoutine() {
         swerve.gyro.setYaw(swerve.getYaw()
@@ -82,12 +81,12 @@ public class RobotContainer {
         NamedCommands.registerCommand("shooterIdle", new InstantCommand(shooter::idleSpeed));
         NamedCommands.registerCommand("shooterStop", new InstantCommand(shooter::stop));
         NamedCommands.registerCommand("armTravel", arm.armTravelCommand());
-        NamedCommands.registerCommand("armRest", arm.armBottomCommand());
+        NamedCommands.registerCommand("armRest", arm.armTravelCommand());
         NamedCommands.registerCommand("armAim", new InstantCommand(() -> {arm.setManualMode(false);}));
         NamedCommands.registerCommand("armAmp", arm.armAmpCommand());
         NamedCommands.registerCommand("armFerry", arm.armFerryCommand());
         NamedCommands.registerCommand("rotateToShoot", new AutoRotateToShoot(swerve));
-        NamedCommands.registerCommand("noteAim", fullAimToNote);
+        NamedCommands.registerCommand("noteAim", aimToNote);
         NamedCommands.registerCommand("confirmShot", new InstantCommand(intake::confirmShot));
         NamedCommands.registerCommand("denyShot", new InstantCommand(intake::denyShot));
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -130,11 +129,12 @@ public class RobotContainer {
         // Right Bumper - Robot Oriented Driving
         // Left Bumper - Confirm Shot (TogetherShoot)
         // Left Trigger - Swerve Crawl Speeds
+        // DPad Down - Auto Rotate to Shoot (Requires Apriltags)
         xbox.povDown().whileTrue(autoRotateToShoot);
-        xbox.povUp().whileTrue(swerve.subwooferLineUp());
+        // xbox.povUp().whileTrue(swerve.subwooferLineUp());
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         // xbox.x().onTrue(arm.shuffleBoardArmCommand());
-        xbox.y().whileTrue(fullAimToNote);
+        xbox.y().whileTrue(aimToNote);
     }
 
     /**
