@@ -1,0 +1,65 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.34,
+        "y": 5.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3842135399789548,
+        "y": 5.573348723359733
+      },
+      "isLocked": false,
+      "linkedName": "subwoofer_dep"
+    },
+    {
+      "anchor": {
+        "x": 2.3764027015181504,
+        "y": 6.9697160476897855
+      },
+      "prevControl": {
+        "x": 1.6038251366092853,
+        "y": 6.9697160476897855
+      },
+      "nextControl": {
+        "x": 3.0433796997318767,
+        "y": 6.9697160476897855
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.21238494898122,
+        "y": 6.9697160476897855
+      },
+      "prevControl": {
+        "x": 4.167123101777569,
+        "y": 6.948470690839092
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "aa_crossline_end"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "ring1",
+  "previewStartingState": null,
+  "useDefaultConstraints": true
+}

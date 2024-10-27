@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.8893339325140204,
+        "y": 5.525487974052871
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.931791094351422,
+        "y": 7.341005451241672
+      },
+      "isLocked": false,
+      "linkedName": "advampdep_shootpoint"
+    },
+    {
+      "anchor": {
+        "x": 7.786776342783456,
+        "y": 6.166839256755436
+      },
+      "prevControl": {
+        "x": 5.839041831929821,
+        "y": 6.212509106336894
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "midring2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "-amp",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

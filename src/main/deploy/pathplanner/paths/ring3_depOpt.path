@@ -1,0 +1,58 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.316319415046238,
+        "y": 4.566242979708182
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.219288862617482,
+        "y": 5.58924051980193
+      },
+      "isLocked": false,
+      "linkedName": "ring3_sidepickup"
+    },
+    {
+      "anchor": {
+        "x": 1.34,
+        "y": 5.55
+      },
+      "prevControl": {
+        "x": 1.3679596451735374,
+        "y": 5.508548121372248
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "subwoofer_dep"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "ring3",
+  "previewStartingState": {
+    "rotation": -40.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

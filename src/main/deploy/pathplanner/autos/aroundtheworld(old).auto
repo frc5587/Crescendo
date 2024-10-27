@@ -1,0 +1,86 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6924444618120005,
+      "y": 6.677362186633205
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterForward"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "armAim"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeForward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ampside_1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ampside_2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeForward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ampside_3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "amp side start",
+  "choreoAuto": false
+}

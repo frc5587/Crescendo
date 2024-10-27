@@ -1,0 +1,26 @@
+{
+  "robotWidth": 0.8509,
+  "robotLength": 0.85,
+  "holonomicMode": true,
+  "pathFolders": [
+    "-amp",
+    "-middle",
+    "-source",
+    "5ring",
+    "ferry",
+    "pathplanning",
+    "ring1",
+    "ring2",
+    "ring3"
+  ],
+  "autoFolders": [
+    "Choreo Autos",
+    "amp side start",
+    "source side start"
+  ],
+  "defaultMaxVel": 4.5,
+  "defaultMaxAccel": 3.5,
+  "defaultMaxAngVel": 180.0,
+  "defaultMaxAngAccel": 180.0,
+  "maxModuleSpeed": 5.0
+}

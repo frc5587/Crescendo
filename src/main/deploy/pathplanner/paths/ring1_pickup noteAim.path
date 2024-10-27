@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.34,
+        "y": 5.55
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.49040090193273,
+        "y": 5.6818315921842
+      },
+      "isLocked": false,
+      "linkedName": "subwoofer_dep"
+    },
+    {
+      "anchor": {
+        "x": 2.5085249599885775,
+        "y": 6.710309340732804
+      },
+      "prevControl": {
+        "x": 2.370682206789075,
+        "y": 6.565397728394865
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": 40.0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 40.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "ring1",
+  "previewStartingState": null,
+  "useDefaultConstraints": true
+}
