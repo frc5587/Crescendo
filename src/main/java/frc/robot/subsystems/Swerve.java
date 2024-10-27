@@ -43,7 +43,7 @@ public class Swerve extends SwerveBase {
             kinematics, 
             getYaw(), 
             getModulePositions(), 
-            DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE,
+            getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE),
             MatBuilder.fill(Nat.N3(), Nat.N1(), 0.05, 0.05, 0.05), // Odometry standard deviations. Smaller number = more trust. PoseX, PoseY, Rotation
             MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.) // Vision standard deviations.
             );
@@ -67,7 +67,7 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Reset to Limelight Pose", false);
         if (DriverStation.getAlliance().isPresent()) {
-        resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+        resetOdometry(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE));
         } else {odometrySet = false;}
     }
 
@@ -85,12 +85,12 @@ public class Swerve extends SwerveBase {
     }
 
     public Command ampLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_AMP_POSE : FieldConstants.RED_AMP_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_AMP_POSE, FieldConstants.BLUE_AMP_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
 
     }
 
     public Command subwooferLineUp() {
-        return AutoBuilder.pathfindToPose(DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE, AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
     }
 
     public void resetOdometryWithYaw(Pose2d pose) {
@@ -104,7 +104,7 @@ public class Swerve extends SwerveBase {
                 this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
 
         if (!odometrySet) {
-            resetOdometry((DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? FieldConstants.BLUE_SUBWOOFER_FRONT_POSE : FieldConstants.RED_SUBWOOFER_FRONT_POSE));
+            resetOdometry(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE));
             odometrySet = true;
         }
         
