@@ -66,7 +66,6 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected void configureAngleMotor() {
         angleMotor.getConfigurator().apply(ctreConfigs.swerveAngleFXConfig);
-        angleMotor.setInverted(DrivetrainConstants.ANGLE_MOTOR_INVERTED);
         angleMotor.setNeutralMode(DrivetrainConstants.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
     }
@@ -74,7 +73,6 @@ public class SwerveModule extends SwerveModuleBase {
     @Override
     protected void configureDriveMotor() {
         driveMotor.getConfigurator().apply(ctreConfigs.swerveDriveFXConfig);
-        driveMotor.setInverted(DrivetrainConstants.DRIVE_MOTOR_INVERTED);
         driveMotor.setNeutralMode(DrivetrainConstants.DRIVE_NEUTRAL_MODE);
         driveMotor.setPosition(0);
     }

@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
-import org.frc5587.lib.subsystems.PivotingArmBase;
+import org.frc5587.lib.subsystems.TalonPivotingArmBase;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.Follower;
@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 
-public class Arm extends PivotingArmBase {
+public class Arm extends TalonPivotingArmBase {
     private final TalonFX leftMotor;
     private final TalonFX rightMotor;
     private final Supplier<Pose2d> poseSupplier;
