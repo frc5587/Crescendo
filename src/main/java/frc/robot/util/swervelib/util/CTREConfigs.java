@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
@@ -29,13 +29,14 @@ public final class CTREConfigs {
         angleCurrLimit.StatorCurrentLimit = Constants.DrivetrainConstants.ANGLE_PEAK_LIMIT;
         angleCurrLimit.SupplyCurrentLimitEnable = Constants.DrivetrainConstants.ANGLE_LIMIT_ENABLED;
         angleCurrLimit.StatorCurrentLimitEnable = Constants.DrivetrainConstants.ANGLE_PEAK_LIMIT_ENABLED;
-        angleCurrLimit.SupplyTimeThreshold = Constants.DrivetrainConstants.ANGLE_PEAK_DURATION;
+        angleCurrLimit.SupplyCurrentLowerTime = Constants.DrivetrainConstants.ANGLE_PEAK_DURATION;
 
         angleSlot0Configs.kP = Constants.DrivetrainConstants.ANGLE_FPID.kP;
         angleSlot0Configs.kI = Constants.DrivetrainConstants.ANGLE_FPID.kI;
         angleSlot0Configs.kD = Constants.DrivetrainConstants.ANGLE_FPID.kD;
         swerveAngleFXConfig.CurrentLimits = angleCurrLimit;
         swerveAngleFXConfig.Slot0 = angleSlot0Configs;
+        swerveAngleFXConfig.MotorOutput.Inverted = Constants.DrivetrainConstants.ANGLE_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
         /* Swerve Drive Motor Configuration */
         CurrentLimitsConfigs driveCurrLimit = new CurrentLimitsConfigs();
@@ -44,7 +45,7 @@ public final class CTREConfigs {
         driveCurrLimit.StatorCurrentLimit = Constants.DrivetrainConstants.DRIVE_PEAK_LIMIT;
         driveCurrLimit.SupplyCurrentLimitEnable = Constants.DrivetrainConstants.DRIVE_LIMIT_ENABLED;
         driveCurrLimit.StatorCurrentLimitEnable = Constants.DrivetrainConstants.DRIVE_PEAK_LIMIT_ENABLED;
-        driveCurrLimit.SupplyTimeThreshold = Constants.DrivetrainConstants.DRIVE_PEAK_DURATION;
+        driveCurrLimit.SupplyCurrentLowerTime = Constants.DrivetrainConstants.DRIVE_PEAK_DURATION;
 
         driveSlot0Configs.kP = Constants.DrivetrainConstants.DRIVE_FPID.kP;
         driveSlot0Configs.kI = Constants.DrivetrainConstants.DRIVE_FPID.kI;
@@ -56,9 +57,10 @@ public final class CTREConfigs {
         swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.DrivetrainConstants.OPEN_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.DrivetrainConstants.CLOSED_LOOP_RAMP;
         swerveDriveFXConfig.Slot0 = driveSlot0Configs;
+        swerveDriveFXConfig.MotorOutput.Inverted = Constants.DrivetrainConstants.DRIVE_MOTOR_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         
         /* Swerve CANCoder Configuration */ 
-        swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        swerveCanCoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
         swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.DrivetrainConstants.CANCODER_INVERTED ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
     }
 }

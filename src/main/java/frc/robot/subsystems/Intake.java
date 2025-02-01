@@ -4,9 +4,10 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,14 +15,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.util.REVConfigs;
 
 public class Intake extends PIDSubsystem {
-    private CANSparkMax motor = new CANSparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
+    private SparkMax motor = new SparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
     private final DigitalInput limitSwitch = new DigitalInput(1);
     private final BooleanSupplier shooterSpunUpSupplier, spunUpOverrideSupplier;
     private final DoubleConsumer rumbleConsumer;
     private double rumbleTimerEndTime = Timer.getFPGATimestamp() + 1;
     private boolean switchTimeHasBeenSet, shotIsConfirmed = false;
+    private REVConfigs motorConfigs;
     
     public Intake(BooleanSupplier shooterSpunUpSupplier, BooleanSupplier spunUpOverrideSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
@@ -33,15 +36,7 @@ public class Intake extends PIDSubsystem {
     }
 
     public void configureMotors() {
-        motor.restoreFactoryDefaults();
-        resetEncoders();
-        motor.setInverted(IntakeConstants.MOTOR_INVERTED);
-        motor.setSmartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
-        motor.setIdleMode(IdleMode.kCoast);
-        motor.burnFlash();
-    }
-
-    public void resetEncoders() {
+        motor.configure(motorConfigs.intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         motor.getEncoder().setPosition(0);
     }
 

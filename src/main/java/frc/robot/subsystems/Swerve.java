@@ -5,9 +5,9 @@ import org.frc5587.lib.subsystems.SwerveBase;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,13 +28,19 @@ public class Swerve extends SwerveBase {
     private Limelight limelight;
     private Field2d limelightField = new Field2d();
     private boolean brakeModeEnabled, odometrySet = true;
+    private RobotConfig config;
 
     public Swerve(SwerveModule[] swerveModules, Limelight limelight) {
         super(DrivetrainConstants.SWERVE_CONSTANTS, swerveModules);
         this.swerveModules = swerveModules;
         this.limelight = limelight;
         this.limelightField.setRobotPose(limelight.getWPIBlueBotpose());
-        ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
+        try {
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
         this.poseEstimator = new SwerveDrivePoseEstimator(
             kinematics, 
             getYaw(), 
@@ -45,19 +50,23 @@ public class Swerve extends SwerveBase {
             MatBuilder.fill(Nat.N3(), Nat.N1(), .7, .7, 999.) // Vision standard deviations.
             );
         // Auto Config
-        AutoBuilder.configureHolonomic(
+        AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetOdometryWithYaw, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            (speeds, feedforwards) -> setChassisSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                 new PIDConstants(AutoConstants.TRANSLATION_KP, AutoConstants.TRANSLATION_KI, AutoConstants.TRANSLATION_KD), // Translation PID constants
-                new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD), // Rotation PID constants
-                AutoConstants.MAX_SPEED_MPS, // Max module speed, in m/s
-                AutoConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
-                replanningConfig // Default path replanning config. See the API for the options here
+                new PIDConstants(AutoConstants.ROTATION_KP, AutoConstants.ROTATION_KI, AutoConstants.ROTATION_KD) // Rotation PID constants
             ),
-            () -> {return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Red);},
+            config,
+            () -> {
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
             this // Reference to this subsystem to set requirements
             );
         SmartDashboard.putBoolean("Swerve Debug On?", false);
@@ -82,12 +91,12 @@ public class Swerve extends SwerveBase {
     }
 
     public Command ampLineUp() {
-        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_AMP_POSE, FieldConstants.BLUE_AMP_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0.0,/*m/s*/ 0.0/*meters*/);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_AMP_POSE, FieldConstants.BLUE_AMP_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0.0 /*m/s*/);
 
     }
 
     public Command subwooferLineUp() {
-        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0, 0);
+        return AutoBuilder.pathfindToPose(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE), AutoConstants.PATHFIND_CONSTRAINTS, 0.0 /*m/s*/);
     }
 
     public void resetOdometryWithYaw(Pose2d pose) {

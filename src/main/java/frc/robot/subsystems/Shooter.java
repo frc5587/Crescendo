@@ -2,9 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,17 +19,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.util.REVConfigs;
 
 public class Shooter extends ProfiledPIDSubsystem {
-    // private static CANSparkMax leftMotor = new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
-    // private static CANSparkMax rightMotor = new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private CANSparkMax leftMotor;
-    private CANSparkMax rightMotor;
+    // private static SparkMax leftMotor = new SparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
+    // private static SparkMax rightMotor = new SparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    private SparkMax leftMotor;
+    private SparkMax rightMotor;
     private SimpleMotorFeedforward ff, leftFF, rightFF;
     private Supplier<Pose2d> poseSupplier;
     private final ProfiledPIDController leftPID, rightPID;
+    private REVConfigs motorConfigs;
 
-    public Shooter(CANSparkMax leftMotor, CANSparkMax rightMotor, Supplier<Pose2d> poseSupplier) {
+    public Shooter(SparkMax leftMotor, SparkMax rightMotor, Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
@@ -47,25 +50,17 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public Shooter(Supplier<Pose2d> poseSupplier) {
-        this(new CANSparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless),
-        new CANSparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless),
+        this(new SparkMax(ShooterConstants.LEFT_MOTOR_ID, MotorType.kBrushless),
+        new SparkMax(ShooterConstants.RIGHT_MOTOR_ID, MotorType.kBrushless),
         poseSupplier
         );
     }
 
     public void configureMotors() {
-        leftMotor.restoreFactoryDefaults();
-        rightMotor.restoreFactoryDefaults();
-        leftMotor.setInverted(ShooterConstants.LEFT_MOTOR_INVERTED);
-        rightMotor.setInverted(ShooterConstants.RIGHT_MOTOR_INVERTED);
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
-        leftMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
-        rightMotor.setSmartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
-        leftMotor.getEncoder().setPosition(0);
-        rightMotor.getEncoder().setPosition(0);
-        leftMotor.burnFlash();
-        rightMotor.burnFlash();
+        leftMotor.configure(motorConfigs.leftShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightMotor.configure(motorConfigs.rightShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leftMotor.getEncoder().setPosition(0.);
+        rightMotor.getEncoder().setPosition(0.);
     }
 
     public void idleSpeed() {
