@@ -6,6 +6,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -29,7 +31,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     private SimpleMotorFeedforward ff, leftFF, rightFF;
     private Supplier<Pose2d> poseSupplier;
     private final ProfiledPIDController leftPID, rightPID;
-    private REVConfigs motorConfigs;
+    private static SparkMaxConfig leftShooterConfig = new SparkMaxConfig();
+    private static SparkMaxConfig rightShooterConfig = new SparkMaxConfig();
 
     public Shooter(SparkMax leftMotor, SparkMax rightMotor, Supplier<Pose2d> poseSupplier) {
         super(ShooterConstants.PID);
@@ -57,15 +60,24 @@ public class Shooter extends ProfiledPIDSubsystem {
     }
 
     public void configureMotors() {
-        leftMotor.configure(motorConfigs.leftShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightMotor.configure(motorConfigs.rightShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // set each setting for the motor configuration
+        leftShooterConfig.inverted(ShooterConstants.LEFT_MOTOR_INVERTED);
+        leftShooterConfig.idleMode(IdleMode.kCoast);
+        leftShooterConfig.smartCurrentLimit(ShooterConstants.STALL_LIMIT, ShooterConstants.FREE_LIMIT);
+
+        rightShooterConfig.apply(leftShooterConfig); // apply left shooter's configurations to the right shooter
+        // change any settings that are different between the motors
+        rightShooterConfig.inverted(ShooterConstants.RIGHT_MOTOR_INVERTED);
+
+        leftMotor.configure(leftShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightMotor.configure(rightShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         leftMotor.getEncoder().setPosition(0.);
         rightMotor.getEncoder().setPosition(0.);
     }
 
     public void idleSpeed() {
-        setLeftSpeed(6);
-        setRightSpeed(6);
+        setLeftSpeed(0);
+        setRightSpeed(0);
     }
 
     public double getMotorSpeeds() {

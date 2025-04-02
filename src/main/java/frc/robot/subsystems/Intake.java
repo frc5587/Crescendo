@@ -8,6 +8,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,9 +24,9 @@ public class Intake extends PIDSubsystem {
     private final DigitalInput limitSwitch = new DigitalInput(1);
     private final BooleanSupplier shooterSpunUpSupplier, spunUpOverrideSupplier;
     private final DoubleConsumer rumbleConsumer;
+    private static SparkMaxConfig intakeConfig = new SparkMaxConfig();
     private double rumbleTimerEndTime = Timer.getFPGATimestamp() + 1;
     private boolean switchTimeHasBeenSet, shotIsConfirmed = false;
-    private REVConfigs motorConfigs;
     
     public Intake(BooleanSupplier shooterSpunUpSupplier, BooleanSupplier spunUpOverrideSupplier, DoubleSupplier swerveSpeedSupplier, DoubleConsumer rumbleConsumer) {
         super(IntakeConstants.PID);
@@ -36,7 +38,11 @@ public class Intake extends PIDSubsystem {
     }
 
     public void configureMotors() {
-        motor.configure(motorConfigs.intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        intakeConfig.inverted(IntakeConstants.MOTOR_INVERTED);
+        intakeConfig.idleMode(IdleMode.kCoast);
+        intakeConfig.smartCurrentLimit(IntakeConstants.STALL_LIMIT, IntakeConstants.FREE_LIMIT);
+        
+        motor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         motor.getEncoder().setPosition(0);
     }
 

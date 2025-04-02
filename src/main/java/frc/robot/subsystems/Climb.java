@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
@@ -21,7 +22,8 @@ public class Climb extends ProfiledPIDSubsystem {
     private SparkMax leftMotor;
     private SparkMax rightMotor;
     private boolean brakeModeEnabled = true;
-    private REVConfigs motorConfigs;
+    private static SparkMaxConfig leftClimbConfig = new SparkMaxConfig();
+    private static SparkMaxConfig rightClimbConfig = new SparkMaxConfig();
 
     public Climb(SparkMax leftMotor, SparkMax rightMotor) {
         super(ClimbConstants.PID);
@@ -41,8 +43,15 @@ public class Climb extends ProfiledPIDSubsystem {
     }
 
     public void configureMotors() {
-        leftMotor.configure(motorConfigs.leftClimbConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightMotor.configure(motorConfigs.rightClimbConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leftClimbConfig.inverted(ClimbConstants.LEFT_MOTOR_INVERTED);
+        leftClimbConfig.idleMode(IdleMode.kBrake);
+        leftClimbConfig.smartCurrentLimit(ClimbConstants.STALL_LIMIT, ClimbConstants.FREE_LIMIT);
+        rightClimbConfig.apply(leftClimbConfig);
+        rightClimbConfig.inverted(ClimbConstants.RIGHT_MOTOR_INVERTED);
+        rightClimbConfig.follow(ClimbConstants.LEFT_MOTOR_ID);
+        
+        leftMotor.configure(leftClimbConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightMotor.configure(rightClimbConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         resetEncoders();
     }
 
@@ -105,8 +114,10 @@ public class Climb extends ProfiledPIDSubsystem {
 
         if(SmartDashboard.getBoolean("Climb Brake Mode", true) != brakeModeEnabled) {
             this.brakeModeEnabled = SmartDashboard.getBoolean("Climb Brake Mode", true);
-            motorConfigs.leftClimbConfig.idleMode(brakeModeEnabled ? IdleMode.kBrake : IdleMode.kCoast);
-            motorConfigs.rightClimbConfig.idleMode(brakeModeEnabled ? IdleMode.kBrake : IdleMode.kCoast);
+            leftClimbConfig.idleMode(brakeModeEnabled ? IdleMode.kBrake : IdleMode.kCoast);
+            rightClimbConfig.idleMode(brakeModeEnabled ? IdleMode.kBrake : IdleMode.kCoast);
+            leftMotor.configure(leftClimbConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            rightMotor.configure(rightClimbConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         }
     }
     
