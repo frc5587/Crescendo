@@ -147,7 +147,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 0.5; // reg 5
+        public static final double MAX_SPEED = 1; // reg 5
         public static final double CRAWL_SPEED = 0.5; // reg 0.75
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = Math.PI / 3; // reg 3 * Math.PI
@@ -163,7 +163,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(155.188+68.291);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(222.802735);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULE_CONSTANTS = new SwerveModuleConstants(
                     0, WHEEL_CIRCUMFERENCE_METERS, MAX_SPEED, ANGLE_ENCODER_CPR, DRIVE_ENCODER_CPR, ANGLE_GEAR_RATIO,
