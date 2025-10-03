@@ -114,15 +114,15 @@ public class RobotContainer {
         xbox2.rightTrigger().whileTrue(new RunCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
 
         xbox2.a().onTrue(arm.armTravelCommand());
-        // xbox2.b().onTrue(arm.disableManualMode());
-        // xbox2.x().onTrue(arm.armBottomCommand());
-        // xbox2.y().onTrue(arm.armAmpCommand());
-        // xbox2.back().whileTrue(fullClimb);
+        xbox2.b().onTrue(arm.disableManualMode());
+        xbox2.x().onTrue(arm.armBottomCommand());
+        xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.back().whileTrue(fullClimb);
         
-        // xbox2.povUp().onTrue(new InstantCommand(climb::hookTop));
-        // xbox2.povDown().onTrue(new InstantCommand(climb::hookBottom));
-        // xbox2.povUp().whileTrue(arm.armUpSlowCommand());
-        // xbox2.povDown().whileTrue(arm.armDownSlowCommand());
+        xbox2.povUp().onTrue(new InstantCommand(climb::hookTop));
+        xbox2.povDown().onTrue(new InstantCommand(climb::hookBottom));
+        xbox2.povUp().whileTrue(arm.armUpSlowCommand());
+        xbox2.povDown().whileTrue(arm.armDownSlowCommand());
         xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
         xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
         
