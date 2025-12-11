@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.subsystems.SwerveBase;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -26,6 +27,7 @@ import frc.robot.Constants.FieldConstants;
 public class Swerve extends SwerveBase {
     private SwerveModule[] swerveModules;
     private Limelight limelight;
+    private Orchestra orchestra = new Orchestra();
     private Field2d limelightField = new Field2d();
     private boolean brakeModeEnabled, odometrySet = true;
     private RobotConfig config;
@@ -72,9 +74,18 @@ public class Swerve extends SwerveBase {
         SmartDashboard.putBoolean("Swerve Debug On?", false);
         SmartDashboard.putBoolean("Swerve Brake Mode", brakeModeEnabled);
         SmartDashboard.putBoolean("Reset to Limelight Pose", false);
+        SmartDashboard.putBoolean("Play Music", false);
+        SmartDashboard.putBoolean("Stop Music", false);
         if (DriverStation.getAlliance().isPresent()) {
         resetOdometry(getAlliancePose(FieldConstants.RED_SUBWOOFER_FRONT_POSE, FieldConstants.BLUE_SUBWOOFER_FRONT_POSE));
         } else {odometrySet = false;}
+
+        for(int i = 0; i < swerveModules.length; i++) {
+            orchestra.addInstrument(swerveModules[i].driveMotor);
+            orchestra.addInstrument(swerveModules[i].angleMotor);
+            orchestra.loadMusic("nggyu.mid");
+        }
+
     }
 
     public Swerve(Limelight limelight) {
@@ -137,7 +148,17 @@ public class Swerve extends SwerveBase {
 
         SmartDashboard.putData("Field", field);
         SmartDashboard.putData("LimelightField", limelightField);
-        
+
+        if(SmartDashboard.getBoolean("Play Music", true)) {
+            orchestra.play();
+        }
+        SmartDashboard.putBoolean("Play Music", false);
+
+        if(SmartDashboard.getBoolean("Stop Music", true)) {
+            orchestra.stop();
+        }
+        SmartDashboard.putBoolean("Stop Music", false);
+
         if(limelight.hasTarget() && (limelight.get3DTargetSpacePose().getZ() <= 1.5) && SmartDashboard.getBoolean("Reset to Limelight Pose", false)) {// if the target is super close, we can set the pose to the limelight pose
             odometry.resetPosition(getYaw(), getModulePositions(), limelight.getWPIBlueBotpose());
             poseEstimator.resetPosition(getYaw(), getModulePositions(), limelight.getWPIBlueBotpose());

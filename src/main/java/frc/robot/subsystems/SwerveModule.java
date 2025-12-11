@@ -13,7 +13,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.util.swervelib.util.CTREConfigs;
 
 public class SwerveModule extends SwerveModuleBase {
-    private TalonFX angleMotor, driveMotor;
+    public TalonFX angleMotor, driveMotor;
     private CANcoder angleEncoder;
     private Rotation2d canCoderOffset;
     public static CTREConfigs ctreConfigs = new CTREConfigs();
