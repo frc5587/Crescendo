@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AimToNote;
@@ -32,6 +34,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LEDController;
+import frc.robot.subsystems.LEDController.LEDColor;
 import frc.robot.subsystems.NoteDetector;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -50,7 +54,9 @@ public class RobotContainer {
     });
     public final Arm arm = new Arm(swerve::getPose);
     private final Climb climb = new Climb();
+    private final LEDController ledController = new LEDController();
     private final SendableChooser<Command> autoChooser;
+    private Trigger intakeLimitSwitch = new Trigger (intake::getLimitSwitch);
 
     private final DualStickSwerve driveCommand = new DualStickSwerve(swerve, xbox::getLeftY, () -> -xbox.getLeftX(),
             () -> xbox.getRightX(), xbox.rightBumper(), xbox.leftTrigger());
@@ -109,9 +115,13 @@ public class RobotContainer {
      */
     private void configureBindings() {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
-        xbox2.rightBumper().whileTrue(runIntakeWithArm);
+        xbox2.rightBumper().whileTrue(runIntakeWithArm.alongWith(blinkCommand(LEDColor.YELLOW)));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        xbox2.rightTrigger().whileTrue(new RunCommand(shooter::forward)).onFalse(new InstantCommand(shooter::idleSpeed));
+        Command shooterSpinWithLED = (new RunCommand(shooter::forward, shooter))
+                .alongWith(blinkCommand(LEDColor.GREEN))
+                .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
+                .finallyDo((interrupted) -> shooter.idleSpeed());
+        xbox2.rightTrigger().whileTrue(shooterSpinWithLED);
 
         xbox2.a().onTrue(arm.armTravelCommand());
         // xbox2.b().onTrue(arm.disableManualMode());
@@ -124,7 +134,7 @@ public class RobotContainer {
         // xbox2.povUp().whileTrue(arm.armUpSlowCommand());
         // xbox2.povDown().whileTrue(arm.armDownSlowCommand());
         xbox2.povRight().whileTrue(autoAmpWhenLinedUp);
-        xbox2.povLeft().whileTrue(autoShootWhenLinedUp);
+        xbox2.povLeft().whileTrue(autoShootWhenLinedUp.alongWith(blinkCommand(LEDColor.GREEN)).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
         
         // Right Bumper - Robot Oriented Driving
         // Left Bumper - Confirm Shot (TogetherShoot)
@@ -135,7 +145,32 @@ public class RobotContainer {
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         // xbox.x().onTrue(arm.shuffleBoardArmCommand());
         xbox.y().whileTrue(aimToNote);
+
+        intakeLimitSwitch.whileTrue(limitSwitchLEDCommand());
     }
+
+    private Command blinkCommand(LEDColor color) {
+        return new StartEndCommand(() -> ledController.applyColorBlink(color, LEDColor.OFF, 0),
+                ledController::turnOffAll, ledController);
+    }
+
+    private Command limitSwitchLEDCommand() {
+        return new FunctionalCommand(    
+                ledController::startLimitSwitchProgressLoop,
+                ledController::runLimitSwitchProgressLoop,
+                interrupted -> ledController.stopLimitSwitchProgressLoop(),
+                () -> false,
+                ledController);
+    }
+
+    public LEDController getLEDController() {
+        return ledController;
+    }
+
+    public boolean isIntakeLimitSwitchTriggered() {
+        return intake.getLimitSwitch();
+    }
+    // while !getLimitSwitch
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -144,5 +179,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+    public void periodic() {
+        intakeLimitSwitch.whileTrue(limitSwitchLEDCommand());
     }
 }

@@ -17,6 +17,7 @@ public class AimToNote extends Command {
     private final BooleanSupplier hasNoteSupplier;
     private final DoubleSupplier armAngleSupplier;
     private double endTime = 0.;
+    private boolean noteSeenAtSwitch = false;
 
     public AimToNote(NoteDetector noteDetector, Swerve swerve, BooleanSupplier hasNoteSupplier, DoubleSupplier armAngleSupplier) {
         this.noteDetector = noteDetector;
@@ -30,10 +31,21 @@ public class AimToNote extends Command {
     public void initialize() {
         endTime = 0;
         timer.restart();
+        noteSeenAtSwitch = false;
     }
 
     @Override
     public void execute() {
+        boolean beamBroken = hasNoteSupplier.getAsBoolean();
+        if (beamBroken) {
+            noteSeenAtSwitch = true;
+            swerve.drive(new Translation2d(0.5, 0.), 0, false, false);
+            return;
+        } else if (noteSeenAtSwitch) {
+            swerve.stop();
+            return;
+        }
+
         if(noteDetector.hasTarget()) {
             double fwdMPS = 50 / noteDetector.getDistanceToNoteMeters(Rotation2d.fromRadians(armAngleSupplier.getAsDouble()));
             double strafeMPS = noteDetector.getRotationToNote(Rotation2d.fromRadians(armAngleSupplier.getAsDouble())).getRadians() * 1.5;
@@ -54,11 +66,13 @@ public class AimToNote extends Command {
 
     @Override
     public boolean isFinished() {
-        return hasNoteSupplier.getAsBoolean() || timer.hasElapsed(2.);
+        boolean beamBroken = hasNoteSupplier.getAsBoolean();
+        return (noteSeenAtSwitch && !beamBroken) || timer.hasElapsed(2.);
     }
 
     @Override
     public void end(boolean interrupted) {
         swerve.stop();
+        noteSeenAtSwitch = false;
     }
 }
