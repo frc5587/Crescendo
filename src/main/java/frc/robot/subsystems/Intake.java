@@ -21,7 +21,7 @@ import frc.robot.util.REVConfigs;
 
 public class Intake extends PIDSubsystem {
     private SparkMax motor = new SparkMax(IntakeConstants.MOTOR_ID, MotorType.kBrushless);
-    private final DigitalInput limitSwitch = new DigitalInput(1);
+    private final DigitalInput limitSwitch = new DigitalInput(2);
     private final BooleanSupplier shooterSpunUpSupplier, spunUpOverrideSupplier;
     private final DoubleConsumer rumbleConsumer;
     private static SparkMaxConfig intakeConfig = new SparkMaxConfig();
@@ -94,19 +94,8 @@ public class Intake extends PIDSubsystem {
         SmartDashboard.putNumber("Intake Measurement", getMeasurement());
         SmartDashboard.putBoolean("Intake Limit Switch", getLimitSwitch());
         if(DriverStation.isAutonomousEnabled()) {
-            if(shotIsConfirmed && getLimitSwitch()) {
-                forward();
-            }
-            else if(getLimitSwitch()) {
-                stop();
-            }
-            else {
-                forward();
-            }
+            forward();
         }
-        if(getLimitSwitch() && !(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && motor.get() > 0. && !DriverStation.isAutonomousEnabled()) {
-            stop();
-        } 
         if(getLimitSwitch() && switchTimeHasBeenSet && Timer.getFPGATimestamp() < rumbleTimerEndTime) {
             rumbleConsumer.accept(1.);
         }

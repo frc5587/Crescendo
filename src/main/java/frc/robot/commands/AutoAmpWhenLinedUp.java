@@ -32,3 +32,4 @@ public class AutoAmpWhenLinedUp extends Command {
         shooter.idleSpeed();
     }
 }
+
