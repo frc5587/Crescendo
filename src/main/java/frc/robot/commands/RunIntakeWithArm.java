@@ -21,19 +21,13 @@ public class RunIntakeWithArm extends Command {
 
     @Override
     public void initialize() {
-        if(!(shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) && arm.getController().getGoal().position != ArmConstants.AMP_SETPOINT) {
-            arm.armBottom();
-        }
+        updateArmPosition();
     }
 
     @Override
     public void execute() {
-        if((shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean()) || arm.getController().getGoal().position == ArmConstants.AMP_SETPOINT || !intake.getLimitSwitch()) {
-            intake.forward();
-        }
-        else {
-            intake.stop();
-        }
+        intake.forward();
+        updateArmPosition();
     }
 
     @Override
@@ -42,5 +36,19 @@ public class RunIntakeWithArm extends Command {
             arm.armTravel();
         }
         intake.stop();
+    }
+
+    private void updateArmPosition() {
+        if (arm.getController().getGoal().position == ArmConstants.AMP_SETPOINT) {
+            return;
+        }
+
+        boolean shooterRevving = shooterSpunUpSupplier.getAsBoolean() || spunUpOverrideSupplier.getAsBoolean();
+        // Drive the arm down until we have a note, then return to travel when intaking.
+        if (!intake.getLimitSwitch()) {
+            arm.armBottom();
+        } else if (!shooterRevving) {
+            arm.armTravel();
+        }
     }
 }

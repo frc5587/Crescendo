@@ -114,19 +114,22 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        Trigger rightBumper = xbox2.rightBumper();
+        Trigger rightTrigger = xbox2.rightTrigger();
+
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
-        xbox2.rightBumper().whileTrue(runIntakeWithArm.alongWith(blinkCommand(LEDColor.YELLOW)));
+
+        rightBumper.whileTrue(runIntakeWithArm);
+
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        Command shooterSpinWithLED = (new RunCommand(shooter::forward, shooter))
-                .alongWith(blinkCommand(LEDColor.GREEN))
-                .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
+        Command shooterSpin = (new RunCommand(shooter::forward, shooter))
                 .finallyDo((interrupted) -> shooter.idleSpeed());
-        xbox2.rightTrigger().whileTrue(shooterSpinWithLED);
+        rightTrigger.whileTrue(shooterSpin);
 
         xbox2.a().onTrue(arm.armTravelCommand());
         // xbox2.b().onTrue(arm.disableManualMode());
         // xbox2.x().onTrue(arm.armBottomCommand());
-        // xbox2.y().onTrue(arm.armAmpCommand());
+        xbox2.y().onTrue(arm.armAmpCommand());
         // xbox2.back().whileTrue(fullClimb);
         
         // xbox2.povUp().onTrue(new InstantCommand(climb::hookTop));
@@ -145,8 +148,6 @@ public class RobotContainer {
         xbox.a().whileTrue(new InstantCommand(swerve::standYourGround, swerve));
         // xbox.x().onTrue(arm.shuffleBoardArmCommand());
         xbox.y().whileTrue(aimToNote);
-
-        intakeLimitSwitch.whileTrue(limitSwitchLEDCommand());
     }
 
     private Command blinkCommand(LEDColor color) {
@@ -170,6 +171,13 @@ public class RobotContainer {
     public boolean isIntakeLimitSwitchTriggered() {
         return intake.getLimitSwitch();
     }
+    public boolean isShooterRevving() {
+        return xbox2.rightTrigger().getAsBoolean();
+    }
+
+    public boolean isIntaking() {
+        return intake.getMotorSetSpeed() > 0.05;
+    }
     // while !getLimitSwitch
 
     /**
@@ -179,8 +187,5 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
-    }
-    public void periodic() {
-        intakeLimitSwitch.whileTrue(limitSwitchLEDCommand());
     }
 }
