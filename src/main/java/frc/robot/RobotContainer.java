@@ -117,11 +117,11 @@ public class RobotContainer {
         xbox2.leftBumper().whileTrue(new InstantCommand(intake::backward).alongWith(new InstantCommand(shooter::backward))).onFalse(new InstantCommand(intake::stop).alongWith(new InstantCommand(shooter::idleSpeed)));
         xbox2.rightBumper().whileTrue(runIntakeWithArm.alongWith(blinkCommand(LEDColor.YELLOW)));
         xbox2.leftTrigger().whileTrue(new InstantCommand(shooter::backward)).onFalse(new InstantCommand(shooter::idleSpeed));
-        Command shooterSpinWithLED = (new RunCommand(shooter::forward, shooter))
+        Command shooterSpinWithLED = (new InstantCommand(shooter::forward))
                 .alongWith(blinkCommand(LEDColor.GREEN))
                 .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming)
                 .finallyDo((interrupted) -> shooter.idleSpeed());
-        xbox2.rightTrigger().whileTrue(shooterSpinWithLED);
+        xbox2.rightTrigger().whileTrue(new InstantCommand(shooter::forward)).onFalse(new InstantCommand(shooter::stopVoltage));
 
         xbox2.a().onTrue(arm.armTravelCommand());
         // xbox2.b().onTrue(arm.disableManualMode());
