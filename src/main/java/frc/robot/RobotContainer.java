@@ -171,6 +171,13 @@ public class RobotContainer {
         return intake.getLimitSwitch();
     }
     // while !getLimitSwitch
+    public boolean isIntaking() {
+        return (intake.getSetpoint() != 0);
+    }
+
+    public boolean isShooterRevving() {
+        return xbox2.rightTrigger().getAsBoolean();
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
