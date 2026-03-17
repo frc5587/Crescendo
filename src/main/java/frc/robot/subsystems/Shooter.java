@@ -50,6 +50,7 @@ public class Shooter extends ProfiledPIDSubsystem {
         leftPID.setTolerance(0.3);
         rightPID.setTolerance(0.3);
         SmartDashboard.putNumber("Desired Speed", 0.0);
+        SmartDashboard.putNumber("Shooter speed", 12.0);
     }
 
     public Shooter(Supplier<Pose2d> poseSupplier) {
@@ -119,8 +120,8 @@ public class Shooter extends ProfiledPIDSubsystem {
     public void forward() {
         // setLeftSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
         // setRightSpeed(poseDepenantShooterSpeed(poseSupplier.get()));
-        setLeftSpeed(12);
-        setRightSpeed(12);
+        setLeftSpeed(SmartDashboard.getNumber("Shooter speed", 12.0));
+        setRightSpeed(SmartDashboard.getNumber("Shooter speed", 12.0));
     }
 
     public double poseDepenantShooterSpeed(Pose2d pose) {
